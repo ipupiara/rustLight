@@ -9,26 +9,56 @@ USE IEEE.NUMERIC_STD.ALL;
 
 --  register
 
---ENTITY regn IS
---	GENERIC ( N : INTEGER := 16 ) ;
---	PORT ( D : IN STD_LOGIC_VECTOR(N−1 DOWNTO 0) ;
---		Resetn, Clock, Enable : IN STD_LOGIC ;
---		Q : OUT STD_LOGIC_VECTOR(N−1 DOWNTO 0) ) ;
---END regn ;
---ARCHITECTURE Behavior OF regn IS
---BEGIN
---	PROCESS ( Resetn, Clock )
+ENTITY signalDelayer is
+	PORT (
+				Reset, Clock,Enable, sigIn : IN STD_LOGIC;
+				sigOut: OUT STD_LOGIC
+			);
+END;
+ARCHITECTURE behave OF signalDelayer is
+TYPE signalDelayStateType is (disabled, idle, receivedFirstClock);
+SIGNAL signalDelayState : signalDelayStateType;
+BEGIN
+	PROCESS (  Clock )
+	BEGIN
+		IF (Reset = '0') THEN
+			signalDelayState <= idle;
+			sigOut <= '0';
+		ELSIF (Clock'EVENT AND Clock = '1') THEN
+			IF (Enable = '0') THEN	
+				signalDelayState <= disabled;
+			ELSE	
+				IF (signalDelayState = disabled)  THEN
+					signalDelayState <= idle;
+				END IF;	
+				IF (signalDelayState = idle) THEN
+						signalDelayState <= receivedFirstClock;
+				ELSIF (signalDelayState = receivedFirstClock) THEN
+						sigOut <= sigIn;
+						signalDelayState <= idle;
+				END IF;
+			END IF; 
+		END IF;
+	END PROCESS ;
+	
+--	PROCESS ( Enable)
 --	BEGIN
---		IF (Resetn = ’0’) THEN
---			Q <=(OTHERS=> ’0’) ;
---		ELSIF ( (Clock’EVENT AND Clock = ’1’ ) AND (Enable = 1) ) THEN
---			Q <= D ;
---		END IF ;
---	END PROCESS ;
---END Behavior ;
---
+--		if (Enable = '0') then
+--			signalDelayState <= disabled;
+--		ELSIF	((Enable = '1') AND (signalDelayState = disabled) ) THEN
+--			signalDelayState <= idle;
+--		END IF;	
+--	END PROCESS; 
+
+END behave;
 
 -- demuxer
+
+LIBRARY ieee ;
+USE ieee.std_logic_1164.all ;
+USE IEEE.MATH_REAL.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
 
 entity DeMUX_1toX_N_bits is
   generic (
