@@ -8,7 +8,8 @@ ENTITY rustLight IS
 	GENERIC ( amtTriacs : INTEGER := 4 ) ;
 	PORT ( 	data : IN STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 				address : IN STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
-				Clock, Reset, Strobe, zeroPass, SwitchOnOff : IN STD_LOGIC 
+				Clock, Reset, Strobe, zeroPass, SwitchOnOff : IN STD_LOGIC;
+				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) 
 			 ) ;
 END rustLight ;
 ARCHITECTURE Behavior OF rustLight IS
@@ -43,7 +44,8 @@ ARCHITECTURE Behavior OF rustLight IS
 		port (
 			 ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
 			 switchOnOff, zeroPass    : in  STD_LOGIC;
-			 Clock,Reset    : in  STD_LOGIC
+			 Clock,Reset    : in  STD_LOGIC;
+			 triacTriggerPulse : out STD_LOGIC
 		  );
 	END COMPONENT;
 	
@@ -59,7 +61,8 @@ ARCHITECTURE Behavior OF rustLight IS
 		for i1 in 0 to amtTriacs-1 generate
 			REGX : triacDriver port map
 				(InputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-				 InputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset);
+				 InputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset,
+				 triacTriggerPulses(i1));
 		end generate GEN_REG;	
 			
 		PROCESS ( Reset, Clock )

@@ -9,7 +9,8 @@ entity triacDriver is
   port (
     ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
     switchOnOff, zeroPass    : in  STD_LOGIC;
-	 Clock,Reset    : in  STD_LOGIC
+	 Clock,Reset    : in  STD_LOGIC;
+	 triacTriggerPulse : out STD_LOGIC
   );
 end;
 
@@ -27,6 +28,14 @@ architecture driverJob of triacDriver is
 				IgnitionDelayReg <= ignitionDelay; 
 				SwitchOnOffReg <= switchOnOff; 
 				ZeroPassReg <= zeroPass;
+				
+				--  trivial Code, so that all lines are used and not optimized away by the synthesis/fitter
+				IF (ZeroPassReg = '1') THEN
+					triacTriggerPulse <= '0';
+				ELSIF ( (( to_integer(unsigned(IgnitionDelayReg  ))) > 0 ) AND (SwitchOnOffReg = '1'))  THEN
+					triacTriggerPulse <= '1';
+				END IF;
+				
 			END IF ;
 		END PROCESS ;
 
