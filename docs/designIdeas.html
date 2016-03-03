@@ -25,15 +25,18 @@
 	<br />
 	The rather simple scratch diagram shows a "memory interface" to the fpga. 
 	Each triacdriver has got it's own address and the triac trigger delay can be 
-	entered by a ten bit positive integer in the range of a 0 to 1024. A half 
+	entered as a ten bit positive integer in the range of&nbsp; 0 to 1024. A half 
 	cycle of AC (10 mSecs in our 220 V public current) is divided by 1024 and 
-	the integer describes the point of time in this interval. <br />
+	the integer describes the point of time in this interval when triac trigger 
+	takes place. <br />
 	<br />
-	The zeropass detector is needed because the triacdriver needs to synchronise 
+	The zeropass detector is needed because the triacdriver needs to be synchronised 
 	with the AC timing.<br />
 	<br />
-	The fpga finally transmits the trigger current pulse to the triac driver 
-	with a trigger duration of approx 5 uSecs.<br />
+	The fpga finally transmits the different trigger current pulses to the triac drivers 
+	with a trigger duration of approx 5 uSecs. To be able to switch highly 
+	inductive loads, a pulse train will be sent after the initial pulse with an 
+	interval time of approx. 100 uSecs, what means approx 10 pulses per mSec.<br />
 	<br />
 	<a href="diagrams/InputComponents.jpg" target="_blank">ideas about the input components of 
 	the vhdl on a netlist RTL Viewer</a> <br />
