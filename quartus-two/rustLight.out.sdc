@@ -19,7 +19,7 @@
 ## PROGRAM "Quartus II"
 ## VERSION "Version 13.1.0 Build 162 10/23/2013 SJ Web Edition"
 
-## DATE    "Thu Mar 03 19:47:27 2016"
+## DATE    "Fri Mar 04 00:44:28 2016"
 
 ##
 ## DEVICE  "EP3C16F484C6"
@@ -57,6 +57,10 @@ create_clock -name {CLOCK} -period 20.000 -waveform { 0.000 10.000 } [get_ports 
 # Set Clock Uncertainty
 #**************************************************************
 
+set_clock_uncertainty -rise_from [get_clocks {CLOCK}] -rise_to [get_clocks {CLOCK}]  0.01  
+set_clock_uncertainty -rise_from [get_clocks {CLOCK}] -fall_to [get_clocks {CLOCK}]  0.01  
+set_clock_uncertainty -fall_from [get_clocks {CLOCK}] -rise_to [get_clocks {CLOCK}]  0.01  
+set_clock_uncertainty -fall_from [get_clocks {CLOCK}] -fall_to [get_clocks {CLOCK}]  0.01  
 
 
 #**************************************************************
