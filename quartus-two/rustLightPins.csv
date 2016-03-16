@@ -1,0 +1,42 @@
+# Copyright (C) 1991-2013 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, Altera MegaCore Function License 
+# Agreement, or other applicable license agreement, including, 
+# without limitation, that your use is for the sole purpose of 
+# programming logic devices manufactured by Altera and sold by 
+# Altera or its authorized distributors.  Please refer to the 
+# applicable agreement for further details.
+
+# Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
+# File: D:\projects\vhdl\rustLightProject\quartus-two\rustLightPins.csv
+# Generated on: Wed Mar 16 00:47:42 2016
+
+# Note: The column header names should not be changed if you wish to import this .csv file into the Quartus II software.
+
+To,Direction,Location,I/O Bank,VREF Group,Fitter Location,I/O Standard,Reserved,Current Strength,Slew Rate,Differential Pair
+address[1],Input,PIN_AB16,4,B4_N1,PIN_L8,,,,,
+address[0],Input,PIN_AA16,4,B4_N1,PIN_J1,,,,,
+Clock,Input,,,,PIN_G2,,,,,
+data[9],Input,PIN_AB10,3,B3_N0,PIN_AA2,,,,,
+data[8],Input,PIN_AA10,3,B3_N0,PIN_M3,,,,,
+data[7],Input,PIN_AB8,3,B3_N0,PIN_L7,,,,,
+data[6],Input,PIN_AA8,3,B3_N0,PIN_M5,,,,,
+data[5],Input,PIN_AB5,3,B3_N1,PIN_N2,,,,,
+data[4],Input,PIN_AA5,3,B3_N1,PIN_T2,,,,,
+data[3],Input,PIN_AB4,3,B3_N1,PIN_T1,,,,,
+data[2],Input,PIN_AA4,3,B3_N1,PIN_M2,,,,,
+data[1],Input,PIN_V14,4,B4_N0,PIN_U2,,,,,
+data[0],Input,PIN_U14,4,B4_N0,PIN_M4,,,,,
+Reset,Input,PIN_Y13,4,B4_N1,PIN_AB11,,,,,
+Strobe,Input,PIN_W13,4,B4_N1,PIN_H6,,,,,
+SwitchOnOff,Input,PIN_U13,4,B4_N0,PIN_M1,,,,,
+triacTriggerPulses[3],Output,PIN_U7,3,B3_N1,PIN_V10,,,,,
+triacTriggerPulses[2],Output,PIN_V5,3,B3_N1,PIN_V9,,,,,
+triacTriggerPulses[1],Output,PIN_W6,3,B3_N1,PIN_AA9,,,,,
+triacTriggerPulses[0],Output,PIN_W7,3,B3_N1,PIN_V5,,,,,
+zeroPass,Input,PIN_V12,4,B4_N1,PIN_H2,,,,,

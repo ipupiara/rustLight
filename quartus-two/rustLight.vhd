@@ -16,19 +16,16 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL SwitchOnOffReg, StrobeReg, zeroPassReg: STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
-	SIGNAL InputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;
-	SIGNAL TriacInputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
-	
+	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	
 	type triacDriverIF is 
 	RECORD
 		Dta : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 		SwitchNFF : STD_LOGIC;
 	END RECORD;	
-	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
-	SIGNAL  TriacDriverInput : triacDriverIFArray(amtTriacs -1 downto 0);
-
 	
+	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
+	SIGNAL  TriacDriverInput : triacDriverIFArray(amtTriacs -1 downto 0);	
 	COMPONENT DeMUX_1toX_N_bits
 		generic (
 			 PORTS  : POSITIVE  := 4;
@@ -55,13 +52,13 @@ ARCHITECTURE Behavior OF rustLight IS
 			
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
-			PORT MAP (AddressReg,DataReg & SwitchOnOffReg, InputReg);
+			PORT MAP (AddressReg,DataReg & SwitchOnOffReg, MuxOutputReg);
 			
 		GEN_REG: 
 		for i1 in 0 to amtTriacs-1 generate
 			REGX : triacDriver port map
-				(InputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-				 InputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset,
+				(MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
+				 MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset,
 				 triacTriggerPulses(i1));
 		end generate GEN_REG;	
 			
@@ -75,13 +72,6 @@ ARCHITECTURE Behavior OF rustLight IS
 				DataReg <= data; 
 				addressReg <= address;
 				SwitchOnOffReg <= switchOnOff; 
-				
-	--			TriacInputReg <= InputReg;
-	--			gen : for i1 in 0 to amtTriacs - 1 loop
-	--			  TriacInputReg((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 ) +1 ))  <= TriacDriverInput(i1).Dta;
-	--			  TriacInputReg( (i1 * 11  ))  <= TriacDriverInput(i1).SwitchNFF;
-	--			end loop;
-				
 			END IF ;
 		END PROCESS ;
 

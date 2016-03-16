@@ -24,6 +24,7 @@ architecture driverJob of triacDriver is
 				IgnitionDelayReg <= (OTHERS => '0'); 
 				SwitchOnOffReg <= '0';
 				ZeroPassReg <= '0';
+				triacTriggerPulse <= '0';
 			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
 				IgnitionDelayReg <= ignitionDelay; 
 				SwitchOnOffReg <= switchOnOff; 
