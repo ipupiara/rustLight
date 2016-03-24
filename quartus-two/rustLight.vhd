@@ -8,13 +8,13 @@ ENTITY rustLight IS
 	GENERIC ( amtTriacs : INTEGER := 4 ) ;
 	PORT ( 	data : IN STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 				address : IN STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
-				Clock, Reset, Strobe, zeroPass, SwitchOnOff : IN STD_LOGIC;
+				Clock, Reset, Strobe, zeroPass, SwitchOnOff, CountersClock : IN STD_LOGIC;
 				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) 
 			 ) ;
 END rustLight ;
 ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL SwitchOnOffReg, StrobeReg, zeroPassReg: STD_LOGIC;
+	SIGNAL SwitchOnOffReg, StrobeReg, zeroPassReg, countersClockSig: STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	
@@ -41,7 +41,7 @@ ARCHITECTURE Behavior OF rustLight IS
 		port (
 			 ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
 			 switchOnOff, zeroPass    : in  STD_LOGIC;
-			 Clock,Reset    : in  STD_LOGIC;
+			 Clock,Reset, CountersClock    : in  STD_LOGIC;
 			 triacTriggerPulse : out STD_LOGIC
 		  );
 	END COMPONENT;
@@ -49,6 +49,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	BEGIN
 		StrobeReg <= Strobe;
 		zeroPassReg <= zeroPass;
+		countersClockSig <= CountersClock;
 			
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
@@ -58,7 +59,7 @@ ARCHITECTURE Behavior OF rustLight IS
 		for i1 in 0 to amtTriacs-1 generate
 			REGX : triacDriver port map
 				(MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-				 MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset,
+				 MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassReg, Clock, Reset,CountersClock,
 				 triacTriggerPulses(i1));
 		end generate GEN_REG;	
 			

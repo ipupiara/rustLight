@@ -9,7 +9,7 @@ entity triacDriver is
   port (
     ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
     switchOnOff, zeroPass    : in  STD_LOGIC;
-	 Clock,Reset    : in  STD_LOGIC;
+	 Clock,Reset, CountersClock  : in  STD_LOGIC;
 	 triacTriggerPulse : out STD_LOGIC
   );
 end;
@@ -17,6 +17,14 @@ end;
 architecture driverJob of triacDriver is
 	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL SwitchOnOffReg, ZeroPassReg   : STD_LOGIC;
+	SIGNAL sourceReg : STD_LOGIC_VECTOR (1 DOWNTO 0);
+component testPluginTriacDriverDelay
+	PORT
+	(
+		probe		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
+		source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
+	);
+end component;
   begin
 		PROCESS ( Reset, Clock )
 		BEGIN
@@ -35,9 +43,21 @@ architecture driverJob of triacDriver is
 					triacTriggerPulse <= '0';
 				ELSIF ( (( to_integer(unsigned(IgnitionDelayReg  ))) > 0 ) AND (SwitchOnOffReg = '1'))  THEN
 					triacTriggerPulse <= '1';
-				END IF;
-				
+				END IF;			
 			END IF ;
 		END PROCESS ;
-
+		PROCESS ( CountersClock)
+		BEGIN
+			IF (CountersClock'EVENT AND CountersClock = '1' ) THEN
+				--countersClockSig  <=  CountersClock;
+				--If ( to_integer(unsigned(IgnitionDelayReg  )) > 0) THEN
+					-- IgnitionDelayReg <= IgnitionDelayReg - minusReg;
+				--END IF;	
+			END IF;
+		END PROCESS;
+		testPluginTriacDriverDelay_inst : testPluginTriacDriverDelay 
+			PORT MAP (
+				probe	 => IgnitionDelayReg ,
+				source	 => sourceReg
+			);
 end;
