@@ -8,15 +8,17 @@ USE IEEE.NUMERIC_STD.ALL;
 entity triacDriver is
   port (
     ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
-    switchOnOff, zeroPass    : in  STD_LOGIC;
+    switchOnOff, zeroPassDown, zeroPassUp    : in  STD_LOGIC;
 	 Clock,Reset, CountersClock  : in  STD_LOGIC;
 	 triacTriggerPulse : out STD_LOGIC
   );
 end;
 
 architecture driverJob of triacDriver is
+	type triacStateType is (idle, triacTriggerDelay, fireTrigger, fireDelay);
+	SIGNAL triacState : triacStateType;
 	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL SwitchOnOffReg, ZeroPassReg   : STD_LOGIC;
+	SIGNAL SwitchOnOffReg, ZeroPassDownReg, ZeroPassUpReg   : STD_LOGIC;
 	SIGNAL sourceReg : STD_LOGIC_VECTOR (1 DOWNTO 0);
 component testPluginTriacDriverDelay
 	PORT
@@ -28,18 +30,21 @@ end component;
   begin
 		PROCESS ( Reset, Clock )
 		BEGIN
-			IF Reset = '1' THEN
+			IF ( Reset = '1' ) THEN
 				IgnitionDelayReg <= (OTHERS => '0'); 
 				SwitchOnOffReg <= '0';
-				ZeroPassReg <= '0';
+				ZeroPassDownReg <= '0';
+				ZeroPassUpReg <= '0';
 				triacTriggerPulse <= '0';
-			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
+				triacState <= idle;
+			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
 				IgnitionDelayReg <= ignitionDelay; 
 				SwitchOnOffReg <= switchOnOff; 
-				ZeroPassReg <= zeroPass;
+				ZeroPassDownReg <= zeroPassDown;
+				ZeroPassUpReg <= zeroPassUp;
 				
 				--  trivial Code, so that all lines are used and not optimized away by the synthesis/fitter
-				IF (ZeroPassReg = '1') THEN
+				IF (ZeroPassDownReg = '1') THEN
 					triacTriggerPulse <= '0';
 				ELSIF ( (( to_integer(unsigned(IgnitionDelayReg  ))) > 0 ) AND (SwitchOnOffReg = '1'))  THEN
 					triacTriggerPulse <= '1';
