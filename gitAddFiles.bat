@@ -2,6 +2,7 @@ git add docs/*
 git add gitAddFiles.bat
 git add quartus-two/*
 git add quartus-two/rustLightPLL_1.*
+git add quartus-two/rustLightCounter*.*
 git add quartus-two/testPluginTriacDriverDelay.*
 git add quartus-two/rustLight.qsf
 git add quartus-two/basics.vhd

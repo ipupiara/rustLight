@@ -90,4 +90,17 @@ set_location_assignment PIN_W7 -to triacTriggerPulses[0]
 set_location_assignment PIN_G21 -to Clock
 set_global_assignment -name QIP_FILE testPluginTriacDriverDelay.qip
 set_global_assignment -name QIP_FILE rustLightPLL_1.qip
+set_location_assignment PIN_B14 -to zeroPassUp
+set_location_assignment PIN_E13 -to zeroPassDown
+set_location_assignment PIN_L1 -to altera_reserved_tms
+set_location_assignment PIN_L2 -to altera_reserved_tck
+set_location_assignment PIN_L5 -to altera_reserved_tdi
+set_location_assignment PIN_L4 -to altera_reserved_tdo
+set_location_assignment PIN_D1 -to ~ALTERA_ASDO_DATA1~
+set_location_assignment PIN_E2 -to ~ALTERA_FLASH_nCE_nCSO~
+set_location_assignment PIN_K2 -to ~ALTERA_DCLK~
+set_location_assignment PIN_K1 -to ~ALTERA_DATA0~
+set_location_assignment PIN_K22 -to ~ALTERA_nCEO~
+set_global_assignment -name QIP_FILE testcounter.qip
+set_global_assignment -name QIP_FILE rustLightCounter.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
