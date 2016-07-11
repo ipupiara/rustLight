@@ -8,20 +8,22 @@ ENTITY rustLight IS
 	GENERIC ( amtTriacs : INTEGER := 4 ) ;
 	PORT ( 	data : IN STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 				address : IN STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
-				Clock, Reset, Strobe, zeroPassDown, zeroPassUp, SwitchOnOff : IN STD_LOGIC;
+				Clock, Reset, Strobe,zeroPassUp1, zeroPassUp2, SwitchedOn : IN STD_LOGIC;
 				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) 
 			 ) ;
 END rustLight ;
 ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL SwitchOnOffReg, StrobeReg, countersClockSig: STD_LOGIC;
+	SIGNAL SwitchedOnReg, countersClockSig: STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
+	SIGNAL zeroPassUpAsync1, zeroPassUpAsync2: STD_LOGIC; 
+	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
 	
 	type triacDriverIF is 
 	RECORD
 		Dta : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-		SwitchNFF : STD_LOGIC;
+		SwitchedOn : STD_LOGIC;
 	END RECORD;	
 	
 	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
@@ -40,7 +42,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	COMPONENT triacDriver 
 		port (
 			 ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
-			 switchOnOff, zeroPassDown, zeroPassUp    : in  STD_LOGIC;
+			 switchedOn, zeroPassUp    : in  STD_LOGIC;
 			 Clock,Reset, CountersClock    : in  STD_LOGIC;
 			 triacTriggerPulse : out STD_LOGIC
 		  );
@@ -56,35 +58,39 @@ ARCHITECTURE Behavior OF rustLight IS
 
 	
 	BEGIN
-		StrobeReg <= Strobe;
-		--zeroPassDownReg <= zeroPassDown;
-		--countersClockSig <= CountersClock;
+--		StrobeReg <= Strobe;
 			
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
-			PORT MAP (AddressReg,DataReg & SwitchOnOffReg, MuxOutputReg);
+			PORT MAP (AddressReg,DataReg & SwitchedOnReg, MuxOutputReg);
 			
 		GEN_REG: 
 		for i1 in 0 to amtTriacs-1 generate
 			REGX : triacDriver port map
 				(MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-				 MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassDown, zeroPassUp, Clock, Reset,countersClockSig,
+				 MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUpAsync2, Clock, Reset,countersClockSig,
 				 triacTriggerPulses(i1));
 		end generate GEN_REG;	
 		
 		pll_1: rustLightPLL_1
 			PORT MAP (Clock, countersClockSig);
 			
-		PROCESS ( Reset, Clock, StrobeReg )
+		PROCESS ( Reset, Clock )
 		BEGIN
 			IF Reset = '1' THEN
 				DataReg <= (OTHERS => '0'); 
 				addressReg  <= (OTHERS => '0'); 
-				SwitchOnOffReg <= '0';
-			ELSIF ( (Clock'EVENT AND Clock = '1' ) AND (StrobeReg = '1') ) THEN
-				DataReg <= data; 
-				addressReg <= address;
-				SwitchOnOffReg <= switchOnOff; 
+				SwitchedOnReg <= '0';
+			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
+				zeroPassUpAsync1 <= zeroPassUp1 OR zeroPassUp2;
+				zeroPassUpAsync2 <= zeroPassUpAsync1;
+				strobeAsync1 <= Strobe;
+				strobeAsync2 <=  strobeAsync1;
+				IF (strobeAsync2 = '1')  THEN
+					DataReg <= data; 
+					addressReg <= address;
+					SwitchedOnReg <= switchedOn; 
+				END IF;
 			END IF ;
 		END PROCESS ;
 
