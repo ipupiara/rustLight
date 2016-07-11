@@ -15,7 +15,7 @@ entity triacDriver is
 end;
 
 architecture driverJob of triacDriver is
-	type triacStateType is (idle, triacTriggerDelay, fireTrigger, fireDelay);
+	type triacStateType is (idle, triacDelayLoading, triacTriggerDelay, fireTrigger, breakLoading, fireBreak);
 	SIGNAL triacState : triacStateType;
 	SIGNAL IgnitionDelayReg, IgnitionBreakReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
@@ -41,23 +41,50 @@ component rustLightCompare_1
 		aeb		: OUT STD_LOGIC 
 	);
 end component;
+
   begin
   		IgnitionDelayReg <= ignitionDelay; 
 		IgnitionBreakReg <= "1111111100";
 		SwitchedOnReg <= switchedOn; 
 		ZeroPassUpReg <= zeroPassUp;
 --		sloadSig <= '0';
-		PROCESS ( Reset, Clock )
-		BEGIN
-			IF ( Reset = '1' ) THEN
+		PROCESS ( Reset, Clock )	
+			procedure entryIdle is
+			begin
 				triacTriggerPulse <= '0';
 				triacState <= idle;
 				sloadIgnitionDelaySig <= '0';
 				cntEnaIgnitionDelaySig  <= '0';
+				sloadIgnitionBreakSig <= '0';
+				cntEnaIgnitionBreakSig <= '0';
+			end procedure entryIdle;
+		BEGIN
+			IF ( Reset = '1' ) THEN
+				entryIdle;
 			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
+				IF ((SwitchedOnReg = '0') OR (ZeroPassUpReg = '0')) THEN 
+					entryIdle; 
+				END IF;
+				IF ((triacState = idle) AND (ZeroPassUpReg = '1')) THEN
+					sloadIgnitionDelaySig <= '1';
+					triacState <= triacDelayLoading;
+				ElSIF (triacState = triacDelayLoading) THEN
+						sloadIgnitionDelaySig <= '0';
+						cntEnaIgnitionDelaySig <= '1';
+						triacState <= triacTriggerDelay;
+				END IF;
+				IF ((triacState = triacTriggerDelay) AND (rustLightIgnitionDelayCompare = '1'))  THEN
+					cntEnaIgnitionDelaySig <= '0';
+					triacTriggerPulse <= '1';
+					
+					-- ,,,,................
+					
+				END IF
+				
+				
 --				IgnitionDelayReg <= ignitionDelay; 
-				sloadIgnitionDelaySig <= '0';
-				cntEnaIgnitionDelaySig <= '0';
+				sloadIgnitionDelaySig <= '1';
+				cntEnaIgnitionDelaySig <= '1';
 				--  trivial Code, so that all lines are used and not optimized away by the synthesis/fitter
 				IF (ZeroPassUpReg = '0') THEN
 					triacTriggerPulse <= '0';
@@ -66,25 +93,25 @@ end component;
 				END IF;			
 			END IF ;
 		END PROCESS ;
-		rustLightIgnitionDelayCounter_inst : rustLightCounter PORT MAP (
+		rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
 			clock	 => countersClock,
 			cnt_en => cntEnaIgnitionDelaySig,
 			data	 => IgnitionDelayReg,
 			sload	 => sloadIgnitionDelaySig,
 			q	 => IgnitionDelayCounterReg
 		);
-		rustLightIgnitionDelayCompare_inst : rustLightCompare_1 PORT MAP (
+		rustLightIgnitionDelayCompare : rustLightCompare_1 PORT MAP (
 			dataa	 => IgnitionDelayCounterReg,
 			aeb	 => equalIgnitionDelaySig
 		);
-		rustLightIgnitionBreakCounter_inst : rustLightCounter PORT MAP (
+		rustLightIgnitionBreakCounter : rustLightCounter PORT MAP (
 			clock	 => Clock,
 			cnt_en => cntEnaIgnitionBreakSig,
 			data	 => IgnitionBreakReg,
 			sload	 => sloadIgnitionBreakSig,
 			q	 => IgnitionBreakCounterReg
 		);
-		rustLightIgnitionBreakCompare_inst : rustLightCompare_1 PORT MAP (
+		rustLightIgnitionBreakCompare : rustLightCompare_1 PORT MAP (
 			dataa	 => IgnitionBreakCounterReg,
 			aeb	 => equalIgnitionBreakSig
 		);
