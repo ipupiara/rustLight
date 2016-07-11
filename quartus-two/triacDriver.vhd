@@ -15,14 +15,17 @@ entity triacDriver is
 end;
 
 architecture driverJob of triacDriver is
-	type triacStateType is (idle, triacDelayLoading, triacTriggerDelay, fireTrigger, breakLoading, fireBreak);
+	type triacStateType is (idle, triacDelayLoading, triacTriggerDelay, triacIgnitionDurationLoading, fireIgnitionTrigger, 
+										fireBreakDurationLoading, fireBreak);
 	SIGNAL triacState : triacStateType;
-	SIGNAL IgnitionDelayReg, IgnitionBreakReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
+	SIGNAL IgnitionDelayReg, IgnitionDurationReg, fireBreakDurationReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL IgnitionBreakCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
+	SIGNAL IgnitionDurationCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
+	SIGNAL fireBreakDurationCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL SwitchedOnReg, ZeroPassUpReg   : STD_LOGIC;
 	SIGNAL sloadIgnitionDelaySig, cntEnaIgnitionDelaySig, equalIgnitionDelaySig : std_LOGIC;
-	SIGNAL sloadIgnitionBreakSig, cntEnaIgnitionBreakSig, equalIgnitionBreakSig : std_LOGIC;
+	SIGNAL sloadIgnitionDurationSig, cntEnaIgnitionDurationSig, equalIgnitionDurationSig : std_LOGIC;
+	SIGNAL sloadFireBreakDurationSig, cntEnaFireBreakDurationSig, equalFireBreakDurationSig: std_LOGIC;
 
 component rustLightCounter
 	PORT
@@ -44,7 +47,8 @@ end component;
 
   begin
   		IgnitionDelayReg <= ignitionDelay; 
-		IgnitionBreakReg <= "1111111100";
+		IgnitionDurationReg <=  "1111111100";
+		fireBreakDurationReg <= "0000000100";
 		SwitchedOnReg <= switchedOn; 
 		ZeroPassUpReg <= zeroPassUp;
 --		sloadSig <= '0';
@@ -55,8 +59,8 @@ end component;
 				triacState <= idle;
 				sloadIgnitionDelaySig <= '0';
 				cntEnaIgnitionDelaySig  <= '0';
-				sloadIgnitionBreakSig <= '0';
-				cntEnaIgnitionBreakSig <= '0';
+				sloadIgnitionDurationSig <= '0';
+				cntEnaIgnitionDurationSig <= '0';
 			end procedure entryIdle;
 		BEGIN
 			IF ( Reset = '1' ) THEN
@@ -68,30 +72,35 @@ end component;
 				IF ((triacState = idle) AND (ZeroPassUpReg = '1')) THEN
 					sloadIgnitionDelaySig <= '1';
 					triacState <= triacDelayLoading;
-				ElSIF (triacState = triacDelayLoading) THEN
+				ELSIF (triacState = triacDelayLoading) THEN
 						sloadIgnitionDelaySig <= '0';
 						cntEnaIgnitionDelaySig <= '1';
 						triacState <= triacTriggerDelay;
 				END IF;
-				IF ((triacState = triacTriggerDelay) AND (rustLightIgnitionDelayCompare = '1'))  THEN
+				IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySig = '1'))
+						OR ((triacState = fireBreak ) AND (equalFireBreakDurationSig = '1')) )   THEN
 					cntEnaIgnitionDelaySig <= '0';
+					cntEnaFireBreakDurationSig <= '0';
+					sloadIgnitionDurationSig <= '1';
+					triacState <= triacIgnitionDurationLoading;
+				ELSIF (triacState = triacIgnitionDurationLoading) THEN
+					sloadIgnitionDurationSig <= '0';
+					cntEnaIgnitionDurationSig <= '1';
+					triacState <= fireIgnitionTrigger;
 					triacTriggerPulse <= '1';
-					
-					-- ,,,,................
-					
-				END IF
-				
-				
---				IgnitionDelayReg <= ignitionDelay; 
-				sloadIgnitionDelaySig <= '1';
-				cntEnaIgnitionDelaySig <= '1';
-				--  trivial Code, so that all lines are used and not optimized away by the synthesis/fitter
-				IF (ZeroPassUpReg = '0') THEN
+				END IF;
+				IF ((triacState = fireIgnitionTrigger)  AND (equalIgnitionDurationSig = '1' ))  THEN
 					triacTriggerPulse <= '0';
-				ELSIF ( (( to_integer(unsigned(IgnitionDelayReg  ))) > 0 ) AND (SwitchedOnReg = '1'))  THEN
-					triacTriggerPulse <= '1';
-				END IF;			
-			END IF ;
+					cntEnaIgnitionDurationSig <= '0';
+					sloadFireBreakDurationSig <= '1';
+					triacState <= fireBreakDurationLoading;
+				ELSIF (triacState= fireBreakDurationLoading ) THEN
+					sloadFireBreakDurationSig <= '0';
+					cntEnaFireBreakDurationSig <= '1';
+					triacState <= fireBreak;
+				END IF;
+				
+			END IF;	
 		END PROCESS ;
 		rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
 			clock	 => countersClock,
@@ -104,15 +113,30 @@ end component;
 			dataa	 => IgnitionDelayCounterReg,
 			aeb	 => equalIgnitionDelaySig
 		);
-		rustLightIgnitionBreakCounter : rustLightCounter PORT MAP (
+		rustLightIgnitionDurationCounter : rustLightCounter PORT MAP (
 			clock	 => Clock,
-			cnt_en => cntEnaIgnitionBreakSig,
-			data	 => IgnitionBreakReg,
-			sload	 => sloadIgnitionBreakSig,
-			q	 => IgnitionBreakCounterReg
+			cnt_en => cntEnaIgnitionDurationSig,
+			data	 => IgnitionDurationReg,
+			sload	 => sloadIgnitionDurationSig,
+			q	 => IgnitionDurationCounterReg
 		);
-		rustLightIgnitionBreakCompare : rustLightCompare_1 PORT MAP (
-			dataa	 => IgnitionBreakCounterReg,
-			aeb	 => equalIgnitionBreakSig
+		rustLightIgnitionDurationCompare : rustLightCompare_1 PORT MAP (
+			dataa	 => IgnitionDurationCounterReg,
+			aeb	 => equalIgnitionDurationSig
 		);
+		
+		rustLightFireBreakDurationCounter : rustLightCounter PORT MAP (
+			clock	 => countersClock,
+			cnt_en => cntEnaFireBreakDurationSig,
+			data	 => fireBreakDurationReg,
+			sload	 => sloadFireBreakDurationSig,
+			q	 => fireBreakDurationCounterReg
+		);
+		rustLightFireBreakDurationCompare : rustLightCompare_1 PORT MAP (
+			dataa	 => fireBreakDurationCounterReg,
+			aeb	 => equalFireBreakDurationSig
+		);
+		
+		
+
 end;
