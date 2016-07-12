@@ -61,6 +61,8 @@ end component;
 				cntEnaIgnitionDelaySig  <= '0';
 				sloadIgnitionDurationSig <= '0';
 				cntEnaIgnitionDurationSig <= '0';
+				sloadFireBreakDurationSig  <= '0';
+				cntEnaFireBreakDurationSig  <= '0';
 			end procedure entryIdle;
 		BEGIN
 			IF ( Reset = '1' ) THEN
