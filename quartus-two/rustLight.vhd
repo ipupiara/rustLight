@@ -19,6 +19,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	SIGNAL zeroPassUpAsync1, zeroPassUpAsync2: STD_LOGIC; 
 	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
+	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	
 	type triacDriverIF is 
 	RECORD
@@ -59,10 +60,11 @@ ARCHITECTURE Behavior OF rustLight IS
 	
 	BEGIN
 --		StrobeReg <= Strobe;
+		XSig <= DataReg & SwitchedOnReg;
 			
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
-			PORT MAP (AddressReg,DataReg & SwitchedOnReg, MuxOutputReg);
+			PORT MAP (AddressReg,XSig, MuxOutputReg);
 			
 		GEN_REG: 
 		for i1 in 0 to amtTriacs-1 generate
