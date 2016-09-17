@@ -30,7 +30,7 @@ NET_ERR       err;
 
 
 OS_STK  AppTaskStartStk[APP_TASK_START_STK_SIZE];
-
+OS_STK  tcp_ip_Thread_MethodStk[tcp_ip_Thread_Method_STK_SIZE];
 
 /*
 **************************************************************************************************************
@@ -92,7 +92,7 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	NET_SOCK_PROTOCOL_UDP,
 	&err);
 	if (err != NET_SOCK_ERR_NONE) {
-//		err_printf("NetSock Open failed\n");
+		err_printf("NetSock Open failed\n");
 	}
 	
 	server_sock_addr_ip_size = sizeof(server_sock_addr_ip);
@@ -138,7 +138,7 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 				break;
 			}
 		} while (attempt_rx == DEF_YES);
-//		info_printf("Net received %i  bytes : %s\n",rx_size,tcp_ip_RecvBuffer);
+		info_printf("Net received %i  bytes : %s\n",rx_size,tcp_ip_RecvBuffer);
 		
 		secB = 0; //currentSec100Info.sec;
 		minB = 0; //currentSec100Info.min;
@@ -309,7 +309,7 @@ static  void  AppTaskCreate (void)
 	
 	
 #if uC_TCPIP_MODULE > 0
-	
+	INT8U retVal = 0;
 	retVal = OSTaskCreateExt(tcp_ip_Thread_Method,
 	(void *)0,
 	(OS_STK *)&tcp_ip_Thread_MethodStk[tcp_ip_Thread_Method_STK_SIZE - 1],
@@ -331,4 +331,19 @@ static  void  AppTaskCreate (void)
 	
 }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

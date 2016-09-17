@@ -43,7 +43,7 @@
 
 #define  APP_TASK_START_STK_SIZE          unique_STK_SIZE
 
-#define  tcp_ip_Thread_Method_STK_SIZE          unique_STK_SIZE
+#define  tcp_ip_Thread_Method_STK_SIZE          unique_STK_SIZE  
 #define  rtcPid_Thread_Method_STK_SIZE          unique_STK_SIZE
 
 #define  NET_OS_CFG_TMR_TASK_STK_SIZE        172

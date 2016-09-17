@@ -2087,3 +2087,94 @@ void  LED_Toggle (CPU_INT08U led)
              break;
     }
 }
+
+
+
+
+/*
+*    error and info print methods
+*/
+
+
+CPU_INT32U  amtErr;			// amt calls to err_printf
+CPU_INT32U  amtPrintErr;   // errors during print out, where err_printf should not be called
+CPU_INT08U  err_init_print;
+
+
+void init_err_printf()
+{
+	CPU_INT08U retVal;
+
+	amtErr = 0;
+	amtPrintErr = 0;
+	err_init_print = OS_NO_ERR;
+
+/*
+	if (err_init_print == OS_NO_ERR) {
+		BSP_USART_Init (APP_USART_COM, 57600);  // start with something slow, later increase
+
+		if (!(SerialQSem = OSSemCreate(0)))
+		// after initialisation, probable a character can be sent
+		// worst case we just loose it
+		{
+			//err_printf("could not create serialQSem\n");
+			err_init_print = 0xFF;
+		}
+	}
+	*/
+
+}
+	
+//char bufferS [serialStrSz] ;
+
+void info_printf( char *emsg, ...)
+{
+	va_list ap;
+//	CPU_INT08S  res;
+//	CPU_INT08U	err;
+//	serialMem* sm;
+
+	va_start(ap, emsg);
+/*
+	if (serialOn == 1) {
+		sm = (serialMem *) OSMemGet(serialMsgMem, &err);
+		if( sm != 0 ) {
+			res = vsnprintf(sm->serialStr, serialStrSz-1,  emsg, ap);
+			if (res < 0) res = serialStrSz;
+
+			sm->serialStr[serialStrSz-1] = 0;
+
+			//            attemptSendUSBString(sm->serialStr);     // temporarely commented out, pn 31 aug 12
+			
+			err = OSQPost(serialMsgTaskQ, (void *)sm);
+			if ( err != OS_NO_ERR) {
+				//	do something but dont loop--->> err_printf("Q post err tickHook\n");
+				OnPrintError();
+			}
+
+			} else	{  //OSMemGet
+			// do somethingg ???
+			OnPrintError();
+		}
+		} else {   // serialOn
+		// might turn on an led or so
+		OnPrintError();
+	}
+	
+	*/
+	va_end(ap);
+	//	printf(emsg, ap);
+}
+
+// just for usage with short strings, otherwise sizes of buffers need to be increased
+void  err_printf ( char *emsg, ...)
+{
+	va_list ap;
+
+	va_start(ap, emsg);
+	++ amtErr;
+	info_printf(emsg, ap);
+	va_end(ap);
+}
+
+
