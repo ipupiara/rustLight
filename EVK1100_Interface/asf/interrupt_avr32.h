@@ -54,7 +54,7 @@
 #define barrier()        asm ("")    // pn 5.7.12 just everything I found concering barrier() on the Internet
                                     // but what is that good for ?
 
-#  define sysreg_read(reg)               __get_system_register(reg)
+//#  define sysreg_read(reg)               __get_system_register(reg)
 //#define sysreg_read(reg)               __builtin_mfsr(reg)
 //#define Get_system_register(reg)         sysreg_read(reg)
 
@@ -125,7 +125,7 @@ typedef void (__interrupt *__int_handler)(void);
 #endif
 
 #if defined(__GNUC__) || defined(__DOXYGEN__) || defined(CONFIG_INTERRUPT_FORCE_INTC)
-#  include <intc.h>
+	#include <intc.h>
 
 /**
  * \brief Initialize interrupt vectors

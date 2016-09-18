@@ -802,6 +802,11 @@ typedef struct
   #define Set_system_register(sysreg, value)  __set_system_register(sysreg, value)
 #endif
 
+
+#define sysreg_read(reg) Get_system_register(reg)         
+#define sysreg_write(reg) Set_system_register(reg)
+
+
 //! @}
 
 

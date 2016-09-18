@@ -20,6 +20,10 @@
 #include <math.h>
 #include <string.h>
 
+//#include "sdramc.h"
+
+#include "UartPrint.h"
+
 /*
 **************************************************************************************************************
 *                                               VARIABLES

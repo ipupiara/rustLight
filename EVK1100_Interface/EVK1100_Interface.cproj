@@ -147,6 +147,9 @@
       <Value>../uC-TCPIP/NIC/Ether/PHY/DP83848</Value>
       <Value>../asf</Value>
       <Value>../asf/sdramc</Value>
+      <Value>../asf/UartPrint</Value>
+      <Value>../asf/EVK1100</Value>
+      <Value>../asf/intc</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
@@ -185,6 +188,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="APP" />
+    <Folder Include="asf\EVK1100" />
+    <Folder Include="asf\intc" />
+    <Folder Include="asf\UartPrint" />
     <Folder Include="asf\sdramc" />
     <Folder Include="BSP" />
     <Folder Include="asf" />
@@ -241,10 +247,25 @@
     <Compile Include="asf\compiler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="asf\EVK1100\conf_board.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\EVK1100\evk1100.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="asf\gpio.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="asf\gpio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\intc\exception.S">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\intc\intc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\intc\intc.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="asf\interrupt_avr32.h">
@@ -287,6 +308,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="asf\tpaste.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\UartPrint\UartPrint.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\UartPrint\UartPrint.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="BSP\bsp.c">
@@ -552,6 +579,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="asf\intc\exception.s82">
+      <SubType>compile</SubType>
+    </None>
     <None Include="BSP\link_newlib_uc3a0512.lds">
       <SubType>compile</SubType>
     </None>
