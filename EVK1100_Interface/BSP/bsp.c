@@ -1409,7 +1409,7 @@ void  BSP_USART_printf (CPU_INT08U com, CPU_CHAR *format, ...)
     va_end(vArgs);
     CPU_CRITICAL_EXIT();
 
-    BSP_USART_StrWr(com, (CPU_CHAR *)buffer);
+    BSP_USART_StrWr(com, (CPU_INT08U *)buffer);
 }
 
 
@@ -2103,7 +2103,7 @@ CPU_INT08U  err_init_print;
 
 void init_err_printf()
 {
-	CPU_INT08U retVal;
+//	CPU_INT08U retVal;
 
 	amtErr = 0;
 	amtPrintErr = 0;

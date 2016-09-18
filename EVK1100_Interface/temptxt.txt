@@ -1,3 +1,9 @@
 temptxt.txt
 
 Error	100	undefined reference to `OSTCBPrioTbl'	D:\projects\vhdl\rustLightProject\EVK1100_Interface\Debug/../uCOS-II/Source/os_task.c	787	1	EVK1100_Interface
+
+
+D:\downloads\electronics\embedded_Development\AVR_Atmel\at32uc3a\Micrium_UC3A0512_uCOS-II\Micrium\Software\EvalBoards\Atmel\EVK1100\AtmelStudio6\log.txt
+
+
+C:\Users\mira\Documents\Atmel Studio\6.2
