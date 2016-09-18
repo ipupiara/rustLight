@@ -183,7 +183,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="APP" />
+    <Folder Include="asf\sdramc" />
     <Folder Include="BSP" />
+    <Folder Include="asf" />
     <Folder Include="uC-TCPIP" />
     <Folder Include="uC-TCPIP\IF" />
     <Folder Include="uC-TCPIP\IF\Ether" />
@@ -229,6 +231,60 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="APP\ttcp_cfg.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\board.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\compiler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\gpio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\gpio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\interrupt_avr32.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\mrepeat.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\mt48lc16m16a2tg7e.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\pdca.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\pdca.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\pm.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\pm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\preprocessor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\rtc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\rtc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\sdramc\sdramc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\sdramc\sdramc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\stringz.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\tpaste.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="BSP\bsp.c">

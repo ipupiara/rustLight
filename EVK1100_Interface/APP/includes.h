@@ -44,3 +44,7 @@
     #include  <ttcp_cfg.h>
     #include  <ttcp.h>
 #endif
+
+
+#include      <pdca.h>
+#include      <sdramc.h>
