@@ -21,11 +21,12 @@
 *********************************************************************************************************
 */
 
+#include <includes.h>
+
 #define  MICRIUM_SOURCE
 
 #ifndef  OS_MASTER_FILE
 #define  OS_GLOBALS
-#include <ucos_ii.h>
 #endif
 
 /*

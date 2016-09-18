@@ -12,6 +12,9 @@
 *********************************************************************************************************
 */
 
+#define      OS_MASTER_FILE      1u
+#define      OS_GLOBALS          1u
+
 #include      <stdio.h>
 #include      <stdarg.h>
 

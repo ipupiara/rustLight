@@ -23,9 +23,11 @@
 
 #define  MICRIUM_SOURCE
 
-#ifndef  OS_MASTER_FILE
+//#ifndef  OS_MASTER_FILE
+//#include <ucos_ii.h>
+//#endif
+
 #include <ucos_ii.h>
-#endif
 
 /*$PAGE*/
 /*

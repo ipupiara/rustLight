@@ -110,7 +110,7 @@
 
 
                                        /* ---------------------- MESSAGE QUEUES ---------------------- */
-#define OS_Q_EN                   0    /* Enable (1) or Disable (0) code generation for QUEUES         */
+#define OS_Q_EN                   1    /* Enable (1) or Disable (0) code generation for QUEUES         */
 #define OS_Q_ACCEPT_EN            1    /*     Include code for OSQAccept()                             */
 #define OS_Q_DEL_EN               1    /*     Include code for OSQDel()                                */
 #define OS_Q_FLUSH_EN             1    /*     Include code for OSQFlush()                              */

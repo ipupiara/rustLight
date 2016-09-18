@@ -1,1 +1,3 @@
 temptxt.txt
+
+Error	100	undefined reference to `OSTCBPrioTbl'	D:\projects\vhdl\rustLightProject\EVK1100_Interface\Debug/../uCOS-II/Source/os_task.c	787	1	EVK1100_Interface
