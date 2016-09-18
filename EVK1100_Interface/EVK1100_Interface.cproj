@@ -450,10 +450,10 @@
     <Compile Include="uCOS-II\Ports\AVR32\UC3\AtmelStudio6\os_cpu.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="uCOS-II\Ports\AVR32\UC3\AtmelStudio6\os_cpu_c.c">
+    <Compile Include="uCOS-II\Ports\AVR32\UC3\AtmelStudio6\os_cpu_a.S">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="uCOS-II\Source\os_cfg_r.h">
+    <Compile Include="uCOS-II\Ports\AVR32\UC3\AtmelStudio6\os_cpu_c.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="uCOS-II\Source\os_core.c">

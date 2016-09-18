@@ -14,6 +14,12 @@
 
 #include  <includes.h>
 
+#include <stdlib.h>
+//#include <malloc.h>
+#include <stdarg.h>
+#include <math.h>
+#include <string.h>
+
 /*
 **************************************************************************************************************
 *                                               VARIABLES
@@ -304,8 +310,27 @@ AppInit_TCPIP();                                                    /* Initializ
 **************************************************************************************************************
 */
 
+// bad luck the following methods need (more or less) to be implemented as well  (or some own defines
+// needed to be implemented into
+// the framework code, what is not so nice for future possible upgrades
+
+// moreover it is not possible to compile an application with OS_TASK_SW_HOOK_EN set to 0
+// because this will give a build error in any case what shows that the
+// framework code itself is not so completely finished in its development.
+// so it seems the easiest just to implement these method, since probable they get optimized out anyhow
+
+void          App_TaskCreateHook      (OS_TCB          *ptcb){}
+void          App_TaskDelHook         (OS_TCB          *ptcb){}
+void          App_TaskIdleHook        (void){}
+void          App_TaskStatHook        (void){}
+void          App_TCBInitHook         (OS_TCB          *ptcb){}
+void          App_TaskSwHook          (void){}
+
+void          App_TimeTickHook        (void)   {}
+	
+
 static  void  AppTaskCreate (void)
-{
+{  
 	
 	
 #if uC_TCPIP_MODULE > 0

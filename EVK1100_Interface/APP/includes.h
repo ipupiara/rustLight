@@ -20,6 +20,9 @@
 
 #include      <cpu.h>
 #include      <app_cfg.h>
+#include      <os_cfg.h>
+#include	  <os_cpu.h>
+
 #include      <ucos_ii.h>
 
 #include      <lib_def.h>

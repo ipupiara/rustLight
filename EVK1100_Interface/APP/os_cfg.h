@@ -27,9 +27,9 @@
 
 
                                        /* ---------------------- MISCELLANEOUS ----------------------- */
-#define OS_APP_HOOKS_EN           0    /* Application-defined hooks are called from the uC/OS-II hooks */
+#define OS_APP_HOOKS_EN           1    /* Application-defined hooks are called from the uC/OS-II hooks */
 #define OS_ARG_CHK_EN             0    /* Enable (1) or Disable (0) argument checking                  */
-#define OS_CPU_HOOKS_EN           0    /* uC/OS-II hooks are found in the processor port files         */
+#define OS_CPU_HOOKS_EN           1    /* uC/OS-II hooks are found in the processor port files         */
 
 #define OS_DEBUG_EN               1    /* Enable(1) debug variables                                    */
 
@@ -46,9 +46,9 @@
 #define OS_MAX_QS                 7    /* Max. number of queue control blocks in your application      */
 #define OS_MAX_TASKS             20    /* Max. number of tasks in your application, MUST be >= 2       */
 
-#define OS_SCHED_LOCK_EN          0    /* Include code for OSSchedLock() and OSSchedUnlock()           */
+#define OS_SCHED_LOCK_EN          1    /* Include code for OSSchedLock() and OSSchedUnlock()           */
 
-#define OS_TICK_STEP_EN           0    /* Enable tick stepping feature for uC/OS-View                  */
+#define OS_TICK_STEP_EN           1    /* Enable tick stepping feature for uC/OS-View                  */
 #define OS_TICKS_PER_SEC        100    /* Set the number of ticks in one second                        */
 
 
@@ -71,11 +71,11 @@
 #define OS_TASK_STAT_EN           0    /*     Enable (1) or Disable(0) the statistics task             */
 #define OS_TASK_STAT_STK_CHK_EN   1    /*     Check task stacks from statistic task                    */
 #define OS_TASK_SUSPEND_EN        1    /*     Include code for OSTaskSuspend() and OSTaskResume()      */
-#define OS_TASK_SW_HOOK_EN        0    /*     Include code for OSTaskSwHook()                          */
+#define OS_TASK_SW_HOOK_EN        1    /*     Include code for OSTaskSwHook()                          */
 
 
                                        /* ----------------------- EVENT FLAGS ------------------------ */
-#define OS_FLAG_EN                0    /* Enable (1) or Disable (0) code generation for EVENT FLAGS    */
+#define OS_FLAG_EN                1    /* Enable (1) or Disable (0) code generation for EVENT FLAGS    */
 #define OS_FLAG_ACCEPT_EN         1    /*     Include code for OSFlagAccept()                          */
 #define OS_FLAG_NAME_EN			1		// pn 17. sept 2016....  seems that the versions I use net vs. os are not 100% compatible
 #define OS_FLAG_DEL_EN            1    /*     Include code for OSFlagDel()                             */
@@ -103,7 +103,7 @@
 
 
                                        /* ---------------- MUTUAL EXCLUSION SEMAPHORES --------------- */
-#define OS_MUTEX_EN               0    /* Enable (1) or Disable (0) code generation for MUTEX          */
+#define OS_MUTEX_EN               1    /* Enable (1) or Disable (0) code generation for MUTEX          */
 #define OS_MUTEX_ACCEPT_EN        1    /*     Include code for OSMutexAccept()                         */
 #define OS_MUTEX_DEL_EN           1    /*     Include code for OSMutexDel()                            */
 #define OS_MUTEX_QUERY_EN         1    /*     Include code for OSMutexQuery()                          */
@@ -134,7 +134,7 @@
 #define OS_TIME_DLY_HMSM_EN       1    /*     Include code for OSTimeDlyHMSM()                         */
 #define OS_TIME_DLY_RESUME_EN     1    /*     Include code for OSTimeDlyResume()                       */
 #define OS_TIME_GET_SET_EN        1    /*     Include code for OSTimeGet() and OSTimeSet()             */
-#define OS_TIME_TICK_HOOK_EN      0    /*     Include code for OSTimeTickHook()                        */
+#define OS_TIME_TICK_HOOK_EN      1    /*     Include code for OSTimeTickHook()                        */
 
 
                                        /* --------------------- TIMER MANAGEMENT --------------------- */

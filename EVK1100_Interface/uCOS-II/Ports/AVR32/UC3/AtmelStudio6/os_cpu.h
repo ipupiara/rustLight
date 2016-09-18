@@ -20,6 +20,9 @@
 *********************************************************************************************************
 */
 
+#ifndef  os_cpu_h
+#define  os_cpu_h
+
 #include  <cpu.h>
 
 #ifdef    OS_CPU_GLOBALS
@@ -79,3 +82,6 @@ void  OSStartHighRdy(void);
 
 void  OSCtxRestore(INT32U *sp);
 void  OSIntCtxRestore(INT32U *sp);
+
+
+#endif
