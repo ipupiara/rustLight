@@ -145,6 +145,8 @@
       <Value>../uC-TCPIP/IF</Value>
       <Value>../uC-TCPIP/NIC/Ether/PHY</Value>
       <Value>../uC-TCPIP/NIC/Ether/PHY/DP83848</Value>
+      <Value>../asf</Value>
+      <Value>../asf/sdramc</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
