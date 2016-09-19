@@ -14,7 +14,7 @@
 
 #include "includes.h"
 #include "UartPrint.h"
-#include "udc.h"
+//#include "udc.h"
 
 
 
@@ -26,6 +26,7 @@ CPU_INT32U  debugUartLoopCnt, debugUartPosFlag;
  *
  *
  */
+#define SerialQMethod_STK_SIZE   unique_STK_SIZE
 
 OS_STK  SerialQMethodStk[SerialQMethod_STK_SIZE];
 //static  void  SerialQMethod (void *p_arg);
@@ -398,7 +399,7 @@ void init_err_printf()
         
         if (err_init_print != OS_NO_ERR ) {OnPrintError(); }
 
-    retVal = OSTaskCreateExt(SerialQMethod,                                       /* Create the start task                                    */
+    retVal = OSTaskCreateExt(SerialQMethod,                                    
                     (void *)0,
                     (OS_STK *)&SerialQMethodStk[SerialQMethod_STK_SIZE - 1],
                     SerialQ_TASK_PRIO,
@@ -411,7 +412,7 @@ void init_err_printf()
     if (retVal !=  OS_NO_ERR  ) {OnPrintError(); }                // at least count the errros for debugging reasons
     
 
-    OSTaskNameSet(CalculationController_TASK_PRIO, (CPU_CHAR *)"SerQ", &retVal);
+    OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &retVal);
 
 	serialOn = (err_init_print == OS_NO_ERR);
     info_printf("serial print ready for use\n");

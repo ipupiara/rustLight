@@ -189,7 +189,6 @@
   <ItemGroup>
     <Folder Include="APP" />
     <Folder Include="asf\EVK1100" />
-    <Folder Include="asf\intc" />
     <Folder Include="asf\UartPrint" />
     <Folder Include="asf\sdramc" />
     <Folder Include="BSP" />
@@ -259,15 +258,6 @@
     <Compile Include="asf\gpio.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="asf\intc\exception.S">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="asf\intc\intc.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="asf\intc\intc.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="asf\interrupt_avr32.h">
       <SubType>compile</SubType>
     </Compile>
@@ -283,19 +273,7 @@
     <Compile Include="asf\pdca.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="asf\pm.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="asf\pm.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="asf\preprocessor.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="asf\rtc.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="asf\rtc.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="asf\sdramc\sdramc.c">
@@ -579,9 +557,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="asf\intc\exception.s82">
-      <SubType>compile</SubType>
-    </None>
     <None Include="BSP\link_newlib_uc3a0512.lds">
       <SubType>compile</SubType>
     </None>

@@ -21,7 +21,7 @@
 **************************************************************************************************************
 */
 
-#define     FOSC0                        (12000000)                     /* Frequency: Hz                                            */
+//#define     FOSC0                        (12000000)           /* Frequency: Hz  , already defined in evk1100.h to the same value (12 Mhz)*/
 #define     RCOSC                       AVR32_PM_RCOSC_FREQUENCY        /* Internal RC oscillator frequency                         */
 
 /*
@@ -30,7 +30,7 @@
 **************************************************************************************************************
 */
 
-#define     LED_COUNT                            8
+#define     LED_COUNT                            
 
 #define     LED1_GPIO                   AVR32_PIN_PB27
 #define     LED2_GPIO                   AVR32_PIN_PB28

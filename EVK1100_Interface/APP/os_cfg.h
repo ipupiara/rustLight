@@ -97,7 +97,7 @@
 
                                        /* --------------------- MEMORY MANAGEMENT -------------------- */
 #define OS_MEM_NAME_EN			1  // pn 17sept16:   compatibility issue ??
-#define OS_MEM_EN                 0    /* Enable (1) or Disable (0) code generation for MEMORY MANAGER */
+#define OS_MEM_EN                 1    /* Enable (1) or Disable (0) code generation for MEMORY MANAGER */
 #define OS_MEM_NAME_SIZE         16    /*     Determine the size of a memory partition name            */
 #define OS_MEM_QUERY_EN           1    /*     Include code for OSMemQuery()                            */
 

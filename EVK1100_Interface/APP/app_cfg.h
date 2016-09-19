@@ -58,7 +58,7 @@
 
 #define  APP_TASK_START_PRIO                1
 #define  OS_TASK_TMR_PRIO                   5
-
+#define  SerialQ_TASK_PRIO                   6
 
 #define tcp_ip_Thread_TASK_PRIO              12
 
