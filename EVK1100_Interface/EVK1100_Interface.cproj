@@ -191,8 +191,8 @@
     <Folder Include="asf\EVK1100" />
     <Folder Include="asf\UartPrint" />
     <Folder Include="asf\sdramc" />
-    <Folder Include="BSP" />
     <Folder Include="asf" />
+    <Folder Include="BSP\" />
     <Folder Include="uC-TCPIP" />
     <Folder Include="uC-TCPIP\IF" />
     <Folder Include="uC-TCPIP\IF\Ether" />
@@ -235,6 +235,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="APP\os_cfg.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="APP\tcpipApp.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="APP\tcpipApp.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="APP\ttcp_cfg.h">

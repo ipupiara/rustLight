@@ -348,7 +348,6 @@ static  void  SerialQMethod (void *p_arg)
 
 void init_err_printf()
 {
-	CPU_INT08U retVal;
     amtUSBInterrupts = 0;
     amtUSBNonSofInterrupts = 0;
 	serialOn = 0;
@@ -367,12 +366,14 @@ void init_err_printf()
 			err_init_print = 0xFF;
 		}
 	}
-
+	
+	if (err_init_print == OS_NO_ERR)  {
 #ifdef usePDCA
 	initPDCA(&err_init_print);
 #endif
-
+	}
 	memset(serialStrBuf,0x00,sizeof(serialStrBuf));
+	
 	if (err_init_print == OS_NO_ERR) {
 		serialMsgMem = OSMemCreate(&serialStrBuf[0], serialStrBufSz, sizeof(serialMem), &err_init_print);
 	}
@@ -380,7 +381,7 @@ void init_err_printf()
 		OSMemNameSet(serialMsgMem, (INT8U*)"serialMsgMem", &err_init_print);
 	}
 	if (err_init_print == OS_NO_ERR) {
-		serialMsgTaskQ = OSQCreate(&serialTaskQMsg[0], serialTaskQMsgSz);
+		serialMsgTaskQ = OSQCreate(&serialTaskQMsg[0], serialTaskQMsgSz);  
 		if (! serialMsgTaskQ) err_init_print = 0xFF;
 	}
 
@@ -392,32 +393,26 @@ void init_err_printf()
 		} else {
 			err_init_print = 0xFF;
 		}
-
+		BSP_USART_IntEn (APP_USART_COM, (1<< AVR32_USART_IER_TXRDY));
 	}
-	BSP_USART_IntEn (APP_USART_COM, (1<< AVR32_USART_IER_TXRDY));
-#endif
+#endif 
         
-        if (err_init_print != OS_NO_ERR ) {OnPrintError(); }
-
-    retVal = OSTaskCreateExt(SerialQMethod,                                    
-                    (void *)0,
-                    (OS_STK *)&SerialQMethodStk[SerialQMethod_STK_SIZE - 1],
-                    SerialQ_TASK_PRIO,
-                    SerialQ_TASK_PRIO,
-                    (OS_STK *)&SerialQMethodStk[0],
-                    SerialQMethod_STK_SIZE,
-                    (void *)0,
-                    OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
-    
-    if (retVal !=  OS_NO_ERR  ) {OnPrintError(); }                // at least count the errros for debugging reasons
-    
-
+    if (err_init_print == OS_NO_ERR )  {
+		err_init_print = OSTaskCreateExt(SerialQMethod,                                    
+									(void *)0,
+									(OS_STK *)&SerialQMethodStk[SerialQMethod_STK_SIZE - 1],
+									SerialQ_TASK_PRIO,
+									SerialQ_TASK_PRIO,
+									(OS_STK *)&SerialQMethodStk[0],
+									SerialQMethod_STK_SIZE,
+									(void *)0,
+									OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
+	}
+        
     OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &retVal);
-
 	serialOn = (err_init_print == OS_NO_ERR);
+	
     info_printf("serial print ready for use\n");
-    info_printf("second test ok\n");
-     info_printf("third test ok\n");
 }
 
 
