@@ -28,6 +28,29 @@ dispatchMsg dispatchMsgArray[dispatchQMemSz];
 void* dispatchQMsgPtrArray[dispatchQSz];
 
 
+INT8U shrUnmaskByte(INT8U sRight,INT32U msk, INT32U val)
+{
+	INT32U sVal = (val >> sRight);
+	INT8U  res = (INT8U) sVal & msk;
+	return res;
+}
+
+
+INT16U shrUnmaskWord(INT8U sRight,INT32U msk, INT32U val)
+{
+	INT32U sVal = (val >> sRight);
+	INT16U  res = (INT16U) sVal & msk;
+	return res;
+}
+
+void dispatchMesg(dispatchMsg* dmPtr)
+{
+	INT32U msgW =  dmPtr->dispatchData;
+	INT16U portVal = shrUnmaskWord(0,0x000003FF,msgW);
+	INT8U  adrVal  = shrUnmaskByte(16,0x00000003,msgW);
+	INT8U  enaVal  = shrUnmaskByte(24,0x00000001,msgW);
+}
+
 void initIfDipatcher()
 {
 	INT8U	err_init = OS_NO_ERR;
@@ -59,7 +82,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
 		if (err == OS_NO_ERR) {
-				
+			dispatchMesg(dmPtr);				
 	
 			err = OSMemPut(dispatchMsgMem, (void *)dmPtr);
 			if (err != OS_NO_ERR) {
