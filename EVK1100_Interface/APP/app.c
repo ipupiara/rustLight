@@ -13,21 +13,16 @@
 */
 
 #include  <includes.h>
-
 #include <stdlib.h>
 //#include <malloc.h>
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-
 //#include "sdramc.h"
-
 #include "UartPrint.h"
-
-
-
 #if uC_TCPIP_MODULE > 0
-#include "tcpipApp.h"                                                
+#include "tcpipApp.h"     
+#include "ifDispatcher.h"                                           
 #endif
 
 
@@ -74,7 +69,7 @@ int  main (void)
 	BSP_Init();          
 	
 	init_err_printf();
-	info_printf("EVK1100_Interface to cyclone-III rustlight fpga starting")                                             
+	info_printf("EVK1100_Interface to cyclone-III rustlight fpga starting");                                             
 
     OSTaskCreateExt(AppTaskStart,                                      
                     (void *)0,
@@ -122,11 +117,9 @@ static  void  AppTaskStart (void *p_arg)
     OSStatInit();                                                       /* Determine CPU capacity                                  */
 #endif
 
-
 #if uC_TCPIP_MODULE > 0
 	AppInit_TCPIP();                                               
 #endif
-
 
     AppTaskCreate();                                                
 
@@ -179,8 +172,6 @@ void          App_TimeTickHook        (void)   {}
 
 static  void  AppTaskCreate (void)
 {  
-	
-	
 	
 #if uC_TCPIP_MODULE > 0
 	startTcpipThread();

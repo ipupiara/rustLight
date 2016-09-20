@@ -15,7 +15,7 @@
 #include <string.h>
 
 //#include "sdramc.h"
-
+#include "tcpipApp.h"
 #include "UartPrint.h"
 
 NET_IP_ADDR   ip;
@@ -25,19 +25,12 @@ NET_ERR       err;
 
 OS_STK  tcp_ip_Thread_MethodStk[tcp_ip_Thread_Method_STK_SIZE];
 
-
 #define tcp_ip_Buffer_Size   256
 
 char   tcp_ip_RecvBuffer [tcp_ip_Buffer_Size];
 char   tcp_ip_SendBuffer [tcp_ip_Buffer_Size];
 
-
-#define UDP_SERVER_PORT 10001
-
-
-
-
-static void AppInit_TCPIP (void)
+void AppInit_TCPIP (void)
 {
 	#if EMAC_CFG_MAC_ADDR_SEL == EMAC_MAC_ADDR_SEL_CFG
 	NetIF_MAC_Addr[0] = 0x00;
@@ -54,7 +47,7 @@ static void AppInit_TCPIP (void)
 
 	err = Net_Init();                                                  
 
-	ip      = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.155",  &err);
+	ip      = NetASCII_Str_to_IP((CPU_CHAR *) ownIPAddress,  &err);
 	msk     = NetASCII_Str_to_IP((CPU_CHAR *)"255.255.255.0", &err);
 	gateway = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.1",   &err);
 
@@ -98,7 +91,7 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	server_sock_addr_ip.Family = NET_SOCK_ADDR_FAMILY_IP_V4;
 	server_sock_addr_ip.Addr = NET_UTIL_HOST_TO_NET_32(NET_SOCK_ADDR_IP_WILD_CARD);
 	server_sock_addr_ip.Port = NET_UTIL_HOST_TO_NET_16(UDP_SERVER_PORT);
-	
+#warning: 	" tobe debugged  in method  tcp_ip_Thread_Method    ip.addr in server_sock_add_ip"
 	NetSock_Bind((NET_SOCK_ID ) sock,
 	(NET_SOCK_ADDR *)&server_sock_addr_ip,
 	(NET_SOCK_ADDR_LEN) NET_SOCK_ADDR_SIZE,
@@ -113,15 +106,15 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 			client_sock_addr_ip_size = sizeof(client_sock_addr_ip);
 			
 			rx_size = NetSock_RxDataFrom((NET_SOCK_ID ) sock,
-			(void *) tcp_ip_RecvBuffer,
-			(CPU_INT16S ) sizeof(tcp_ip_RecvBuffer),
-			(CPU_INT16S ) NET_SOCK_FLAG_NONE,
-			(NET_SOCK_ADDR *)&client_sock_addr_ip,
-			(NET_SOCK_ADDR_LEN *)&client_sock_addr_ip_size,
-			(void *) 0,
-			(CPU_INT08U ) 0,
-			(CPU_INT08U *) 0,
-			(NET_ERR *)&err);
+								(void *) tcp_ip_RecvBuffer,
+								(CPU_INT16S ) sizeof(tcp_ip_RecvBuffer),
+								(CPU_INT16S ) NET_SOCK_FLAG_NONE,
+								(NET_SOCK_ADDR *)&client_sock_addr_ip,
+								(NET_SOCK_ADDR_LEN *)&client_sock_addr_ip_size,
+								(void *) 0,
+								(CPU_INT08U ) 0,
+								(CPU_INT08U *) 0,
+								(NET_ERR *)&err);
 			switch (err) {
 				case NET_SOCK_ERR_NONE:
 				attempt_rx = DEF_NO;
@@ -160,39 +153,6 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	}
 }
 
-
-
-static void AppInit_TCPIP (void)
-{
-	#if EMAC_CFG_MAC_ADDR_SEL == EMAC_MAC_ADDR_SEL_CFG
-	NetIF_MAC_Addr[0] = 0x00;
-	NetIF_MAC_Addr[1] = 0x50;
-	NetIF_MAC_Addr[2] = 0xC2;
-	NetIF_MAC_Addr[3] = 0x25;
-	NetIF_MAC_Addr[4] = 0x60;
-	NetIF_MAC_Addr[5] = 0x01;
-	#endif
-
-	#if uC_TTCP_MODULE > 0
-	BSP_USART_Init(TTCP_COMM_SEL, 38400);                            
-	#endif
-
-	err = Net_Init();                                                  
-
-	ip      = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.155",  &err);
-	msk     = NetASCII_Str_to_IP((CPU_CHAR *)"255.255.255.0", &err);
-	gateway = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.1",   &err);
-
-	err     = NetIP_CfgAddrThisHost(ip, msk);
-	err     = NetIP_CfgAddrDfltGateway(gateway);
-
-	#if uC_TTCP_MODULE > 0
-	TTCP_Init();                                                      
-	#endif
-	info_printf("tcp/ip network initialized ...\n");
-}
-
-
 void startTcpipThread()
 {
 	INT8U retVal = 0;
@@ -208,6 +168,8 @@ void startTcpipThread()
 	
 	if (retVal !=  OS_NO_ERR  ) {
 		err_printf("error create sec100 tcp_ip Thread\n");
+	}  else {
+		info_printf("tcp/ip started as %s:%d\n",ownIPAddress,UDP_SERVER_PORT);
 	}
 
 	#if (OS_TASK_NAME_SIZE > 10)

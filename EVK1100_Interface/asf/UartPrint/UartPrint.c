@@ -409,10 +409,10 @@ void init_err_printf()
 									OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
 	}
         
-    OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &retVal);
+    OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &err_init_print);
 	serialOn = (err_init_print == OS_NO_ERR);
 	
-    info_printf("serial print ready for use\n");
+    info_printf("serial print ready for use: %d\n",(err_init_print == OS_NO_ERR ));
 }
 
 

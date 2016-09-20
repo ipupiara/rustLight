@@ -228,6 +228,12 @@
     <Compile Include="APP\app_cfg.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="APP\ifDispatcher.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="APP\ifDispatcher.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="APP\includes.h">
       <SubType>compile</SubType>
     </Compile>

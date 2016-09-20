@@ -5,17 +5,15 @@
  *  Author: mira
  */ 
 
-
 #ifndef TCPIPAPP_H_
 #define TCPIPAPP_H_
 
-
-#include "tcpipApp.h"
-
+#define ownIPAddress  "192.168.1.155"
+#define UDP_SERVER_PORT 10001
 
 void startTcpipThread();
 
-static  void  AppInit_TCPIP(void);
+void  AppInit_TCPIP(void);
 
 
 #endif /* TCPIPAPP_H_ */
