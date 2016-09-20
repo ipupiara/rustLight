@@ -17,6 +17,7 @@
 //#include "sdramc.h"
 #include "tcpipApp.h"
 #include "UartPrint.h"
+#include "ifDispatcher.h"
 
 NET_IP_ADDR   ip;
 NET_IP_ADDR   msk;
@@ -72,15 +73,13 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	NET_SOCK_RTN_CODE rx_size, tx_size;
 	CPU_BOOLEAN attempt_rx;
 	NET_ERR err;
-	CPU_INT08U secB;
-	CPU_INT16S minB;
-	CPU_INT08U continueInt;
-	
-	continueInt = 1;
+	dispatchMsg* dmPtr;
+	INT8U continueInt = 1;
+
 	sock = NetSock_Open( NET_SOCK_ADDR_FAMILY_IP_V4,
-	NET_SOCK_TYPE_DATAGRAM,
-	NET_SOCK_PROTOCOL_UDP,
-	&err);
+					NET_SOCK_TYPE_DATAGRAM,
+					NET_SOCK_PROTOCOL_UDP,
+					&err);
 	if (err != NET_SOCK_ERR_NONE) {
 		err_printf("NetSock Open failed\n");
 	}
@@ -93,9 +92,9 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	server_sock_addr_ip.Port = NET_UTIL_HOST_TO_NET_16(UDP_SERVER_PORT);
 #warning: 	" tobe debugged  in method  tcp_ip_Thread_Method    ip.addr in server_sock_add_ip"
 	NetSock_Bind((NET_SOCK_ID ) sock,
-	(NET_SOCK_ADDR *)&server_sock_addr_ip,
-	(NET_SOCK_ADDR_LEN) NET_SOCK_ADDR_SIZE,
-	(NET_ERR *)&err);
+				(NET_SOCK_ADDR *)&server_sock_addr_ip,
+				(NET_SOCK_ADDR_LEN) NET_SOCK_ADDR_SIZE,
+				(NET_ERR *)&err);
 	if (err != NET_SOCK_ERR_NONE) {
 		NetSock_Close(sock, &err);
 		err_printf("Net sock Bind failed\n");
@@ -129,21 +128,26 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 			}
 		} while (attempt_rx == DEF_YES);
 		info_printf("Net received %i  bytes : %X\n",rx_size,tcp_ip_RecvBuffer);
+		dmPtr = OSMemGet(dispatchMsgMem,&err);
+		if (err != OS_NO_ERR) {
+			err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
+		}  else {
+			dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
+			err = OSQPost(dispatchMsgQ,dmPtr);
+			if (err != OS_NO_ERR) {
+				err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
+			}		
+		}
 		
-		secB = 0; //currentSec100Info.sec;
-		minB = 0; //currentSec100Info.min;
-		//   not threadsave, but if ever an accident happens, it is of no consequence in this case.... murphis law...  :-)
-		
-		//		snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer),"dcfAlways Server at min %i sec %i - still prototye",minB,secB);
-		snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer),"msg received");
+		snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer)," msg received");
 		
 		tx_size = NetSock_TxDataTo((NET_SOCK_ID ) sock,
-		(void *) tcp_ip_SendBuffer,
-		(CPU_INT16S ) strlen((char*) tcp_ip_SendBuffer)+ 1,
-		(CPU_INT16S ) NET_SOCK_FLAG_NONE,
-		(NET_SOCK_ADDR *)&client_sock_addr_ip,
-		(NET_SOCK_ADDR_LEN) client_sock_addr_ip_size,
-		(NET_ERR *)&err);
+					(void *) tcp_ip_SendBuffer,
+					(CPU_INT16S ) strlen((char*) tcp_ip_SendBuffer)+ 1,
+					(CPU_INT16S ) NET_SOCK_FLAG_NONE,
+					(NET_SOCK_ADDR *)&client_sock_addr_ip,
+					(NET_SOCK_ADDR_LEN) client_sock_addr_ip_size,
+					(NET_ERR *)&err);
 		
 		info_printf("net sent (ret error code %i) %i bytes : &s\n",err,tx_size, tcp_ip_SendBuffer);
 	}

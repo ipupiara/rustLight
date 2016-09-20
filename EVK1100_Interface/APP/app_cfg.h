@@ -47,7 +47,7 @@
 
 #define  NET_OS_CFG_TMR_TASK_STK_SIZE        172
 #define  NET_OS_CFG_IF_RX_TASK_STK_SIZE      384
-
+#define  ifDispatcher_Thread_Method_STK_SIZE   unique_STK_SIZE
 
 /*
 **************************************************************************************************************
@@ -59,7 +59,8 @@
 #define  OS_TASK_TMR_PRIO                   5
 #define  SerialQ_TASK_PRIO                   6
 
-#define tcp_ip_Thread_TASK_PRIO              12
+#define tcp_ip_Thread_TASK_PRIO              7
+#define ifDispatcher_Thread_TASK_PRIO         10
 
 
 #define  NET_OS_CFG_IF_RX_TASK_PRIO            20   // lower prio as recommended in tcp-ip manuals, pn 21 aug 12

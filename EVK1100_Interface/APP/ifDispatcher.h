@@ -10,6 +10,16 @@
 #define IFDISPATCHER_H_
 
 
+typedef struct dispatchMsg {
+	INT32U dispatchData;
+} dispatchMsg;
+
+OS_MEM * dispatchMsgMem;
+OS_EVENT*  dispatchMsgQ;
+
+void initIfDipatcher();
+
+void startIfDispatcher();
 
 
 

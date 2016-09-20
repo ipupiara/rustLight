@@ -121,6 +121,8 @@ static  void  AppTaskStart (void *p_arg)
 	AppInit_TCPIP();                                               
 #endif
 
+	initIfDipatcher();
+	
     AppTaskCreate();                                                
 
     while (1) {                                                         /* Task body, always written as an infinite loop.          */
@@ -176,7 +178,7 @@ static  void  AppTaskCreate (void)
 #if uC_TCPIP_MODULE > 0
 	startTcpipThread();
 #endif
-	
+	startIfDispatcher();
 }
 
 

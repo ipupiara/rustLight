@@ -33,7 +33,8 @@ OS_STK  SerialQMethodStk[SerialQMethod_STK_SIZE];
 
 
 #define serialStrBufSz    14
-#define serialStrSz    80    // pn 9.June2012 attention: a value of e.g. 123 will give an unhandled exception.... ????
+#define serialStrSz    128    // pn 9.June2012 attention: a value of e.g. 123 will give an unhandled exception.... ????
+#warning: "exception tobe tested ???"
 typedef struct serialMem {
   char serialStr [serialStrSz];  // ATTENTION serialStr must be at first place, so that &(serialMem) == &(serialStr)
 } serialMem;
