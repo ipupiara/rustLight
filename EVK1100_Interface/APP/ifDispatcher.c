@@ -28,6 +28,24 @@ dispatchMsg dispatchMsgArray[dispatchQMemSz];
 void* dispatchQMsgPtrArray[dispatchQSz];
 
 
+void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
+{
+	volatile  avr32_gpio_port_t  *gpio_port;
+
+	gpio_port        = &AVR32_GPIO.port[pin >> 5];
+	INT8U pinOfs     = pin & 0x1F;
+	INT16U mask     = (1<< pinOfs);
+	
+	gpio_port->oders = mask; // The GPIO output driver is enabled for that pin.
+	gpio_port->gpers = mask; // The GPIO module controls that pin.
+	if (val == 0) {
+		gpio_port->ovrc  = mask;
+	} else {
+		gpio_port->ovrs  = mask;
+	}
+}
+		                 
+
 INT8U shrUnmaskByte(INT8U sRight,INT32U msk, INT32U val)
 {
 	INT32U sVal = (val >> sRight);
