@@ -20,13 +20,28 @@
 
 OS_STK  dispatcherMethod_STK[ifDispatcher_Thread_Method_STK_SIZE];
 
-#define dispatchQMemSz    14
+#define dispatchQMemSz    32
 
 #define dispatchQSz  dispatchQMemSz
 
+typedef struct pinData                                         
+{
+	INT8U     pinNr;
+	INT8S     bytePos;
+} pinPosData;
+
+#define pinPosArraySize  13
+
+pinPosData pinPosArray [pinPosArraySize] = {{1,0},{2,1},{3,2},
+								{1,3},{2,4},{3,5},
+								{1,6},{2,7},{3,8},
+								{1,9},{2,16},{3,17},
+								{1,24} };
+									
+#define strobePin	123		
+
 dispatchMsg dispatchMsgArray[dispatchQMemSz];
 void* dispatchQMsgPtrArray[dispatchQSz];
-
 
 void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
 {
@@ -43,30 +58,35 @@ void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
 	} else {
 		gpio_port->ovrs  = mask;
 	}
+	
 }
-		                 
 
-INT8U shrUnmaskByte(INT8U sRight,INT32U msk, INT32U val)
+
+INT32U shrUnmaskDWord(INT8U sLeft, INT32U sVal)
 {
-	INT32U sVal = (val >> sRight);
-	INT8U  res = (INT8U) sVal & msk;
+	INT32U msk = (1 << sLeft);
+	INT32U  res = (sVal & msk);
 	return res;
 }
 
 
-INT16U shrUnmaskWord(INT8U sRight,INT32U msk, INT32U val)
-{
-	INT32U sVal = (val >> sRight);
-	INT16U  res = (INT16U) sVal & msk;
-	return res;
-}
 
-void dispatchMesg(dispatchMsg* dmPtr)
-{
-	INT32U msgW =  dmPtr->dispatchData;
-	INT16U portVal = shrUnmaskWord(0,0x000003FF,msgW);
-	INT8U  adrVal  = shrUnmaskByte(16,0x00000003,msgW);
-	INT8U  enaVal  = shrUnmaskByte(24,0x00000001,msgW);
+//  this method uses timedelay statements, but they
+//should be as short as possible concerning the hardware driven
+void dispatchMesg(dispatchMsg* dmPtr)   
+{										
+	INT32U msgW;
+	msgW = dmPtr->dispatchData;
+	INT8U i1 ;
+	for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
+		int a = i1;
+		INT8U valNotZero = (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0);
+		setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
+	}	
+	OSTimeDlyHMSM(0,0,0,1);
+	setPinAsOutputWithValue( strobePin,1);
+	OSTimeDlyHMSM(0,0,0,1);
+	setPinAsOutputWithValue( strobePin,0);
 }
 
 void initIfDipatcher()
@@ -100,6 +120,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
 		if (err == OS_NO_ERR) {
+			info_printf("tcpip received %X\n",dmPtr);
 			dispatchMesg(dmPtr);				
 	
 			err = OSMemPut(dispatchMsgMem, (void *)dmPtr);
@@ -134,7 +155,7 @@ void startIfDispatcher()
 		}
 
 		#if (OS_TASK_NAME_SIZE > 10)
-			OSTaskNameSet(tcp_ip_Thread_TASK_PRIO, (CPU_CHAR *)"tcp_ip", &retVal);
+			OSTaskNameSet(tcp_ip_Thread_TASK_PRIO, (INT8U *)"tcp_ip", &retVal);
 		#endif
 		
 		
