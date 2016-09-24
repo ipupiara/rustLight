@@ -68,8 +68,7 @@ int  main (void)
     OSInit();  	
 	BSP_Init();          
 	
-	init_err_printf();
-	info_printf("EVK1100_Interface to cyclone-III rustlight fpga starting");                                             
+	init_err_printf();                                           
 
     OSTaskCreateExt(AppTaskStart,                                      
                     (void *)0,
@@ -85,7 +84,9 @@ int  main (void)
     OSTaskNameSet(APP_TASK_START_PRIO, (CPU_CHAR *)"Startup", &err);
 #endif
 
-    OSStart();                                                        
+    OSStart();     
+	                                                   
+	info_printf("EVK1100_Interface to cyclone-III rustlight fpga starting\n");
 
     return (0);                                                        
 }
@@ -118,14 +119,17 @@ static  void  AppTaskStart (void *p_arg)
 #endif
 
 #if uC_TCPIP_MODULE > 0
-	AppInit_TCPIP();                                               
+//	AppInit_TCPIP();                                               
 #endif
 
-	initIfDipatcher();
+//	initIfDipatcher();
 	
-    AppTaskCreate();                                                
+//    AppTaskCreate();                                                
 
-    while (1) {                                                         /* Task body, always written as an infinite loop.          */
+
+	INT32U   loopCnt = 0;
+    while (1) {          
+		loopCnt ++;
         for (i = 1; i <= 6; i++) {
             LED_On(i);
             OSTimeDlyHMSM(0, 0, 1, 0);
@@ -136,6 +140,7 @@ static  void  AppTaskStart (void *p_arg)
             OSTimeDlyHMSM(0, 0, 1, 0);
             LED_Off(9 - i);
         }
+		info_printf("AppTaskStart loopCnt: %u \n",loopCnt);
     }
 }
 

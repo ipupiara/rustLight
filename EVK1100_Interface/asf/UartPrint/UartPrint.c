@@ -412,8 +412,6 @@ void init_err_printf()
         
     OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &err_init_print);
 	serialOn = (err_init_print == OS_NO_ERR);
-	
-    info_printf("serial print ready for use: %d\n",(err_init_print == OS_NO_ERR ));
 }
 
 

@@ -79,7 +79,6 @@ void dispatchMesg(dispatchMsg* dmPtr)
 	msgW = dmPtr->dispatchData;
 	INT8U i1 ;
 	for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
-		int a = i1;
 		INT8U valNotZero = (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0);
 		setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
 	}	

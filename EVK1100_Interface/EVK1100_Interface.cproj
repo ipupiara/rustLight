@@ -18,11 +18,11 @@
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfVersion>2.11.1</AsfVersion>
     <avrtoolinterface>JTAG</avrtoolinterface>
-    <avrtool>com.atmel.avrdbg.tool.avrone</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.avrdragon</avrtool>
     <com_atmel_avrdbg_tool_jtagicemkii>
       <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
       <ToolName>JTAGICE mkII</ToolName>
@@ -52,22 +52,18 @@
       </ToolOptions>
     </com_atmel_avrdbg_tool_jtagicemkii>
     <com_atmel_avrdbg_tool_avrone>
-      <ToolType xmlns="">com.atmel.avrdbg.tool.avrone</ToolType>
-      <ToolName xmlns="">AVR ONE!</ToolName>
-      <ToolNumber xmlns="">00000BEBC98B</ToolNumber>
-      <KeepTimersRunning xmlns="">true</KeepTimersRunning>
-      <OverrideVtor xmlns="">false</OverrideVtor>
-      <OverrideVtorValue xmlns="">
-      </OverrideVtorValue>
-      <Channel xmlns="">
+      <ToolType>com.atmel.avrdbg.tool.avrone</ToolType>
+      <ToolName>AVR ONE!</ToolName>
+      <ToolNumber>00000BEBC98B</ToolNumber>
+      <Channel>
         <host>127.0.0.1</host>
         <port>57863</port>
         <ssl>False</ssl>
       </Channel>
-      <ToolOptions xmlns="">
+      <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>12000000</JtagDbgClock>
+          <JtagDbgClock>0</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -81,7 +77,7 @@
     </com_atmel_avrdbg_tool_avrone>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
     <BootSegment>2</BootSegment>
@@ -97,6 +93,28 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
+    <com_atmel_avrdbg_tool_avrdragon>
+      <ToolOptions>
+        <InterfaceProperties>
+          <JtagEnableExtResetOnStartSession>true</JtagEnableExtResetOnStartSession>
+          <JtagInChain>false</JtagInChain>
+          <JtagDevicesBefore>0</JtagDevicesBefore>
+          <JtagDevicesAfter>0</JtagDevicesAfter>
+          <JtagInstrBitsBefore>0</JtagInstrBitsBefore>
+          <JtagInstrBitsAfter>0</JtagInstrBitsAfter>
+          <JtagSelectedDeviceIndexInChain>
+          </JtagSelectedDeviceIndexInChain>
+          <JtagDbgClock>0</JtagDbgClock>
+          <JtagDaisyChainDevices>
+          </JtagDaisyChainDevices>
+        </InterfaceProperties>
+        <InterfaceName>JTAG</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.avrdragon</ToolType>
+      <ToolNumber>
+      </ToolNumber>
+      <ToolName>AVR Dragon</ToolName>
+    </com_atmel_avrdbg_tool_avrdragon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -123,67 +141,67 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <Avr32Gcc>
-  <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
-  <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
-  <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
-  <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
-  <avr32gcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../APP</Value>
-      <Value>../BSP</Value>
-      <Value>../uCOS-II/Source</Value>
-      <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
-      <Value>../uC-CPU</Value>
-      <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
-      <Value>../uC-CPU/Cfg/Template</Value>
-      <Value>../uC-LIB</Value>
-      <Value>../uC-LIB/Cfg/Template</Value>
-      <Value>../uC-TCPIP/Source</Value>
-      <Value>../uC-TCPIP/OS/uCOS-II</Value>
-      <Value>../uC-TCPIP/NIC/Ether/Atmel_MACB</Value>
-      <Value>../uC-TCPIP/IF/Ether</Value>
-      <Value>../uC-TCPIP/IF</Value>
-      <Value>../uC-TCPIP/NIC/Ether/PHY</Value>
-      <Value>../uC-TCPIP/NIC/Ether/PHY/DP83848</Value>
-      <Value>../asf</Value>
-      <Value>../asf/sdramc</Value>
-      <Value>../asf/UartPrint</Value>
-      <Value>../asf/EVK1100</Value>
-      <Value>../asf/intc</Value>
-    </ListValues>
-  </avr32gcc.compiler.directories.IncludePaths>
-  <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>True</avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>
-  <avr32gcc.compiler.optimization.DebugLevel>Maximum (-g3)</avr32gcc.compiler.optimization.DebugLevel>
-  <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
-  <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
-  <avr32gcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>libm</Value>
-    </ListValues>
-  </avr32gcc.linker.libraries.Libraries>
-  <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
-  <avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>True</avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>
-  <avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>True</avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>
-  <avr32gcc.linker.miscellaneous.LinkerFlags>-T ../BSP/link_newlib_uc3a0512.lds</avr32gcc.linker.miscellaneous.LinkerFlags>
-  <avr32gcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../../../BSP</Value>
-      <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
-      <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
-      <Value>../uC-LIB/Ports/AVR32/UC3/AtmelStudio6</Value>
-    </ListValues>
-  </avr32gcc.assembler.general.IncludePaths>
-  <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
-  <avr32gcc.preprocessingassembler.general.IncludePaths>
-    <ListValues>
-      <Value>../BSP</Value>
-      <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
-      <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
-    </ListValues>
-  </avr32gcc.preprocessingassembler.general.IncludePaths>
-  <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
-</Avr32Gcc>
+        <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
+        <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
+        <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
+        <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
+        <avr32gcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../APP</Value>
+            <Value>../BSP</Value>
+            <Value>../uCOS-II/Source</Value>
+            <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
+            <Value>../uC-CPU</Value>
+            <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
+            <Value>../uC-CPU/Cfg/Template</Value>
+            <Value>../uC-LIB</Value>
+            <Value>../uC-LIB/Cfg/Template</Value>
+            <Value>../uC-TCPIP/Source</Value>
+            <Value>../uC-TCPIP/OS/uCOS-II</Value>
+            <Value>../uC-TCPIP/NIC/Ether/Atmel_MACB</Value>
+            <Value>../uC-TCPIP/IF/Ether</Value>
+            <Value>../uC-TCPIP/IF</Value>
+            <Value>../uC-TCPIP/NIC/Ether/PHY</Value>
+            <Value>../uC-TCPIP/NIC/Ether/PHY/DP83848</Value>
+            <Value>../asf</Value>
+            <Value>../asf/sdramc</Value>
+            <Value>../asf/UartPrint</Value>
+            <Value>../asf/EVK1100</Value>
+            <Value>../asf/intc</Value>
+          </ListValues>
+        </avr32gcc.compiler.directories.IncludePaths>
+        <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>True</avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>
+        <avr32gcc.compiler.optimization.DebugLevel>Maximum (-g3)</avr32gcc.compiler.optimization.DebugLevel>
+        <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
+        <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
+        <avr32gcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avr32gcc.linker.libraries.Libraries>
+        <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
+        <avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>True</avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>
+        <avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>True</avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>
+        <avr32gcc.linker.miscellaneous.LinkerFlags>-T ../BSP/link_newlib_uc3a0512.lds</avr32gcc.linker.miscellaneous.LinkerFlags>
+        <avr32gcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../../../BSP</Value>
+            <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
+            <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
+            <Value>../uC-LIB/Ports/AVR32/UC3/AtmelStudio6</Value>
+          </ListValues>
+        </avr32gcc.assembler.general.IncludePaths>
+        <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
+        <avr32gcc.preprocessingassembler.general.IncludePaths>
+          <ListValues>
+            <Value>../BSP</Value>
+            <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
+            <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
+          </ListValues>
+        </avr32gcc.preprocessingassembler.general.IncludePaths>
+        <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
+      </Avr32Gcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
