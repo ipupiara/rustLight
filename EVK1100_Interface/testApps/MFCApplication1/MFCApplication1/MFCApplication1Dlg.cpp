@@ -64,6 +64,8 @@ BEGIN_MESSAGE_MAP(mfc_if_Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, &mfc_if_Dlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_SEND, &mfc_if_Dlg::OnBnClickedSend)
 END_MESSAGE_MAP()
 
 
@@ -152,3 +154,15 @@ HCURSOR mfc_if_Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void mfc_if_Dlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+void mfc_if_Dlg::OnBnClickedSend()
+{
+	// TODO: Add your control notification handler code here
+}
