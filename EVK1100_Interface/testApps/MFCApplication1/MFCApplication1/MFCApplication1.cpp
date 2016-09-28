@@ -38,13 +38,6 @@ BOOL mfc_if_App::InitInstance()
 {
 	CWinApp::InitInstance();
 
-	if (!AfxSocketInit())
-	{
-		AfxMessageBox(IDP_SOCKETS_INIT_FAILED);
-		return FALSE;
-	}
-
-
 	AfxEnableControlContainer();
 
 	// Create the shell manager, in case the dialog contains

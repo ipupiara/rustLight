@@ -51,6 +51,9 @@ END_MESSAGE_MAP()
 
 mfc_if_Dlg::mfc_if_Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_MFCAPPLICATION1_DIALOG, pParent)
+	, triacAddress(0)
+	, triacValue(0)
+	, triacEnabled(TRUE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -58,14 +61,19 @@ mfc_if_Dlg::mfc_if_Dlg(CWnd* pParent /*=NULL*/)
 void mfc_if_Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_ADDRESS, triacAddress);
+	DDV_MinMaxUInt(pDX, triacAddress, 0, 3);
+	DDX_Text(pDX, IDC_VALUE, triacValue);
+	DDV_MinMaxUInt(pDX, triacValue, 0, 1023);
+	DDX_Check(pDX, IDC_CHECKEnabled, triacEnabled);
 }
 
 BEGIN_MESSAGE_MAP(mfc_if_Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &mfc_if_Dlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_SEND, &mfc_if_Dlg::OnBnClickedSend)
+	ON_BN_CLICKED(IDC_CHECKEnabled, &mfc_if_Dlg::OnBnClickedCheckenabled)
 END_MESSAGE_MAP()
 
 
@@ -155,14 +163,18 @@ HCURSOR mfc_if_Dlg::OnQueryDragIcon()
 }
 
 
-
-void mfc_if_Dlg::OnBnClickedButton1()
+void mfc_if_Dlg::OnBnClickedSend()
 {
 	// TODO: Add your control notification handler code here
+	UINT32 msgValue = 0x00;
+	UpdateData(TRUE);
+	msgValue = triacValue;
+	msgValue |= (triacEnabled << 24);
+	msgValue |= (triacAddress << 16);
 }
 
 
-void mfc_if_Dlg::OnBnClickedSend()
+void mfc_if_Dlg::OnBnClickedCheckenabled()
 {
 	// TODO: Add your control notification handler code here
 }
