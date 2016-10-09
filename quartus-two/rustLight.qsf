@@ -88,7 +88,6 @@ set_location_assignment PIN_V5 -to triacTriggerPulses[2]
 set_location_assignment PIN_W6 -to triacTriggerPulses[1]
 set_location_assignment PIN_W7 -to triacTriggerPulses[0]
 set_location_assignment PIN_G21 -to Clock
-set_global_assignment -name QIP_FILE testPluginTriacDriverDelay.qip
 set_global_assignment -name QIP_FILE rustLightPLL_1.qip
 set_location_assignment PIN_B14 -to zeroPassUp
 set_location_assignment PIN_E13 -to zeroPassDown
@@ -105,4 +104,5 @@ set_global_assignment -name QIP_FILE rustLightCounter.qip
 set_global_assignment -name QIP_FILE rustLightCompare_1.qip
 set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY OFF -section_id eda_simulation
 set_global_assignment -name VECTOR_WAVEFORM_FILE rustLight_01..vwf
+set_global_assignment -name QIP_FILE controllerInputChecker.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "rustlightUdpClient.h"
+
 
 // mfc_if_Dlg dialog
 class mfc_if_Dlg : public CDialogEx
@@ -31,10 +33,12 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+	RustlightUdpClient  rustlightUpdClient;
 public:
 	afx_msg void OnBnClickedSend();
 	UINT triacAddress;
 	UINT triacValue;
 	afx_msg void OnBnClickedCheckenabled();
 	BOOL triacEnabled;
+	CString logText;
 };

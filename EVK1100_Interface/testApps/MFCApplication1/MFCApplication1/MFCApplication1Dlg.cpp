@@ -54,6 +54,7 @@ mfc_if_Dlg::mfc_if_Dlg(CWnd* pParent /*=NULL*/)
 	, triacAddress(0)
 	, triacValue(0)
 	, triacEnabled(TRUE)
+	, logText(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -66,6 +67,7 @@ void mfc_if_Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_VALUE, triacValue);
 	DDV_MinMaxUInt(pDX, triacValue, 0, 1023);
 	DDX_Check(pDX, IDC_CHECKEnabled, triacEnabled);
+	DDX_Text(pDX, IDC_EDITLog, logText);
 }
 
 BEGIN_MESSAGE_MAP(mfc_if_Dlg, CDialogEx)
@@ -109,6 +111,9 @@ BOOL mfc_if_Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	rustlightUpdClient.initRustlightTcpIp("192.168.1.155","10001");
+
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

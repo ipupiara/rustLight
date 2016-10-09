@@ -43,6 +43,13 @@ component rustLightCompare_1
 		datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0)
 	);
 end component;
+component controllerInputChecker
+	PORT
+	(
+		probe		: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
+		source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
+	);
+end component;
 
   begin
   		IgnitionDelayReg <= ignitionDelay; 
@@ -130,7 +137,11 @@ end component;
 			dataa	 => fireBreakDurationCounterReg,
 			datab	 => fireBreakDurationReg
 		);
-		
+		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
+			IgnitionDelayReg => probe_sig,
+			source	 => source_sig
+		);
+
 		
 
 end;

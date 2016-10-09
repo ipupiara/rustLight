@@ -20,6 +20,7 @@
 
 	RustlightUdpClient::~RustlightUdpClient()
 	{
+		exitRustlightTcpIp();
 	}
 
 	void   RustlightUdpClient::info_printf(char *emsg, ...)
