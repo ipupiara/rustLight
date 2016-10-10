@@ -27,18 +27,23 @@ public:
 protected:
 	HICON m_hIcon;
 
+	RustlightUdpClient* rustlightUpdClient;
+
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-	RustlightUdpClient  rustlightUpdClient;
 public:
+	const wchar_t *mfc_if_Dlg::GetWC(const char *c);
 	afx_msg void OnBnClickedSend();
 	UINT triacAddress;
 	UINT triacValue;
 	afx_msg void OnBnClickedCheckenabled();
 	BOOL triacEnabled;
 	CString logText;
+	static void logT(const char *emsg, ...);
+	void addLogText(const char *emsg, ...);
+	static mfc_if_Dlg* singleton;
 };

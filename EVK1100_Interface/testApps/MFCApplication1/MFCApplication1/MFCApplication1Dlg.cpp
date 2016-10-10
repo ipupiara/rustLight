@@ -112,7 +112,14 @@ BOOL mfc_if_Dlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 
-	rustlightUpdClient.initRustlightTcpIp("192.168.1.155","10001");
+	
+//	rustlightUpdClient = new RustlightUdpClient(mp);
+
+	singleton = this;
+
+	rustlightUpdClient = new RustlightUdpClient(&logT);
+
+	rustlightUpdClient->initRustlightTcpIp("192.168.1.155","10001");
 
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -182,4 +189,40 @@ void mfc_if_Dlg::OnBnClickedSend()
 void mfc_if_Dlg::OnBnClickedCheckenabled()
 {
 	// TODO: Add your control notification handler code here
+}
+
+
+
+const wchar_t * mfc_if_Dlg::GetWC(const char *ch)
+{
+	const size_t cSize = strlen(ch) + 1;
+	wchar_t* wc = new wchar_t[cSize];
+	mbstowcs(wc, ch, cSize);
+
+	return wc;
+}
+
+mfc_if_Dlg*  mfc_if_Dlg::singleton = NULL;
+
+void mfc_if_Dlg::logT(const char *emsg, ...)
+{
+	va_list ap;
+	va_start(ap, emsg);
+
+	mfc_if_Dlg::singleton->addLogText(emsg, ap);
+
+	va_end(ap);
+}
+
+void mfc_if_Dlg::addLogText(const char *emsg, ...)
+{
+	va_list ap;
+	va_start(ap, emsg);
+
+	const wchar_t* wc = GetWC(emsg);
+
+	logText.AppendFormat(wc,ap);
+	delete wc;
+	UpdateData(false);
+	va_end(ap);
 }

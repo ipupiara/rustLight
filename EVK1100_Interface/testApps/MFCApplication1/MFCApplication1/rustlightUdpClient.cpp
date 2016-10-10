@@ -18,12 +18,17 @@
 	
 	}
 
+	RustlightUdpClient::RustlightUdpClient(printFunction i_printf)
+	{
+		info_printf = i_printf;
+	}
+
 	RustlightUdpClient::~RustlightUdpClient()
 	{
 		exitRustlightTcpIp();
 	}
 
-	void   RustlightUdpClient::info_printf(char *emsg, ...)
+/*	void   RustlightUdpClient::info_printf(char *emsg, ...)
 	{
 		va_list ap;
 
@@ -31,6 +36,7 @@
 		fprintf(stderr, emsg, ap);
 		va_end(ap);
 	}
+	*/
 
 	void RustlightUdpClient::exitRustlightTcpIp()
 	{
@@ -98,8 +104,8 @@
 
 		gethostname(host_name, sizeof(host_name));
 
-//		hostP = gethostbyname(host_name);
-		hostP == NULL;
+		hostP = gethostbyname(host_name);
+//		hostP == NULL;
 		if ((res = getaddrinfo(host_name,NULL,NULL,&hAddr)) != 0) {
 
 		} else {

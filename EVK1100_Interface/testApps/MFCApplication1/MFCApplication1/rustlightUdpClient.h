@@ -6,11 +6,13 @@
 #define defaultClientAddress    "168.192.0.151"
 #define defaultClientPort   "1234"
 
+typedef void (*printFunction)(const char *emsg, ...);
+
 class RustlightUdpClient
 {
 public:
-
 	RustlightUdpClient();
+	RustlightUdpClient(printFunction i_printf);
 	virtual ~RustlightUdpClient();
 	int initRustlightTcpIp(char* cliAddress, char* cliPort);
 
@@ -22,7 +24,7 @@ protected:
 	SOCKET rustlightSocket;
 	sockaddr_in server;
 	sockaddr_in client;
-	void info_printf(char *emsg, ...);
+	printFunction info_printf;
 };
 
 #endif
