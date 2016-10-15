@@ -214,15 +214,21 @@ void mfc_if_Dlg::logT(const char *emsg, ...)
 	va_end(ap);
 }
 
+#define sbuffersize 1024
 void mfc_if_Dlg::addLogText(const char *emsg, ...)
 {
 	va_list ap;
 	va_start(ap, emsg);
+	char sbuffer[sbuffersize];
 
-	const wchar_t* wc = GetWC(emsg);
 
-	logText.AppendFormat(wc,ap);
-	delete wc;
+//	const wchar_t* wc = GetWC(emsg);
+
+//	logText.AppendFormat(wc,ap);
+	snprintf(sbuffer, sbuffersize - 1, emsg, ap);
+	sbuffer[sbuffersize] = 0x00;
+	logText.Append(sbuffer);
+//	delete wc;
 	UpdateData(false);
 	va_end(ap);
 }
