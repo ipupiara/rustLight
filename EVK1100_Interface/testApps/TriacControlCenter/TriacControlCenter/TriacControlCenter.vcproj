@@ -200,7 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rustlightUdpClient.cpp"
+				RelativePath=".\rustlightUpdClient.cpp"
 				>
 			</File>
 			<File
@@ -253,7 +253,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rustlightUdpClient.h"
+				RelativePath=".\rustlightUpdClient.h"
 				>
 			</File>
 			<File

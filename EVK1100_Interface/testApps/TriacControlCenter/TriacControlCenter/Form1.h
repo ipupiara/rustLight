@@ -26,6 +26,9 @@ namespace TriacControlCenter {
 	/// </summary>
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
+	protected:
+		static	Form1^  singleton ;
+//		RustlightUpdClient* pRustlightUpdClient;
 	public:
 		Form1(void)
 		{
@@ -195,10 +198,12 @@ namespace TriacControlCenter {
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 				 singleton = this;
 				 this->onCheckBox->Checked = true;
-				 rustlightUpdClient = new RustlightUdpClient(&logT);
 
-				 rustlightUpdClient->initRustlightTcpIp("192.168.1.155","10001");
+				 RustlightUpdClient::initClass(&addToLog);
+
+				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("192.168.1.155","10001");
 			 }
+
 	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 System::Decimal dec = this->addressField->Value;
 				 System::Int32 adr = Decimal::ToInt32(dec);
@@ -216,17 +221,17 @@ namespace TriacControlCenter {
 
 			
 			 }
+
 	private: System::Void quitButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 this->Close();
 			 }
+
 	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
+
 private: System::Void label1_Click_1(System::Object^  sender, System::EventArgs^  e) {
 		 }
 
-
-		static	Form1^  singleton ;
-		RustlightUpdClient rustlightUpdClient;
 
 public:	static System::Void addToLog(const char *emsg, ...)
 		{
@@ -239,6 +244,7 @@ public:	static System::Void addToLog(const char *emsg, ...)
 		}
 
 		#define sbuffersize 1024
+
 public:	System::Void addLogText(const char *emsg, ...)
 		{
 			va_list ap;
