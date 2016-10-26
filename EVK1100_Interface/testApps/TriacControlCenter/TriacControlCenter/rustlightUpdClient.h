@@ -2,13 +2,20 @@
 #ifndef RustlightUpdClient_h
 #define RustlightUpdClient_h
 
+using namespace System;
+using namespace System::Text;
+using namespace System::IO;
+using namespace System::Net;
+using namespace System::Net::Sockets;
+using namespace System::Collections;
+
 #define BufferSIZE 100
 #define defaultClientAddress    "168.192.0.151"
-#define defaultClientPort   "1234"
+#define defaultClientPort   1234
 
 typedef void (*printFunction)(const char *emsg, ...);
 
-class RustlightUpdClient
+class RustlightUpdClient  : protected UdpClient
 {
 public:
 	RustlightUpdClient();

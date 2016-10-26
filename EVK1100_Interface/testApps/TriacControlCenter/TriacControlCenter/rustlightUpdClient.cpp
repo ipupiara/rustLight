@@ -13,11 +13,13 @@ using namespace System::Collections;
 
 
 	RustlightUpdClient::RustlightUpdClient()
+		:UdpClient(defaultClientAddress, defaultClientPort)
 	{
 	
 	}
 
 	RustlightUpdClient::RustlightUpdClient(printFunction i_printf)
+		:UdpClient(defaultClientAddress, defaultClientPort)
 	{
 		info_printf = i_printf;
 	}
@@ -32,7 +34,7 @@ using namespace System::Collections;
 
 	void RustlightUpdClient::initClass(printFunction i_printf)
 	{
-//		rustlightUpdClientSingleton = new RustlightUpdClient (i_printf);
+		rustlightUpdClientSingleton = new RustlightUpdClient (i_printf);
 	}
 
 
@@ -48,10 +50,11 @@ using namespace System::Collections;
 
 	void RustlightUpdClient::exitRustlightTcpIp()
 	{
-/*		closesocket(rustlightSocket);
+		Close();
+//		closesocket(rustlightSocket);
 		info_printf( "socket closed\n");
-		WSACleanup();
-		info_printf( "aft wsa cleanup\n"); */
+//		WSACleanup();
+//		info_printf( "aft wsa cleanup\n"); */
 	}
 
 	int RustlightUpdClient::initRustlightTcpIp(char* cliAddress, char* cliPort)
@@ -172,6 +175,22 @@ using namespace System::Collections;
 	int RustlightUpdClient::communicateMsg(System::Int32 msg)
 	{
 		int res = 0;
+//		array<System::Int32>  = 
+			// UdpClient.Send (Byte[], Int32)  
+
+		array<Byte>^ sendBytes = Encoding::ASCII->GetBytes( "Is anybody there" );
+		try
+		{
+		   udpClient->Send( sendBytes, sendBytes->Length );
+		}
+		catch ( Exception^ e ) 
+		{
+		   Console::WriteLine( e->ToString() );
+		}
+
+
+
+
 /*		int cnt;
 		char send_buffer[BufferSIZE];
 		char receive_buffer[BufferSIZE];
