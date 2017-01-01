@@ -19,7 +19,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	SIGNAL zeroPassUpAsync1, zeroPassUpAsync2: STD_LOGIC; 
 	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
-	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
+	SIGNAL XSig, YSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	
 	type triacDriverIF is 
 	RECORD
@@ -75,20 +75,33 @@ ARCHITECTURE Behavior OF rustLight IS
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
 			
-		GEN_REG: 
-		for i1 in 0 to amtTriacs-1 generate
-			REGX : triacDriver port map
-				 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-				 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUp => zeroPassUpAsync2, 
-				 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
-				 triacTriggerPulse => triacTriggerPulses(i1));
-		end generate GEN_REG;	
+		GEN_REG1: 
+		for i1 in 0 to amtTriacs-1 generate 
+			GEN_REG3:	
+			if (i1 = 0) generate
+					rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
+						probe =>   YSig
+--						, source => source_sig
+						);
+						
+					REGX2 : triacDriver port map
+						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
+						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUp => zeroPassUpAsync2, 
+						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
+						 triacTriggerPulse => triacTriggerPulses(i1),
+						 testData => YSig);
+				end generate GEN_REG3;	
+			GEN_REG2: 
+				if i1 > 0 generate
+					REGX1 : triacDriver port map
+						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
+						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUp => zeroPassUpAsync2, 
+						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
+						 triacTriggerPulse => triacTriggerPulses(i1));
+				end generate GEN_REG2; 
+ 
+		end generate GEN_REG1;	
 		
---		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
---			probe =>   ProbeReg,
---			source => source_sig
---		);
-
 		
 		pll_1: rustLightPLL_1
 			PORT MAP (Clock, countersClockSig);
