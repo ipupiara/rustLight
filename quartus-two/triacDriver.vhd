@@ -10,7 +10,8 @@ entity triacDriver is
     ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
     switchedOn, zeroPassUp    : in  STD_LOGIC;
 	 Clock,Reset, CountersClock  : in  STD_LOGIC;
-	 triacTriggerPulse : out STD_LOGIC
+	 triacTriggerPulse : out STD_LOGIC;
+	 testData : out std_LOGIC_VECTOR (10  downto 0)
   );
 end;
 
@@ -25,6 +26,8 @@ architecture driverJob of triacDriver is
 	SIGNAL sclrIgnitionDelaySig, cntEnaIgnitionDelaySig, equalIgnitionDelaySig : std_LOGIC;
 	SIGNAL sclrIgnitionDurationSig, cntEnaIgnitionDurationSig, equalIgnitionDurationSig : std_LOGIC;
 	SIGNAL sclrFireBreakDurationSig, cntEnaFireBreakDurationSig, equalFireBreakDurationSig: std_LOGIC;
+	SIGNAL source_sig : STD_LOGIC_VECTOR (0 DOWNTO 0);
+	SIGNAL probeReg : STD_LOGIC_VECTOR (10 DOWNTO 0);
 
 component rustLightCounter
 	PORT
@@ -43,13 +46,6 @@ component rustLightCompare_1
 		datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0)
 	);
 end component;
-component controllerInputChecker
-	PORT
-	(
-		probe		: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
-		source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
-	);
-end component;
 
   begin
   		IgnitionDelayReg <= ignitionDelay; 
@@ -57,6 +53,8 @@ end component;
 		fireBreakDurationReg <= "0000000100";
 		SwitchedOnReg <= switchedOn; 
 		ZeroPassUpReg <= zeroPassUp;
+		ProbeReg <=  IgnitionDelayReg & SwitchedOnReg;
+			testData <= 	IgnitionDelayReg & SwitchedOnReg;
 		PROCESS ( Reset, Clock )	
 			procedure entryIdle is
 			begin
@@ -137,11 +135,4 @@ end component;
 			dataa	 => fireBreakDurationCounterReg,
 			datab	 => fireBreakDurationReg
 		);
-		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
-			IgnitionDelayReg => probe_sig,
-			source	 => source_sig
-		);
-
-		
-
 end;
