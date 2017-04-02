@@ -84,7 +84,7 @@ int  main (void)
     OSTaskNameSet(APP_TASK_START_PRIO, (CPU_CHAR *)"Startup", &err);
 #endif
 
-    OSStart();     
+    OSStart();     // pn 15.jan 2017 why here appTaskStart and OSStart will execute concurrently ???? is this always ok?
 	                                                   
 	info_printf("EVK1100_Interface to cyclone-III rustlight fpga starting\n");
 
@@ -119,12 +119,12 @@ static  void  AppTaskStart (void *p_arg)
 #endif
 
 #if uC_TCPIP_MODULE > 0
-//	AppInit_TCPIP();                                               
+	AppInit_TCPIP();                                               
 #endif
 
 //	initIfDipatcher();
 	
-//    AppTaskCreate();                                                
+    AppTaskCreate();                                                
 
 
 	INT32U   loopCnt = 0;
@@ -137,10 +137,10 @@ static  void  AppTaskStart (void *p_arg)
         }
         for (i = 4; i <= 7; i++) {
             LED_On(9 - i);
-            OSTimeDlyHMSM(0, 0, 1, 0);
+            OSTimeDlyHMSM(0, 0, 0, 200);
             LED_Off(9 - i);
         }
-		info_printf("AppTaskStart loopCnt: %u \n",loopCnt);
+		info_printf("AppTaskStart loopCnt: %u \r\n*",loopCnt);
     }
 }
 
@@ -183,7 +183,7 @@ static  void  AppTaskCreate (void)
 #if uC_TCPIP_MODULE > 0
 	startTcpipThread();
 #endif
-	startIfDispatcher();
+//	startIfDispatcher();
 }
 
 

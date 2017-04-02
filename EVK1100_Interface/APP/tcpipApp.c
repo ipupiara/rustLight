@@ -49,8 +49,8 @@ void AppInit_TCPIP (void)
 	err = Net_Init();                                                  
 
 	ip      = NetASCII_Str_to_IP((CPU_CHAR *) ownIPAddress,  &err);
-	msk     = NetASCII_Str_to_IP((CPU_CHAR *)"255.255.255.0", &err);
-	gateway = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.1",   &err);
+	msk     = NetASCII_Str_to_IP((CPU_CHAR *)"255.255.0.0", &err);
+//	gateway = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.1",   &err);
 
 	err     = NetIP_CfgAddrThisHost(ip, msk);
 	err     = NetIP_CfgAddrDfltGateway(gateway);
@@ -116,28 +116,28 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 								(NET_ERR *)&err);
 			switch (err) {
 				case NET_SOCK_ERR_NONE:
-				attempt_rx = DEF_NO;
-				break;
+					attempt_rx = DEF_NO;
+					break;
 				case NET_SOCK_ERR_RX_Q_EMPTY:
 				case NET_OS_ERR_LOCK:
-				attempt_rx = DEF_YES;
-				break;
+					attempt_rx = DEF_YES;
+					break;
 				default:
-				attempt_rx = DEF_NO;
-				break;
+					attempt_rx = DEF_NO;
+					break;
 			}
 		} while (attempt_rx == DEF_YES);
 		info_printf("Net received %i  bytes : %X\n",rx_size,tcp_ip_RecvBuffer);
-		dmPtr = OSMemGet(dispatchMsgMem,&err);
-		if (err != OS_NO_ERR) {
-			err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
-		}  else {
-			dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
-			err = OSQPost(dispatchMsgQ,dmPtr);
-			if (err != OS_NO_ERR) {
-				err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
-			}		
-		}
+		//dmPtr = OSMemGet(dispatchMsgMem,&err);
+		//if (err != OS_NO_ERR) {
+			//err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
+		//}  else {
+			//dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
+			//err = OSQPost(dispatchMsgQ,dmPtr);
+			//if (err != OS_NO_ERR) {
+				//err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
+			//}		
+		//}
 		
 		snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer)," msg received");
 		

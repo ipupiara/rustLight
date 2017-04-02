@@ -38,7 +38,6 @@ OS_STK  SerialQMethodStk[SerialQMethod_STK_SIZE];
 typedef struct serialMem {
   char serialStr [serialStrSz];  // ATTENTION serialStr must be at first place, so that &(serialMem) == &(serialStr)
 } serialMem;
-#define serialTaskQMsgSz  serialStrBufSz
 
 CPU_INT08U  serialOn;
 CPU_INT32U   amtUSBInterrupts;
@@ -48,7 +47,7 @@ OS_EVENT *SerialQSem;
 OS_MEM *serialMsgMem;
 OS_EVENT*  serialMsgTaskQ;
 serialMem serialStrBuf[serialStrBufSz];
-void* serialTaskQMsg[serialTaskQMsgSz];
+void* serialTaskQMsg[serialStrBufSz];
 
 // error print methods, just try to work a bit with hardware and BSP
 //
@@ -309,7 +308,7 @@ static  void  SerialQMethod (void *p_arg)
      while (1) {
     	 sm = (serialMem *)OSQPend(serialMsgTaskQ, 1097, &err);
     	 if (err == OS_NO_ERR) {
-    		 for (strInd = 0; strInd < (strlen(sm->serialStr) -1 ); ++ strInd){
+    		 for (strInd = 0; strInd < (strlen(sm->serialStr)  ); ++ strInd){
     			 OSSemPend(SerialQSem, 107, &err);
     			 if (err == OS_NO_ERR){
     				 OSSemSet(SerialQSem, 0, &err);  // by initalization to value of 1, the count
@@ -338,9 +337,7 @@ static  void  SerialQMethod (void *p_arg)
         	    OnPrintError();   // err_printf("mem put problem sec100 method\n");
         	 }
     	 } else {
-    	  // Message not received, must have timed out
-    	// better not err_printf("serial Q timeout\n");
-    		 // but maybe set a pin, or other message on different device
+    	  // no Message  received, has timed out
     	 }
     }
 }
@@ -382,7 +379,7 @@ void init_err_printf()
 		OSMemNameSet(serialMsgMem, (INT8U*)"serialMsgMem", &err_init_print);
 	}
 	if (err_init_print == OS_NO_ERR) {
-		serialMsgTaskQ = OSQCreate(&serialTaskQMsg[0], serialTaskQMsgSz);  
+		serialMsgTaskQ = OSQCreate(&serialTaskQMsg[0], serialStrBufSz);  
 		if (! serialMsgTaskQ) err_init_print = 0xFF;
 	}
 

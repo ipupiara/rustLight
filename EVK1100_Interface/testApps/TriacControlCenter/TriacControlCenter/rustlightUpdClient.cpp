@@ -29,12 +29,12 @@ using namespace System::Collections;
 		exitRustlightTcpIp();
 	}
 
-	RustlightUpdClient* RustlightUpdClient::rustlightUpdClientSingleton;
+//	RustlightUpdClient^ RustlightUpdClient::rustlightUpdClientSingleton;
 
 
 	void RustlightUpdClient::initClass(printFunction i_printf)
 	{
-		rustlightUpdClientSingleton = new RustlightUpdClient (i_printf);
+		rustlightUpdClientSingleton = gcnew RustlightUpdClient (i_printf);
 	}
 
 
@@ -57,9 +57,14 @@ using namespace System::Collections;
 //		info_printf( "aft wsa cleanup\n"); */
 	}
 
-	int RustlightUpdClient::initRustlightTcpIp(char* cliAddress, char* cliPort)
+	int RustlightUpdClient::initRustlightTcpIp(String^ cliAddress, System::UInt32 cliPort)
 	{
 		int res = 0;
+
+		Connect(cliAddress,cliPort);
+
+
+
 /*		int a1, a2, a3, a4;
 		hostent *hostP;
 		char host_name[256];
@@ -172,7 +177,7 @@ using namespace System::Collections;
 									
 
 
-	int RustlightUpdClient::communicateMsg(System::Int32 msg)
+	int RustlightUpdClient::communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::Int32 msg)
 	{
 		int res = 0;
 //		array<System::Int32>  = 
@@ -181,7 +186,8 @@ using namespace System::Collections;
 		array<Byte>^ sendBytes = Encoding::ASCII->GetBytes( "Is anybody there" );
 		try
 		{
-		   udpClient->Send( sendBytes, sendBytes->Length );
+			info_printf("sendBytes \n");
+		   Send( sendBytes, sendBytes->Length );
 		}
 		catch ( Exception^ e ) 
 		{

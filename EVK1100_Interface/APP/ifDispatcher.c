@@ -52,7 +52,7 @@ void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
 	INT16U mask     = (1<< pinOfs);
 	
 	gpio_port->oders = mask; // The GPIO output driver is enabled for that pin.
-	gpio_port->gpers = mask; // The GPIO module controls that pin.
+	gpio_port->gpers = mask; 
 	if (val == 0) {
 		gpio_port->ovrc  = mask;
 	} else {
@@ -119,7 +119,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
 		if (err == OS_NO_ERR) {
-			info_printf("tcpip received %X\n",dmPtr);
+			info_printf("dispather received %X\n",dmPtr);
 			dispatchMesg(dmPtr);				
 	
 			err = OSMemPut(dispatchMsgMem, (void *)dmPtr);

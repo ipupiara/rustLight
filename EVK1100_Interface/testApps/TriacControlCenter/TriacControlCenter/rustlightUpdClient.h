@@ -15,18 +15,18 @@ using namespace System::Collections;
 
 typedef void (*printFunction)(const char *emsg, ...);
 
-class RustlightUpdClient  : protected UdpClient
+public ref class RustlightUpdClient  : public UdpClient
 {
 public:
 	RustlightUpdClient();
 	RustlightUpdClient(printFunction i_printf);
 	virtual ~RustlightUpdClient();
-	int initRustlightTcpIp(char* cliAddress, char* cliPort);
+	int initRustlightTcpIp(String^ cliAddress, System::UInt32 cliPort);
 
 	void exitRustlightTcpIp();
 
-	int communicateMsg(System::Int32 msg);
-	static RustlightUpdClient* rustlightUpdClientSingleton;
+	int communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::Int32 msg);
+	static RustlightUpdClient^ rustlightUpdClientSingleton;
 	static void initClass(printFunction i_printf);
 
 protected:

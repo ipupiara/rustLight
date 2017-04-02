@@ -26,8 +26,8 @@ architecture driverJob of triacDriver is
 	SIGNAL sclrIgnitionDelaySig, cntEnaIgnitionDelaySig, equalIgnitionDelaySig : std_LOGIC;
 	SIGNAL sclrIgnitionDurationSig, cntEnaIgnitionDurationSig, equalIgnitionDurationSig : std_LOGIC;
 	SIGNAL sclrFireBreakDurationSig, cntEnaFireBreakDurationSig, equalFireBreakDurationSig: std_LOGIC;
-	SIGNAL source_sig : STD_LOGIC_VECTOR (0 DOWNTO 0);
-	SIGNAL probeReg : STD_LOGIC_VECTOR (10 DOWNTO 0);
+--	SIGNAL source_sig : STD_LOGIC_VECTOR (0 DOWNTO 0);
+--	SIGNAL probeReg : STD_LOGIC_VECTOR (10 DOWNTO 0);
 
 component rustLightCounter
 	PORT
@@ -53,7 +53,7 @@ end component;
 		fireBreakDurationReg <= "0000000100";
 		SwitchedOnReg <= switchedOn; 
 		ZeroPassUpReg <= zeroPassUp;
-		ProbeReg <=  IgnitionDelayReg & SwitchedOnReg;
+--		ProbeReg <=  IgnitionDelayReg & SwitchedOnReg;
 			testData <= 	IgnitionDelayReg & SwitchedOnReg;
 		PROCESS ( Reset, Clock )	
 			procedure entryIdle is

@@ -5,6 +5,9 @@
 #include <stdarg.h>
 #include "rustlightUpdClient.h"
 
+#define receiverHost "192.168.1.155"
+#define receiverPort 10001
+
 
 namespace TriacControlCenter {
 
@@ -28,6 +31,7 @@ namespace TriacControlCenter {
 	{
 	protected:
 		static	Form1^  singleton ;
+		String^ stri;
 //		RustlightUpdClient* pRustlightUpdClient;
 	public:
 		Form1(void)
@@ -201,7 +205,7 @@ namespace TriacControlCenter {
 
 				 RustlightUpdClient::initClass(&addToLog);
 
-				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("192.168.1.155","10001");
+//				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("192.168.1.155",10001);
 			 }
 
 	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -213,11 +217,12 @@ namespace TriacControlCenter {
 
 				 System::Boolean onState = this->onCheckBox->Checked;
 				 System::Int32 onInt = onState;
-/*				 if (onState)  {
+				 if (onState)  {
 					 onInt = 1;
 				 }  else {
 					 onInt = 0;
-				 } */
+				 } 
+				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg(receiverHost, receiverPort, 0x12345678);
 
 			
 			 }
@@ -243,6 +248,7 @@ public:	static System::Void addToLog(const char *emsg, ...)
 			va_end(ap);
 		}
 
+
 		#define sbuffersize 1024
 
 public:	System::Void addLogText(const char *emsg, ...)
@@ -251,13 +257,18 @@ public:	System::Void addLogText(const char *emsg, ...)
 			va_start(ap, emsg);
 			char sbuffer[sbuffersize];
 
+			String^ st1 = gcnew String (emsg);
+			String^ st2;
 
 		//	const wchar_t* wc = GetWC(emsg);
 
-		//	logText.AppendFormat(wc,ap);
-			_snprintf(sbuffer, sbuffersize - 1, emsg, ap);
-			sbuffer[sbuffersize] = 0x00;
-//			logText.Append(sbuffer);
+//			st2->Format(st1,ap);
+			logText->AppendText(st1);
+
+			
+//			vsnprintf_s(sbuffer, sbuffersize - 1, _TRUNCATE, emsg, ap);
+//			sbuffer[sbuffersize] = 0x00;
+//			logText.Append(st2);
 		//	delete wc;
 //			UpdateData(false);
 			va_end(ap);
