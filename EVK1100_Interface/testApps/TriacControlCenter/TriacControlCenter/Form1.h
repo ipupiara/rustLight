@@ -210,19 +210,20 @@ namespace TriacControlCenter {
 
 	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
 				 System::Decimal dec = this->addressField->Value;
-				 System::Int32 adr = Decimal::ToInt32(dec);
+				 System::UInt32 adr = Decimal::ToUInt32(dec);
 
 				 dec = this->ValueUpDown->Value;
-				 System::Int32 val = Decimal::ToInt32(dec);
+				 System::UInt32 val = Decimal::ToUInt32(dec);
 
 				 System::Boolean onState = this->onCheckBox->Checked;
-				 System::Int32 onInt = onState;
+				 System::UInt32 onInt = onState;
 				 if (onState)  {
 					 onInt = 1;
 				 }  else {
 					 onInt = 0;
 				 } 
-				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg(receiverHost, receiverPort, 0x12345678);
+				 System::UInt32 theMsg = val + (adr  << 16) + (onInt << 24);
+				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg(receiverHost, receiverPort, theMsg);
 
 			
 			 }
@@ -238,7 +239,7 @@ private: System::Void label1_Click_1(System::Object^  sender, System::EventArgs^
 		 }
 
 
-public:	static System::Void addToLog(const char *emsg, ...)
+public:	static System::Void addToLog(String^ emsg, ...)
 		{
 			va_list ap;
 			va_start(ap, emsg);
@@ -251,7 +252,7 @@ public:	static System::Void addToLog(const char *emsg, ...)
 
 		#define sbuffersize 1024
 
-public:	System::Void addLogText(const char *emsg, ...)
+public:	System::Void addLogText(String^ emsg, ...)
 		{
 			va_list ap;
 			va_start(ap, emsg);

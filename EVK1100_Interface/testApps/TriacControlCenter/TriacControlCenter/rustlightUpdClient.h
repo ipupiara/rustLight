@@ -13,7 +13,7 @@ using namespace System::Collections;
 #define defaultClientAddress    "168.192.0.151"
 #define defaultClientPort   1234
 
-typedef void (*printFunction)(const char *emsg, ...);
+typedef void (*printFunction)(String^ emsg, ...);
 
 public ref class RustlightUpdClient  : public UdpClient
 {
@@ -25,7 +25,7 @@ public:
 
 	void exitRustlightTcpIp();
 
-	int communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::Int32 msg);
+	int communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::UInt32 msg);
 	static RustlightUpdClient^ rustlightUpdClientSingleton;
 	static void initClass(printFunction i_printf);
 

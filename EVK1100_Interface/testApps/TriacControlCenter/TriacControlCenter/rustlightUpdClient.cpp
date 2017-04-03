@@ -1,6 +1,7 @@
 
 #using <System.dll>
 #include "stdafx.h"
+#include <stdlib.h>
 #include "rustlightUpdClient.h"
 using namespace System;
 using namespace System::Text;
@@ -177,21 +178,30 @@ using namespace System::Collections;
 									
 
 
-	int RustlightUpdClient::communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::Int32 msg)
+	int RustlightUpdClient::communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::UInt32 msg)
 	{
 		int res = 0;
+		char buffer [0x10];
 //		array<System::Int32>  = 
 			// UdpClient.Send (Byte[], Int32)  
 
 		array<Byte>^ sendBytes = Encoding::ASCII->GetBytes( "Is anybody there" );
 		try
 		{
-			info_printf("sendBytes \n");
-		   Send( sendBytes, sendBytes->Length );
+			ultoa(msg,&buffer[0],0x10);
+			String^ st1 = gcnew String(&buffer[0]);
+			info_printf("sendBytes 0x");
+			info_printf(st1);
+			info_printf(" - \n");
+			Send( sendBytes, sendBytes->Length );
+//			Exception testEx = gcnew Exception("test exception")  ;    //= gcnew Exception();
+//			testEx->
 		}
-		catch ( Exception^ e ) 
+		catch ( Exception^ ex1 ) 
 		{
-		   Console::WriteLine( e->ToString() );
+		   Console::WriteLine( ex1->ToString() );
+		   array<Char>^exText = ex1->ToString()->ToCharArray();
+		   info_printf( ex1->Message->ToString());
 		}
 
 
