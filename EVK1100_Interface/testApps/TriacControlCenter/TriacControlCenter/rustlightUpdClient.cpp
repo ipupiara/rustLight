@@ -62,7 +62,16 @@ using namespace System::Collections;
 	{
 		int res = 0;
 
-		Connect(cliAddress,cliPort);
+
+		try
+		{
+		   Connect(cliAddress,cliPort);
+		}
+		catch ( Exception^ exc ) 
+		{
+		   info_printf( exc->ToString() );
+		}
+
 
 
 

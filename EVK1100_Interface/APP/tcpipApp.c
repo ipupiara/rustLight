@@ -19,7 +19,7 @@
 #include "UartPrint.h"
 #include "ifDispatcher.h"
 
-NET_IP_ADDR   ip;
+NET_IP_ADDR   ownIp;
 NET_IP_ADDR   msk;
 NET_IP_ADDR   gateway;
 NET_ERR       err;
@@ -46,14 +46,27 @@ void AppInit_TCPIP (void)
 	BSP_USART_Init(TTCP_COMM_SEL, 38400);                           
 	#endif
 
-	err = Net_Init();                                                  
+	err = Net_Init();                                        
+	
+	if (err != NET_ERR_NONE)   
+	{
+		info_printf("AppInit_TCPIP 1 net error %i\n",err);
+	}
 
-	ip      = NetASCII_Str_to_IP((CPU_CHAR *) ownIPAddress,  &err);
+	ownIp      = NetASCII_Str_to_IP((CPU_CHAR *) ownIPAddress,  &err);
 	msk     = NetASCII_Str_to_IP((CPU_CHAR *)"255.255.0.0", &err);
 //	gateway = NetASCII_Str_to_IP((CPU_CHAR *)"192.168.1.1",   &err);
 
-	err     = NetIP_CfgAddrThisHost(ip, msk);
+	err     = NetIP_CfgAddrThisHost(ownIp, msk);
+	if (err != NET_ERR_NONE)
+	{
+		info_printf("AppInit_TCPIP 2 net error %i\n",err);
+	}
 	err     = NetIP_CfgAddrDfltGateway(gateway);
+	if (err != NET_ERR_NONE)
+	{
+		info_printf("AppInit_TCPIP 3 net error %i\n",err);
+	}
 
 	#if uC_TTCP_MODULE > 0
 	TTCP_Init();                                               

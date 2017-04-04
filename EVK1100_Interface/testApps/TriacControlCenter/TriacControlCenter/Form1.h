@@ -206,6 +206,8 @@ namespace TriacControlCenter {
 				 RustlightUpdClient::initClass(&addToLog);
 
 //				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("192.168.1.155",10001);
+				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("169.254.15.155",10001);
+
 			 }
 
 	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {

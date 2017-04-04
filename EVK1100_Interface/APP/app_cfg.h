@@ -57,14 +57,16 @@
 
 #define  APP_TASK_START_PRIO                1
 #define  OS_TASK_TMR_PRIO                   5
-#define  SerialQ_TASK_PRIO                   6
-
-#define tcp_ip_Thread_TASK_PRIO              7
-#define ifDispatcher_Thread_TASK_PRIO         10
 
 
-#define  NET_OS_CFG_IF_RX_TASK_PRIO            20   // lower prio as recommended in tcp-ip manuals, pn 21 aug 12
-#define  NET_OS_CFG_TMR_TASK_PRIO             21
+#define  SerialQ_TASK_PRIO                   13
+
+#define tcp_ip_Thread_TASK_PRIO              15
+#define ifDispatcher_Thread_TASK_PRIO         16
+
+
+#define  NET_OS_CFG_IF_RX_TASK_PRIO            7   // lower prio as recommended in tcp-ip manuals, pn 21 aug 12
+#define  NET_OS_CFG_TMR_TASK_PRIO             8
 
 //#warning might be changed .. check amount processed and prios for all processes in application -integraton of net processes
 
