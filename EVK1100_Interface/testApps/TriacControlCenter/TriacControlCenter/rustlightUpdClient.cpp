@@ -2,6 +2,7 @@
 #using <System.dll>
 #include "stdafx.h"
 #include <stdlib.h>
+#include <string.h>
 #include "rustlightUpdClient.h"
 using namespace System;
 using namespace System::Text;
@@ -191,17 +192,20 @@ using namespace System::Collections;
 	{
 		int res = 0;
 		char buffer [0x10];
+		memset(buffer,0,sizeof(buffer));
 //		array<System::Int32>  = 
 			// UdpClient.Send (Byte[], Int32)  
 
-		array<Byte>^ sendBytes = Encoding::ASCII->GetBytes( "Is anybody there" );
 		try
 		{
-			ultoa(msg,&buffer[0],0x10);
+			ultoa(msg,&buffer[0],0x10);				
 			String^ st1 = gcnew String(&buffer[0]);
+			array<Byte>^ sendBytes = Encoding::ASCII->GetBytes( st1 );
+
 			info_printf("sendBytes 0x");
 			info_printf(st1);
 			info_printf(" - \n");
+//			Send(buffer,sizeof(buffer));
 			Send( sendBytes, sendBytes->Length );
 //			Exception testEx = gcnew Exception("test exception")  ;    //= gcnew Exception();
 //			testEx->

@@ -114,8 +114,10 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	}
 	
 	while (continueInt)  {
+		CPU_INT32U msgUint = 0;
 		do {
 			client_sock_addr_ip_size = sizeof(client_sock_addr_ip);
+			memset(tcp_ip_RecvBuffer,0,sizeof(tcp_ip_RecvBuffer));
 			
 			rx_size = NetSock_RxDataFrom((NET_SOCK_ID ) sock,
 								(void *) tcp_ip_RecvBuffer,
@@ -140,7 +142,10 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 					break;
 			}
 		} while (attempt_rx == DEF_YES);
-		info_printf("Net received %i  bytes : %X\n",rx_size,tcp_ip_RecvBuffer);
+//		msgUint = (CPU_INT32U) tcp_ip_RecvBuffer;
+//		msgUint = atol(tcp_ip_RecvBuffer);
+		sscanf(tcp_ip_RecvBuffer,"%x",&msgUint);
+		info_printf("Net received %i  msgUint %X  bytes : [%s]\n",rx_size,msgUint,tcp_ip_RecvBuffer);
 		//dmPtr = OSMemGet(dispatchMsgMem,&err);
 		//if (err != OS_NO_ERR) {
 			//err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
@@ -152,17 +157,17 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 			//}		
 		//}
 		
-		snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer)," msg received");
-		
-		tx_size = NetSock_TxDataTo((NET_SOCK_ID ) sock,
-					(void *) tcp_ip_SendBuffer,
-					(CPU_INT16S ) strlen((char*) tcp_ip_SendBuffer)+ 1,
-					(CPU_INT16S ) NET_SOCK_FLAG_NONE,
-					(NET_SOCK_ADDR *)&client_sock_addr_ip,
-					(NET_SOCK_ADDR_LEN) client_sock_addr_ip_size,
-					(NET_ERR *)&err);
-		
-		info_printf("net sent (ret error code %i) %i bytes : &s\n",err,tx_size, tcp_ip_SendBuffer);
+		//snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer)," msg received");
+		//
+		//tx_size = NetSock_TxDataTo((NET_SOCK_ID ) sock,
+					//(void *) tcp_ip_SendBuffer,
+					//(CPU_INT16S ) strlen((char*) tcp_ip_SendBuffer)+ 1,
+					//(CPU_INT16S ) NET_SOCK_FLAG_NONE,
+					//(NET_SOCK_ADDR *)&client_sock_addr_ip,
+					//(NET_SOCK_ADDR_LEN) client_sock_addr_ip_size,
+					//(NET_ERR *)&err);
+		//
+		//info_printf("net sent (ret error code %i) %i bytes : &s\n",err,tx_size, tcp_ip_SendBuffer);
 	}
 	NetSock_Close(sock, &err);
 	if (err != NET_SOCK_ERR_NONE) {
