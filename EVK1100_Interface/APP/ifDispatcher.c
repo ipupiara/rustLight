@@ -32,11 +32,13 @@ typedef struct pinData
 
 #define pinPosArraySize  13
 
-pinPosData pinPosArray [pinPosArraySize] = {{1,0},{2,1},{3,2},
-								{1,3},{2,4},{3,5},
-								{1,6},{2,7},{3,8},
-								{1,9},{2,16},{3,17},
-								{1,24} };
+#warning ---->>>>> tobe tested with major doubts :-?
+
+pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1},{AVR32_PIN_PX02,2},
+								{AVR32_PIN_PX03,3},{AVR32_PIN_PX04,4},{AVR32_PIN_PX05,5},
+								{AVR32_PIN_PX06,6},{AVR32_PIN_PX07,7},{AVR32_PIN_PX08,8},
+								{AVR32_PIN_PX09,9},{AVR32_PIN_PX10,16},{AVR32_PIN_PX11,17},
+								{AVR32_PIN_PX12,24} };
 									
 #define strobePin	123		
 
@@ -119,7 +121,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
 		if (err == OS_NO_ERR) {
-			info_printf("dispather received %X\n",dmPtr);
+			info_printf("dispatcher received %X\n",dmPtr);
 			dispatchMesg(dmPtr);				
 	
 			err = OSMemPut(dispatchMsgMem, (void *)dmPtr);

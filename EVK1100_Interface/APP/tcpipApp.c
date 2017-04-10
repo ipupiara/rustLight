@@ -146,16 +146,16 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 //		msgUint = atol(tcp_ip_RecvBuffer);
 		sscanf(tcp_ip_RecvBuffer,"%x",&msgUint);
 		info_printf("Net received %i  msgUint %X  bytes : [%s]\n",rx_size,msgUint,tcp_ip_RecvBuffer);
-		//dmPtr = OSMemGet(dispatchMsgMem,&err);
-		//if (err != OS_NO_ERR) {
-			//err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
-		//}  else {
-			//dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
-			//err = OSQPost(dispatchMsgQ,dmPtr);
-			//if (err != OS_NO_ERR) {
-				//err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
-			//}		
-		//}
+		dmPtr = OSMemGet(dispatchMsgMem,&err);
+		if (err != OS_NO_ERR) {
+			err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
+		}  else {
+			dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
+			err = OSQPost(dispatchMsgQ,dmPtr);
+			if (err != OS_NO_ERR) {
+				err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
+			}		
+		}
 		
 		//snprintf((char*)&tcp_ip_SendBuffer,sizeof(tcp_ip_SendBuffer)," msg received");
 		//
