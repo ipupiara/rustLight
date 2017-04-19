@@ -40,7 +40,7 @@ pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1
 								{AVR32_PIN_PX09,9},{AVR32_PIN_PX10,16},{AVR32_PIN_PX11,17},
 								{AVR32_PIN_PX12,24} };
 									
-#define strobePin	123		
+#define strobePin	AVR32_PIN_PX13		
 
 dispatchMsg dispatchMsgArray[dispatchQMemSz];
 void* dispatchQMsgPtrArray[dispatchQSz];
