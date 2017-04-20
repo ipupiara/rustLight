@@ -26,8 +26,8 @@ applicable agreement for further details.
 	(port
 		(pt 0 48)
 		(input)
-		(text "probe[10..0]" (rect 0 0 68 14)(font "Arial" (font_size 8)))
-		(text "probe[10..0]" (rect 20 41 76 54)(font "Arial" (font_size 8)))
+		(text "probe[43..0]" (rect 0 0 68 14)(font "Arial" (font_size 8)))
+		(text "probe[43..0]" (rect 20 41 76 54)(font "Arial" (font_size 8)))
 		(line (pt 0 48)(pt 16 48)(line_width 3))
 	)
 	(port

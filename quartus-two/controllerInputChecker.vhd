@@ -42,7 +42,7 @@ USE altera_mf.all;
 ENTITY controllerInputChecker IS
 	PORT
 	(
-		probe		: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
+		probe		: IN STD_LOGIC_VECTOR (43 DOWNTO 0);
 		source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
 	);
 END controllerInputChecker;
@@ -66,7 +66,7 @@ ARCHITECTURE SYN OF controllerinputchecker IS
 		lpm_type		: STRING
 	);
 	PORT (
-			probe	: IN STD_LOGIC_VECTOR (10 DOWNTO 0);
+			probe	: IN STD_LOGIC_VECTOR (43 DOWNTO 0);
 			source	: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
 	);
 	END COMPONENT;
@@ -78,7 +78,7 @@ BEGIN
 	GENERIC MAP (
 		enable_metastability => "NO",
 		instance_id => "chek",
-		probe_width => 11,
+		probe_width => 44,
 		sld_auto_instance_index => "NO",
 		sld_instance_index => 0,
 		source_initial_value => " 0",
@@ -101,14 +101,14 @@ END SYN;
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: ENABLE_METASTABILITY STRING "NO"
 -- Retrieval info: CONSTANT: INSTANCE_ID STRING "chek"
--- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "11"
+-- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "44"
 -- Retrieval info: CONSTANT: SLD_AUTO_INSTANCE_INDEX STRING "NO"
 -- Retrieval info: CONSTANT: SLD_INSTANCE_INDEX NUMERIC "0"
 -- Retrieval info: CONSTANT: SOURCE_INITIAL_VALUE STRING " 0"
 -- Retrieval info: CONSTANT: SOURCE_WIDTH NUMERIC "1"
--- Retrieval info: USED_PORT: probe 0 0 11 0 INPUT NODEFVAL "probe[10..0]"
+-- Retrieval info: USED_PORT: probe 0 0 44 0 INPUT NODEFVAL "probe[43..0]"
 -- Retrieval info: USED_PORT: source 0 0 1 0 OUTPUT NODEFVAL "source[0..0]"
--- Retrieval info: CONNECT: @probe 0 0 11 0 probe 0 0 11 0
+-- Retrieval info: CONNECT: @probe 0 0 44 0 probe 0 0 44 0
 -- Retrieval info: CONNECT: source 0 0 1 0 @source 0 0 1 0
 -- Retrieval info: GEN_FILE: TYPE_NORMAL controllerInputChecker.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL controllerInputChecker.inc FALSE
