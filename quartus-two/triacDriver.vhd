@@ -8,7 +8,7 @@ USE IEEE.NUMERIC_STD.ALL;
 entity triacDriver is
   port (
     ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
-    switchedOn, zeroPassUp    : in  STD_LOGIC;
+    switchedOn, zeroPass    : in  STD_LOGIC;
 	 Clock,Reset, CountersClock  : in  STD_LOGIC;
 	 triacTriggerPulse : out STD_LOGIC;
 	 testData : out std_LOGIC_VECTOR (10  downto 0)
@@ -22,7 +22,7 @@ architecture driverJob of triacDriver is
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDurationCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL fireBreakDurationCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL SwitchedOnReg, ZeroPassUpReg   : STD_LOGIC;
+	SIGNAL SwitchedOnReg, ZeroPassReg   : STD_LOGIC;
 	SIGNAL sclrIgnitionDelaySig, cntEnaIgnitionDelaySig, equalIgnitionDelaySig : std_LOGIC;
 	SIGNAL sclrIgnitionDurationSig, cntEnaIgnitionDurationSig, equalIgnitionDurationSig : std_LOGIC;
 	SIGNAL sclrFireBreakDurationSig, cntEnaFireBreakDurationSig, equalFireBreakDurationSig: std_LOGIC;
@@ -52,7 +52,7 @@ end component;
 		IgnitionDurationReg <=  "1111111100";
 		fireBreakDurationReg <= "0000000100";
 		SwitchedOnReg <= switchedOn; 
-		ZeroPassUpReg <= zeroPassUp;
+		ZeroPassReg <= zeroPass;
 --		ProbeReg <=  IgnitionDelayReg & SwitchedOnReg;
 			testData <= 	IgnitionDelayReg & SwitchedOnReg;
 		PROCESS ( Reset, Clock )	
@@ -71,13 +71,13 @@ end component;
 			IF ( Reset = '1' ) THEN
 				entryIdle;
 			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
-				IF ((SwitchedOnReg = '0') OR (ZeroPassUpReg = '0')) THEN 
+				IF ((SwitchedOnReg = '0') OR (ZeroPassReg = '0')) THEN 
 					entryIdle; 
 				ELSE
 					sclrFireBreakDurationSig <= '0';
 					sclrIgnitionDelaySig <= '0';
 					sclrIgnitionDurationSig <= '0';
-					IF ((triacState = idle) AND (ZeroPassUpReg = '1')) THEN
+					IF ((triacState = idle) AND (ZeroPassReg = '1')) THEN
 						sclrIgnitionDelaySig <= '1';
 						cntEnaIgnitionDelaySig <= '1';
 						triacState <= triacTriggerDelay;

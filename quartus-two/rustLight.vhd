@@ -8,7 +8,7 @@ ENTITY rustLight IS
 	GENERIC ( amtTriacs : INTEGER := 4 ) ;
 	PORT ( 	data : IN STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 				address : IN STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
-				Clock, Reset, Strobe,zeroPassUp1, zeroPassUp2, SwitchedOn : IN STD_LOGIC;
+				Clock, Reset, Strobe,ZeroPass, SwitchedOn : IN STD_LOGIC;
 				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) 
 			 ) ;
 END rustLight ;
@@ -17,7 +17,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL SwitchedOnReg, countersClockSig: STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
-	SIGNAL zeroPassUpAsync1, zeroPassUpAsync2: STD_LOGIC; 
+	SIGNAL zeroPassAsync1, zeroPassAsync2: STD_LOGIC; 
 	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
 	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	SIGNAL YSig : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
@@ -44,7 +44,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	COMPONENT triacDriver 
 		port (
 			 ignitionDelay  : in  STD_LOGIC_VECTOR(9 downto 0);
-			 switchedOn, zeroPassUp    : in  STD_LOGIC;
+			 switchedOn, zeroPass    : in  STD_LOGIC;
 			 Clock,Reset, CountersClock    : in  STD_LOGIC;
 			 triacTriggerPulse : out STD_LOGIC;
 			 testData : out std_LOGIC_VECTOR (10  downto 0)
@@ -102,7 +102,7 @@ ARCHITECTURE Behavior OF rustLight IS
 --				generate
 					REGX1 : triacDriver port map
 						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
-						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUp => zeroPassUpAsync2, 
+						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
 						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
 						 triacTriggerPulse => triacTriggerPulses(i1),
 						 testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) );
@@ -120,8 +120,8 @@ ARCHITECTURE Behavior OF rustLight IS
 				addressReg  <= (OTHERS => '0'); 
 				SwitchedOnReg <= '0';
 			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
-				zeroPassUpAsync1 <= zeroPassUp1 OR zeroPassUp2;
-				zeroPassUpAsync2 <= zeroPassUpAsync1;
+				zeroPassAsync1 <= ZeroPass;
+				zeroPassAsync2 <= zeroPassAsync1;
 				strobeAsync1 <= Strobe;
 				strobeAsync2 <=  strobeAsync1;
 				IF (strobeAsync2 = '1')  THEN
