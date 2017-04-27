@@ -77,7 +77,7 @@ BEGIN
 	altsource_probe_component : altsource_probe
 	GENERIC MAP (
 		enable_metastability => "NO",
-		instance_id => "chek",
+		instance_id => "cracker_checker",
 		probe_width => 44,
 		sld_auto_instance_index => "NO",
 		sld_instance_index => 0,
