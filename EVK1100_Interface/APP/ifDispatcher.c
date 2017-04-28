@@ -120,11 +120,15 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 {
 	INT8U err;
 	dispatchMsg* dmPtr;
+	
+	setPinAsOutputWithValue( resetPin,1);
+	
+	info_printf("dispatcher startded\n");
 
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
 		if (err == OS_NO_ERR) {
-			info_printf("dispatcher received %X\n",dmPtr);
+			info_printf("dispatcher received %X\n",dmPtr->dispatchData);
 			dispatchMesg(dmPtr);				
 	
 			err = OSMemPut(dispatchMsgMem, (void *)dmPtr);

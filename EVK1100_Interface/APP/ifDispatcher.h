@@ -12,6 +12,7 @@
 
 typedef struct dispatchMsg {
 	INT32U dispatchData;
+	char  dummyArray[10];
 } dispatchMsg;
 
 OS_MEM * dispatchMsgMem;

@@ -122,7 +122,7 @@ static  void  AppTaskStart (void *p_arg)
 	AppInit_TCPIP();                                               
 #endif
 
-//	initIfDipatcher();
+	initIfDipatcher();
 	
     AppTaskCreate();                                                
 
@@ -183,7 +183,7 @@ static  void  AppTaskCreate (void)
 #if uC_TCPIP_MODULE > 0
 	startTcpipThread();
 #endif
-//	startIfDispatcher();
+	startIfDispatcher();
 }
 
 

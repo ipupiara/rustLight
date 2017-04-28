@@ -85,15 +85,16 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	NET_SOCK_ADDR_LEN client_sock_addr_ip_size;
 	NET_SOCK_RTN_CODE rx_size, tx_size;
 	CPU_BOOLEAN attempt_rx;
-	NET_ERR err;
+	NET_ERR netErr;
+	CPU_INT08U	osErr;
 	dispatchMsg* dmPtr;
 	INT8U continueInt = 1;
 
 	sock = NetSock_Open( NET_SOCK_ADDR_FAMILY_IP_V4,
 					NET_SOCK_TYPE_DATAGRAM,
 					NET_SOCK_PROTOCOL_UDP,
-					&err);
-	if (err != NET_SOCK_ERR_NONE) {
+					&netErr);
+	if (netErr != NET_SOCK_ERR_NONE) {
 		err_printf("NetSock Open failed\n");
 	}
 	
@@ -107,9 +108,9 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 	NetSock_Bind((NET_SOCK_ID ) sock,
 				(NET_SOCK_ADDR *)&server_sock_addr_ip,
 				(NET_SOCK_ADDR_LEN) NET_SOCK_ADDR_SIZE,
-				(NET_ERR *)&err);
-	if (err != NET_SOCK_ERR_NONE) {
-		NetSock_Close(sock, &err);
+				(NET_ERR *)&netErr);
+	if (netErr != NET_SOCK_ERR_NONE) {
+		NetSock_Close(sock, &netErr);
 		err_printf("Net sock Bind failed\n");
 	}
 	
@@ -128,8 +129,8 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 								(void *) 0,
 								(CPU_INT08U ) 0,
 								(CPU_INT08U *) 0,
-								(NET_ERR *)&err);
-			switch (err) {
+								(NET_ERR *)&netErr);
+			switch (netErr) {
 				case NET_SOCK_ERR_NONE:
 					attempt_rx = DEF_NO;
 					break;
@@ -146,14 +147,14 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 //		msgUint = atol(tcp_ip_RecvBuffer);
 		sscanf(tcp_ip_RecvBuffer,"%x",&msgUint);
 		info_printf("Net received %i  msgUint %X  bytes : [%s]\n",rx_size,msgUint,tcp_ip_RecvBuffer);
-		dmPtr = OSMemGet(dispatchMsgMem,&err);
-		if (err != OS_NO_ERR) {
-			err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",err);
+		dmPtr = OSMemGet(dispatchMsgMem,&osErr);
+		if (osErr != OS_NO_ERR) {
+			err_printf("error get memory in method tcp_ip_Thread_Method, err = %d\n ",netErr);
 		}  else {
-			dmPtr->dispatchData = (INT32U) tcp_ip_RecvBuffer;
-			err = OSQPost(dispatchMsgQ,dmPtr);
-			if (err != OS_NO_ERR) {
-				err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",err);
+			dmPtr->dispatchData = msgUint;
+			osErr = OSQPost(dispatchMsgQ,dmPtr);
+			if (osErr != OS_NO_ERR) {
+				err_printf("error OSQPost in method tcp_ip_Thread_Method, err = %d\n ",netErr);
 			}		
 		}
 		
@@ -169,8 +170,8 @@ static  void  tcp_ip_Thread_Method (void *p_arg)
 		//
 		//info_printf("net sent (ret error code %i) %i bytes : &s\n",err,tx_size, tcp_ip_SendBuffer);
 	}
-	NetSock_Close(sock, &err);
-	if (err != NET_SOCK_ERR_NONE) {
+	NetSock_Close(sock, &netErr);
+	if (netErr != NET_SOCK_ERR_NONE) {
 		err_printf("Net Sock Close error\n");
 	}
 }
