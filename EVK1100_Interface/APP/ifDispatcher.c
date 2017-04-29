@@ -42,7 +42,8 @@ pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1
 										
 #define strobePin   AVR32_PIN_PX13
 #define resetPin	AVR32_PIN_PX14
-#define zeroPass    AVR32_PIN_PX15
+#define zeroPassPin    AVR32_PIN_PX15
+#define testPin    AVR32_PIN_PX15
 		
 
 dispatchMsg dispatchMsgArray[dispatchQMemSz];
@@ -54,10 +55,12 @@ void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
 
 	gpio_port        = &AVR32_GPIO.port[pin >> 5];
 	INT8U pinOfs     = pin & 0x1F;
-	INT16U mask     = (1<< pinOfs);
+	INT32U mask     = (1<< pinOfs);
 	
 	gpio_port->oders = mask; // The GPIO output driver is enabled for that pin.
 	gpio_port->gpers = mask; 
+	gpio_port->odmerc = mask;
+	
 	if (val == 0) {
 		gpio_port->ovrc  = mask;
 	} else {
@@ -83,14 +86,19 @@ void dispatchMesg(dispatchMsg* dmPtr)
 	INT32U msgW;
 	msgW = dmPtr->dispatchData;
 	INT8U i1 ;
-	for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
-		INT8U valNotZero = (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0);
-		setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
-	}	
-	OSTimeDlyHMSM(0,0,0,1);
-	setPinAsOutputWithValue( strobePin,1);
-	OSTimeDlyHMSM(0,0,0,1);
-	setPinAsOutputWithValue( strobePin,0);
+	//for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
+		//INT8U valNotZero = (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0);
+		//setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
+	//}	
+	//OSTimeDlyHMSM(0,0,0,1);
+	//setPinAsOutputWithValue( strobePin,1);
+	//OSTimeDlyHMSM(0,0,0,1);
+	//setPinAsOutputWithValue( strobePin,0);
+	
+	setPinAsOutputWithValue( testPin,0);
+	setPinAsOutputWithValue( testPin,1);
+	setPinAsOutputWithValue( testPin,0);
+	
 }
 
 void initIfDipatcher()
