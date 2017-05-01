@@ -43,7 +43,8 @@ pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1
 #define strobePin   AVR32_PIN_PX13
 #define resetPin	AVR32_PIN_PX14
 #define zeroPassPin    AVR32_PIN_PX15
-#define testPin    AVR32_PIN_PX15
+//#define testPin    AVR32_PIN_PX15
+//#define testPin      AVR32_PIN_PB27    // =  gpio-led1
 		
 
 dispatchMsg dispatchMsgArray[dispatchQMemSz];
@@ -77,6 +78,23 @@ INT32U shrUnmaskDWord(INT8U sLeft, INT32U sVal)
 	return res;
 }
 
+void testPins()
+{
+	//setPinAsOutputWithValue( testPin,0);
+	//setPinAsOutputWithValue( testPin,1);
+	//setPinAsOutputWithValue( testPin,0);
+	//
+	//INT16U cnt;
+	//info_printf("start pin test\n");
+	//for (cnt = 0; cnt < 109; ++cnt) {
+		//setPinAsOutputWithValue( testPin,0);
+		//setPinAsOutputWithValue( testPin,1);
+		 //OSTimeDlyHMSM(0, 0, 1, 0);
+		//setPinAsOutputWithValue( testPin,0);
+	//}
+	//info_printf("stop pin test\n");
+}
+
 
 
 //  this method uses timedelay statements, but they
@@ -86,19 +104,26 @@ void dispatchMesg(dispatchMsg* dmPtr)
 	INT32U msgW;
 	msgW = dmPtr->dispatchData;
 	INT8U i1 ;
-	//for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
-		//INT8U valNotZero = (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0);
-		//setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
-	//}	
-	//OSTimeDlyHMSM(0,0,0,1);
-	//setPinAsOutputWithValue( strobePin,1);
-	//OSTimeDlyHMSM(0,0,0,1);
-	//setPinAsOutputWithValue( strobePin,0);
+	INT8U iChk = 0;
+	INT8U valNotZero;
+	for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
+		if (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0) {valNotZero = 1;} else {valNotZero = 0;}
+		if (i1 == 12)  {
+			info_printf("valNotZero %X at %i\n",valNotZero,i1);
+		}
+		setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
+		++iChk;
+	}	
+	info_printf("iChk %i\n",iChk);  
+	setPinAsOutputWithValue( strobePin,1);
+//	OSTimeDlyHMSM(0,0,0,1);   better: just do something for a very short time what should be enough for strobe
+#warning  duration of strobe needs still to be minimized 
+	for (INT8U i2= 0; i2 < 10; ++ i2) {
+		i2 += 1;
+	}
+	setPinAsOutputWithValue( strobePin,0);
 	
-	setPinAsOutputWithValue( testPin,0);
-	setPinAsOutputWithValue( testPin,1);
-	setPinAsOutputWithValue( testPin,0);
-	
+//	testPins();	
 }
 
 void initIfDipatcher()

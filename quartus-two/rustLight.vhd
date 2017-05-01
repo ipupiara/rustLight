@@ -67,6 +67,13 @@ ARCHITECTURE Behavior OF rustLight IS
 	);
 	end component;
 
+	component inputProbe
+		PORT
+		(
+			probe		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+			source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
+		);
+	end component;
 
 	
 	BEGIN
@@ -76,11 +83,18 @@ ARCHITECTURE Behavior OF rustLight IS
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
 			
-			rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
-				probe =>   YSig
+		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
+			probe =>   YSig
 --				, source => source_sig
-				);
+			);
 
+		inputProbe_inst : inputProbe PORT MAP (
+			probe	 => data & address & SwitchedOn & Strobe & ZeroPass & Reset
+--			, source	 => source_sig
+		);
+
+			
+			
 			
 		GEN_REG1: 
 		for i1 in 0 to amtTriacs-1 generate 

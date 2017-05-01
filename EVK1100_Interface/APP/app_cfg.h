@@ -38,7 +38,8 @@
 **************************************************************************************************************
 */
 
-//#define unique_STK_SIZE          2048
+//#define unique_STK_SIZE          1300
+#define super_STK_SIZE          2048
 #define unique_STK_SIZE          1024
 
 #define  APP_TASK_START_STK_SIZE          unique_STK_SIZE

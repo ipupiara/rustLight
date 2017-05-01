@@ -131,14 +131,14 @@ static  void  AppTaskStart (void *p_arg)
     while (1) {          
 		loopCnt ++;
         for (i = 1; i <= 6; i++) {
-            LED_On(i);
-            OSTimeDlyHMSM(0, 0, 2, 0);
-            LED_Off(i);
+ //           LED_On(i);
+            OSTimeDlyHMSM(0, 0, 4, 0);
+ //           LED_Off(i);
         }
         for (i = 4; i <= 7; i++) {
-            LED_On(9 - i);
-            OSTimeDlyHMSM(0, 0, 2, 0);
-            LED_Off(9 - i);
+   //         LED_On(9 - i);
+            OSTimeDlyHMSM(0, 0, 4, 0);
+     //       LED_Off(9 - i);
         }
 		info_printf("AppTaskStart loopCnt: %u \r\n*",loopCnt);
     }
