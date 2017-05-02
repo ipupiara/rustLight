@@ -106,7 +106,7 @@ void dispatchMesg(dispatchMsg* dmPtr)
 	INT8U i1 ;
 	INT8U iChk = 0;
 	INT8U valNotZero;
-	for ( i1 = 0; i1 < pinPosArraySize - 1; ++ i1 )  {
+	for ( i1 = 0; i1 < pinPosArraySize ; ++ i1 )  {
 		if (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0) {valNotZero = 1;} else {valNotZero = 0;}
 		if (i1 == 12)  {
 			info_printf("valNotZero %X at %i\n",valNotZero,i1);
