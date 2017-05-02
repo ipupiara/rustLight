@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>7.0</ProjectVersion>
+    <ProjectVersion>6.2</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC32.C</ToolchainName>
     <ProjectGuid>{bfc0ccf3-3663-4054-96c8-5d463ed56995}</ProjectGuid>
     <avrdevice>AT32UC3A0512</avrdevice>
@@ -89,7 +89,7 @@
         <documentation help="" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.25.0" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
@@ -111,24 +111,18 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.avrdragon</ToolType>
-      <ToolNumber>00A200052056</ToolNumber>
+      <ToolNumber>
+      </ToolNumber>
       <ToolName>AVR Dragon</ToolName>
     </com_atmel_avrdbg_tool_avrdragon>
-    <avrtoolserialnumber>00A200052056</avrtoolserialnumber>
-    <avrdeviceexpectedsignature>0x0</avrdeviceexpectedsignature>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
-      <Avr32Gcc>
+      <Avr32Gcc xmlns="">
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
         <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
-        <avr32gcc.compiler.directories.IncludePaths>
-          <ListValues>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
-          </ListValues>
-        </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.level>Optimize for size (-Os)</avr32gcc.compiler.optimization.level>
         <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
         <avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>True</avr32gcc.compiler.optimization.UseAssemblerForPseudoInstructions>
@@ -141,16 +135,6 @@
         <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
         <avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>True</avr32gcc.linker.optimization.PutReadOnlyDataInWritableDataSection>
         <avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>True</avr32gcc.linker.optimization.AllowDirectReferencesToDataSection>
-        <avr32gcc.assembler.general.IncludePaths>
-          <ListValues>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
-          </ListValues>
-        </avr32gcc.assembler.general.IncludePaths>
-        <avr32gcc.preprocessingassembler.general.IncludePaths>
-          <ListValues>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
-          </ListValues>
-        </avr32gcc.preprocessingassembler.general.IncludePaths>
       </Avr32Gcc>
     </ToolchainSettings>
   </PropertyGroup>
@@ -184,7 +168,6 @@
             <Value>../asf/UartPrint</Value>
             <Value>../asf/EVK1100</Value>
             <Value>../asf/intc</Value>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
@@ -207,7 +190,6 @@
             <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
             <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
             <Value>../uC-LIB/Ports/AVR32/UC3/AtmelStudio6</Value>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
           </ListValues>
         </avr32gcc.assembler.general.IncludePaths>
         <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
@@ -216,7 +198,6 @@
             <Value>../BSP</Value>
             <Value>../uC-CPU/AVR32/UC3/AtmelStudio6</Value>
             <Value>../uCOS-II/Ports/AVR32/UC3/AtmelStudio6</Value>
-            <Value>%24(PackRepoDir)\atmel\UC3A_DFP\1.0.53\include\AT32UC3A0512</Value>
           </ListValues>
         </avr32gcc.preprocessingassembler.general.IncludePaths>
         <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
