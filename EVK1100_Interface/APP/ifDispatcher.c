@@ -104,22 +104,16 @@ void dispatchMesg(dispatchMsg* dmPtr)
 	INT32U msgW;
 	msgW = dmPtr->dispatchData;
 	INT8U i1 ;
-	INT8U iChk = 0;
 	INT8U valNotZero;
 	for ( i1 = 0; i1 < pinPosArraySize ; ++ i1 )  {
 		if (shrUnmaskDWord(pinPosArray[i1].bytePos, msgW) > 0) {valNotZero = 1;} else {valNotZero = 0;}
-		if (i1 == 12)  {
-			info_printf("valNotZero %X at %i\n",valNotZero,i1);
-		}
 		setPinAsOutputWithValue(pinPosArray[i1].pinNr,valNotZero);
-		++iChk;
 	}	
-	info_printf("iChk %i\n",iChk);  
 	setPinAsOutputWithValue( strobePin,1);
 //	OSTimeDlyHMSM(0,0,0,1);   better: just do something for a very short time what should be enough for strobe
 #warning  duration of strobe needs still to be minimized 
-	for (INT8U i2= 0; i2 < 10; ++ i2) {
-		i2 += 1;
+	for (INT16U i2= 0; i2 < 10; -- i2) {
+		i2 += 2;
 	}
 	setPinAsOutputWithValue( strobePin,0);
 	
@@ -155,6 +149,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	dispatchMsg* dmPtr;
 	
 	setPinAsOutputWithValue( resetPin,1);
+	setPinAsOutputWithValue( zeroPassPin,0);
 	
 	info_printf("dispatcher startded\n");
 

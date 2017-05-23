@@ -80,7 +80,7 @@ set_location_assignment PIN_AA4 -to data[2]
 set_location_assignment PIN_V14 -to data[1]
 set_location_assignment PIN_U14 -to data[0]
 set_location_assignment PIN_V12 -to Reset
-set_location_assignment PIN_W13 -to Strobe
+set_location_assignment PIN_Y13 -to Strobe
 set_location_assignment PIN_U7 -to triacTriggerPulses[3]
 set_location_assignment PIN_V5 -to triacTriggerPulses[2]
 set_location_assignment PIN_W6 -to triacTriggerPulses[1]
@@ -102,6 +102,6 @@ set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY OFF -section_id eda_simul
 set_global_assignment -name VECTOR_WAVEFORM_FILE rustLight_01..vwf
 set_global_assignment -name QIP_FILE controllerInputChecker.qip
 set_location_assignment PIN_U13 -to ZeroPass
-set_location_assignment PIN_Y13 -to SwitchedOn
+set_location_assignment PIN_W13 -to SwitchedOn
 set_global_assignment -name QIP_FILE inputProbe.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -407,7 +407,7 @@ void init_err_printf()
 									OS_TASK_OPT_STK_CHK | OS_TASK_OPT_STK_CLR);
 	}
         
-    OSTaskNameSet(SerialQ_TASK_PRIO, (CPU_CHAR *)"SerQ", &err_init_print);
+    OSTaskNameSet(SerialQ_TASK_PRIO, (INT8U *)"SerQ", &err_init_print);
 	serialOn = (err_init_print == OS_NO_ERR);
 }
 

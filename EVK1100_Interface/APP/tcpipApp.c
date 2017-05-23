@@ -196,6 +196,6 @@ void startTcpipThread()
 	}
 
 	#if (OS_TASK_NAME_SIZE > 10)
-	OSTaskNameSet(tcp_ip_Thread_TASK_PRIO, (CPU_CHAR *)"tcp_ip", &err);
+	OSTaskNameSet(tcp_ip_Thread_TASK_PRIO, (INT8U *)"tcp_ip", &retVal);
 	#endif
 }
