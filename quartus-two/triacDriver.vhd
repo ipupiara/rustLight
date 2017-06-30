@@ -68,7 +68,7 @@ end component;
 				cntEnaFireBreakDurationSig  <= '0';
 			end procedure entryIdle;
 		BEGIN
-			IF ( Reset = '1' ) THEN
+			IF ( Reset = '0' ) THEN
 				entryIdle;
 			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
 				IF ((SwitchedOnReg = '0') OR (ZeroPassReg = '0')) THEN 

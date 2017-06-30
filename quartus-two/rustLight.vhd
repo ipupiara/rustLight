@@ -13,12 +13,13 @@ ENTITY rustLight IS
 			 ) ;
 END rustLight ;
 ARCHITECTURE Behavior OF rustLight IS
-	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL SwitchedOnReg, countersClockSig: STD_LOGIC;
+--	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
+--	SIGNAL SwitchedOnReg, countersClockSig: STD_LOGIC;
+	SIGNAL countersClockSig: STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	SIGNAL zeroPassAsync1, zeroPassAsync2: STD_LOGIC; 
-	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
+--	SIGNAL strobeAsync1, strobeAsync2: STD_LOGIC;
 	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	SIGNAL YSig : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	
@@ -59,6 +60,16 @@ ARCHITECTURE Behavior OF rustLight IS
 		);
 	END COMPONENT;
 	
+	COMPONENT StrobeLatch 
+	  generic (
+		 BITS   : POSITIVE  := 8 );
+	  port (
+		  inData    : in  STD_LOGIC_VECTOR(BITS - 1 downto 0);
+		  outData    : out  STD_LOGIC_VECTOR(BITS - 1 downto 0) ;
+		  Clock, Strobe, Reset : in std_logic	
+		 );
+	END COMPONENT;
+	
 	component controllerInputChecker
 	PORT
 	(
@@ -77,8 +88,7 @@ ARCHITECTURE Behavior OF rustLight IS
 
 	
 	BEGIN
---		StrobeReg <= Strobe;
-		XSig <= DataReg & SwitchedOnReg;
+--		XSig <= DataReg & SwitchedOnReg;
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
@@ -87,13 +97,20 @@ ARCHITECTURE Behavior OF rustLight IS
 			probe =>   YSig
 --				, source => source_sig
 			);
+			
+		dataLatch : strobeLatch	
+			GENERIC MAP ( BITS => 11)
+			PORT MAP (data & SwitchedOn,XSig,Clock, Strobe, Reset );
+			
+		addressLatch : strobeLatch
+			GENERIC MAP ( BITS => 2)
+			PORT MAP (address,AddressReg,Clock, Strobe, Reset );
+
 
 		inputProbe_inst : inputProbe PORT MAP (
 			probe	 => data & address & SwitchedOn & Strobe & ZeroPass & Reset
 --			, source	 => source_sig
 		);
-
-			
 			
 			
 		GEN_REG1: 
@@ -129,20 +146,20 @@ ARCHITECTURE Behavior OF rustLight IS
 			
 		PROCESS ( Reset, Clock )
 		BEGIN
-			IF Reset = '1' THEN
-				DataReg <= (OTHERS => '0'); 
-				addressReg  <= (OTHERS => '0'); 
-				SwitchedOnReg <= '0';
+			IF Reset = '0' THEN
+--				DataReg <= (OTHERS => '0'); 
+--				addressReg  <= (OTHERS => '0'); 
+--				SwitchedOnReg <= '0';
 			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
 				zeroPassAsync1 <= ZeroPass;
 				zeroPassAsync2 <= zeroPassAsync1;
-				strobeAsync1 <= Strobe;
-				strobeAsync2 <=  strobeAsync1;
-				IF (strobeAsync2 = '1')  THEN
-					DataReg <= data; 
-					addressReg <= address;
-					SwitchedOnReg <= switchedOn; 
-				END IF;
+--				strobeAsync1 <= Strobe;
+--				strobeAsync2 <=  strobeAsync1;
+--				IF (strobeAsync2 = '1')  THEN
+----					DataReg <= data; 
+--					addressReg <= address;
+--					SwitchedOnReg <= switchedOn;
+--				END IF;	
 			END IF ;
 		END PROCESS ;
 

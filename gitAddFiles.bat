@@ -9,6 +9,7 @@ git add quartus-two/rustLight.qsf
 git add quartus-two/basics.vhd
 git add quartus-two/rustLight.vhd
 git add quartus-two/triacDriver.vhd
+git add quartus-two/strobeLatch.vhd
 git add quartus-two/rustLight.out.sdc
 git add -A -f EVK1100_Interface/* 
 git add -A -f EVK1100_Interface/testApps/TriacControlCenter/TriacControlCenter/*
