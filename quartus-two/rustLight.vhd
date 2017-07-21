@@ -85,6 +85,15 @@ ARCHITECTURE Behavior OF rustLight IS
 			source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
 		);
 	end component;
+	
+	component demuxInputChecker
+	PORT
+	(
+		probe		: IN STD_LOGIC_VECTOR (12 DOWNTO 0);
+		source		: OUT STD_LOGIC_VECTOR (0 DOWNTO 0)
+	);
+	end component;
+
 
 	
 	BEGIN
@@ -94,9 +103,10 @@ ARCHITECTURE Behavior OF rustLight IS
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
 			
 		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
-			probe =>   YSig
+			probe =>   MuxOutputReg
 --				, source => source_sig
 			);
+		
 			
 		dataLatch : strobeLatch	
 			GENERIC MAP ( BITS => 11)
@@ -112,6 +122,11 @@ ARCHITECTURE Behavior OF rustLight IS
 --			, source	 => source_sig
 		);
 			
+		demuxInputChecker_inst : demuxInputChecker PORT MAP (
+			probe	 => AddressReg & XSig
+--			,source	 => source_sig
+		);
+
 			
 		GEN_REG1: 
 		for i1 in 0 to amtTriacs-1 generate 
@@ -135,11 +150,13 @@ ARCHITECTURE Behavior OF rustLight IS
 						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
 						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
 						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
-						 triacTriggerPulse => triacTriggerPulses(i1),
-						 testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) );
+						 triacTriggerPulse => triacTriggerPulses(i1)
+--						 ,testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) 
+						 );
 --				end generate GEN_REG2; 
  
 		end generate GEN_REG1;	
+		
 		
 		pll_1: rustLightPLL_1
 			PORT MAP (Clock, countersClockSig);
