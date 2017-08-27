@@ -94,6 +94,14 @@ set_location_assignment PIN_K22 -to ~ALTERA_nCEO~
 set_global_assignment -name EDA_RUN_TOOL_AUTOMATICALLY OFF -section_id eda_simulation
 set_location_assignment PIN_U13 -to ZeroPass
 set_location_assignment PIN_W13 -to SwitchedOn
+set_global_assignment -name QIP_FILE testPluginTriacDriverDelay.qip
+set_global_assignment -name VHDL_FILE testPluginTriacDriverDelay.vhd
+set_global_assignment -name VHDL_FILE rustLightPLL_1.vhd
+set_global_assignment -name VHDL_FILE rustLightCounter.vhd
+set_global_assignment -name VHDL_FILE rustLightCompare_1.vhd
+set_global_assignment -name VHDL_FILE inputProbe.vhd
+set_global_assignment -name VHDL_FILE demuxInputChecker.vhd
+set_global_assignment -name VHDL_FILE controllerInputChecker.vhd
 set_global_assignment -name VHDL_FILE strobeLatch.vhd
 set_global_assignment -name SDC_FILE rustLight.out.sdc
 set_global_assignment -name VHDL_FILE triacDriver.vhd

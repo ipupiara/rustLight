@@ -18,13 +18,15 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-//#include "sdramc.h"
+#include "sdramc.h"
 #include "UartPrint.h"
 #if uC_TCPIP_MODULE > 0
 #include "tcpipApp.h"     
 #include "ifDispatcher.h"                                           
 #endif
 
+
+#define showLED
 
 
 /*
@@ -47,6 +49,17 @@ static  void  AppTaskCreate(void);
 /*
 *    globals and enums
 */
+
+typedef struct sdramSpace{
+//	CalculationTable01   calcTable01;
+//	Snapshot01  snapshots [scoreQMsgSize];
+//	TopHisto     topHisto;
+	CPU_INT08U  dummyData [1000];
+} sdramSpace;
+
+typedef volatile sdramSpace* sdP;
+
+sdP sdp = SDRAM;
 
 
 
@@ -131,16 +144,24 @@ static  void  AppTaskStart (void *p_arg)
     while (1) {          
 		loopCnt ++;
         for (i = 1; i <= 6; i++) {
- //           LED_On(i);
+#ifdef showLED
+			LED_On(i);
+#endif			
             OSTimeDlyHMSM(0, 0, 4, 0);
- //           LED_Off(i);
+#ifdef showLED
+            LED_Off(i);
+#endif
         }
         for (i = 4; i <= 7; i++) {
-   //         LED_On(9 - i);
+#ifdef showLED
+            LED_On(9 - i);
+#endif			
             OSTimeDlyHMSM(0, 0, 4, 0);
-     //       LED_Off(9 - i);
+#ifdef showLED
+            LED_Off(9 - i);
+#endif			
         }
-		info_printf("AppTaskStart loopCnt: %u \r\n*",loopCnt);
+		info_printf("AppTaskStart loopCnt: %u \r\n",loopCnt);
     }
 }
 

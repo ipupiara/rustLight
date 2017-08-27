@@ -15,13 +15,13 @@ using namespace System::Collections;
 
 
 	RustlightUpdClient::RustlightUpdClient()
-		:UdpClient(defaultClientAddress, defaultClientPort)
+		:UdpClient(receiverHost, receiverPort)
 	{
 	
 	}
 
 	RustlightUpdClient::RustlightUpdClient(printFunction i_printf)
-		:UdpClient(defaultClientAddress, defaultClientPort)
+		:UdpClient(receiverHost, receiverPort)
 	{
 		info_printf = i_printf;
 	}
@@ -36,7 +36,17 @@ using namespace System::Collections;
 
 	void RustlightUpdClient::initClass(printFunction i_printf)
 	{
-		rustlightUpdClientSingleton = gcnew RustlightUpdClient (i_printf);
+		try
+		{
+			rustlightUpdClientSingleton = gcnew RustlightUpdClient (i_printf);
+			rustlightUpdClientSingleton->info_printf("RustlightUpdClient::initClass\n");
+			rustlightUpdClientSingleton->initRustlightTcpIp(receiverHost,receiverPort);
+
+		}
+		catch ( Exception^ exc ) 
+		{
+		   i_printf( exc->ToString() );
+		}
 	}
 
 
@@ -188,7 +198,7 @@ using namespace System::Collections;
 									
 
 
-	int RustlightUpdClient::communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::UInt32 msg)
+	int RustlightUpdClient::communicateMsg( System::UInt32 msg)
 	{
 		int res = 0;
 		char buffer [0x10];
@@ -214,10 +224,10 @@ using namespace System::Collections;
 		{
 		   Console::WriteLine( ex1->ToString() );
 		   array<Char>^exText = ex1->ToString()->ToCharArray();
-		   info_printf( ex1->Message->ToString());
+		   info_printf( ex1->Message->ToString()+"\n");
 		}
 
-
+		info_printf("leaving RustlightUpdClient::communicateMsg\n");
 
 
 /*		int cnt;

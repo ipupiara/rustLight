@@ -5,10 +5,6 @@
 #include <stdarg.h>
 #include "rustlightUpdClient.h"
 
-#define receiverHost "192.168.1.155"
-#define receiverPort 10001
-
-
 namespace TriacControlCenter {
 
 	using namespace System;
@@ -205,9 +201,6 @@ namespace TriacControlCenter {
 
 				 RustlightUpdClient::initClass(&addToLog);
 
-//				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("192.168.1.155",10001);
-				 RustlightUpdClient::rustlightUpdClientSingleton->initRustlightTcpIp("169.254.15.155",10001);
-
 			 }
 
 	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -225,7 +218,7 @@ namespace TriacControlCenter {
 					 onInt = 0;
 				 } 
 				 System::UInt32 theMsg = val + (adr  << 16) + (onInt << 24);
-				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg(receiverHost, receiverPort, theMsg);
+				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg( theMsg);
 
 			
 			 }

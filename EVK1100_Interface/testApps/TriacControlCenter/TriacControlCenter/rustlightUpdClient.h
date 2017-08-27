@@ -10,8 +10,10 @@ using namespace System::Net::Sockets;
 using namespace System::Collections;
 
 #define BufferSIZE 100
-#define defaultClientAddress    "168.192.0.151"
-#define defaultClientPort   1234
+
+#define receiverHost "169.254.15.155"
+#define receiverPort 10001
+
 
 typedef void (*printFunction)(String^ emsg, ...);
 
@@ -25,7 +27,7 @@ public:
 
 	void exitRustlightTcpIp();
 
-	int communicateMsg(String^ cliAddress, System::UInt32 cliPort, System::UInt32 msg);
+	int communicateMsg( System::UInt32 msg);
 	static RustlightUpdClient^ rustlightUpdClientSingleton;
 	static void initClass(printFunction i_printf);
 

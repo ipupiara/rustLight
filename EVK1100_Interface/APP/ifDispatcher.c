@@ -32,8 +32,6 @@ typedef struct pinData
 
 #define pinPosArraySize  13
 
-#warning ---->>>>> tobe tested with major doubts :-?
-
 pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1},{AVR32_PIN_PX02,2},
 								{AVR32_PIN_PX03,3},{AVR32_PIN_PX04,4},{AVR32_PIN_PX05,5},
 								{AVR32_PIN_PX06,6},{AVR32_PIN_PX07,7},{AVR32_PIN_PX08,8},
@@ -151,7 +149,7 @@ static  void  ifDispatcher_Thread_Method (void *p_arg)
 	setPinAsOutputWithValue( resetPin,1);
 	setPinAsOutputWithValue( zeroPassPin,0);
 	
-	info_printf("dispatcher startded\n");
+	info_printf("dispatcher thread started\n");
 
 	while (1) {
 		dmPtr = (dispatchMsg *)OSQPend(dispatchMsgQ, 1051, &err);
@@ -187,7 +185,7 @@ void startIfDispatcher()
 		if (retVal !=  OS_NO_ERR  ) {
 			err_printf("error create sec100 tcp_ip Thread\n");
 		}  else {
-			info_printf("ifDispatcher started\n");
+			info_printf("startIfDispatcher started ok\n");
 		}
 
 		#if (OS_TASK_NAME_SIZE > 10)

@@ -281,6 +281,7 @@ void  BSP_Init (void)
                                                                         /* ...  if OS-View and Probe are disabled                   */
     BSP_INTC_IntReg(&BSP_USARTRxTxISR, BSP_IRQ_USART, 1);
 #endif                                                                  /* #if (OS_VIEW_MODULE > 0) || (uC_PROBE_COM_MODULE > 0)    */
+    sdramc_init(4 * FOSC0);
 
     BSP_TmrInit();                                                      /* Initialize OS periodical time source                     */
 }

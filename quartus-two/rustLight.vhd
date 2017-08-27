@@ -23,14 +23,14 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	SIGNAL YSig : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	
-	type triacDriverIF is 
-	RECORD
-		Dta : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-		SwitchedOn : STD_LOGIC;
-	END RECORD;	
-	
-	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
-	SIGNAL  TriacDriverInput : triacDriverIFArray(amtTriacs -1 downto 0);	
+--	type triacDriverIF is 
+--	RECORD
+--		Dta : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
+--		SwitchedOn : STD_LOGIC;
+--	END RECORD;	
+--	
+--	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
+--	SIGNAL  TriacDriverInput : triacDriverIFArray(amtTriacs -1 downto 0);	
 	COMPONENT DeMUX_1toX_N_bits
 		generic (
 			 PORTS  : POSITIVE  := 4;
@@ -102,12 +102,6 @@ ARCHITECTURE Behavior OF rustLight IS
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
 			
-		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
-			probe =>   MuxOutputReg
---				, source => source_sig
-			);
-		
-			
 		dataLatch : strobeLatch	
 			GENERIC MAP ( BITS => 11)
 			PORT MAP (data & SwitchedOn,XSig,Clock, Strobe, Reset );
@@ -118,14 +112,20 @@ ARCHITECTURE Behavior OF rustLight IS
 
 
 		inputProbe_inst : inputProbe PORT MAP (
-			probe	 => data & address & SwitchedOn & Strobe & ZeroPass & Reset
+			probe	 => data & SwitchedOn & address  & Strobe & ZeroPass & Reset
 --			, source	 => source_sig
 		);
 			
 		demuxInputChecker_inst : demuxInputChecker PORT MAP (
-			probe	 => AddressReg & XSig
+			probe	 =>  XSig & AddressReg
 --			,source	 => source_sig
 		);
+		
+					
+		rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
+			probe =>   MuxOutputReg
+--				, source => source_sig
+			);
 
 			
 		GEN_REG1: 

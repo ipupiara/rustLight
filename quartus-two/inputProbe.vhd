@@ -77,9 +77,9 @@ BEGIN
 	altsource_probe_component : altsource_probe
 	GENERIC MAP (
 		enable_metastability => "NO",
-		instance_id => "inPr",
+		instance_id => "inpP",
 		probe_width => 16,
-		sld_auto_instance_index => "YES",
+		sld_auto_instance_index => "NO",
 		sld_instance_index => 0,
 		source_initial_value => " 0",
 		source_width => 1,
@@ -100,9 +100,9 @@ END SYN;
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: ENABLE_METASTABILITY STRING "NO"
--- Retrieval info: CONSTANT: INSTANCE_ID STRING "inPr"
+-- Retrieval info: CONSTANT: INSTANCE_ID STRING "inpP"
 -- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "16"
--- Retrieval info: CONSTANT: SLD_AUTO_INSTANCE_INDEX STRING "YES"
+-- Retrieval info: CONSTANT: SLD_AUTO_INSTANCE_INDEX STRING "NO"
 -- Retrieval info: CONSTANT: SLD_INSTANCE_INDEX NUMERIC "0"
 -- Retrieval info: CONSTANT: SOURCE_INITIAL_VALUE STRING " 0"
 -- Retrieval info: CONSTANT: SOURCE_WIDTH NUMERIC "1"

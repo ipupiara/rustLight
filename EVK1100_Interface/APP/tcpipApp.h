@@ -8,7 +8,10 @@
 #ifndef TCPIPAPP_H_
 #define TCPIPAPP_H_
 
+//#define ownIPAddress  "192.168.0.151"
+
 #define ownIPAddress  "169.254.15.155"
+
 #define UDP_SERVER_PORT 10001
 
 void startTcpipThread();

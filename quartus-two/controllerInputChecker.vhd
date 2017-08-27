@@ -77,10 +77,10 @@ BEGIN
 	altsource_probe_component : altsource_probe
 	GENERIC MAP (
 		enable_metastability => "NO",
-		instance_id => "cracker_checker",
+		instance_id => "ctrI",
 		probe_width => 44,
 		sld_auto_instance_index => "NO",
-		sld_instance_index => 0,
+		sld_instance_index => 6,
 		source_initial_value => " 0",
 		source_width => 1,
 		lpm_type => "altsource_probe"
@@ -100,10 +100,10 @@ END SYN;
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: ENABLE_METASTABILITY STRING "NO"
--- Retrieval info: CONSTANT: INSTANCE_ID STRING "chek"
+-- Retrieval info: CONSTANT: INSTANCE_ID STRING "ctrI"
 -- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "44"
 -- Retrieval info: CONSTANT: SLD_AUTO_INSTANCE_INDEX STRING "NO"
--- Retrieval info: CONSTANT: SLD_INSTANCE_INDEX NUMERIC "0"
+-- Retrieval info: CONSTANT: SLD_INSTANCE_INDEX NUMERIC "6"
 -- Retrieval info: CONSTANT: SOURCE_INITIAL_VALUE STRING " 0"
 -- Retrieval info: CONSTANT: SOURCE_WIDTH NUMERIC "1"
 -- Retrieval info: USED_PORT: probe 0 0 44 0 INPUT NODEFVAL "probe[43..0]"
