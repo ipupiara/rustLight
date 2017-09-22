@@ -114,4 +114,7 @@ set_global_assignment -name VECTOR_WAVEFORM_FILE rustLight_01..vwf
 set_global_assignment -name QIP_FILE controllerInputChecker.qip
 set_global_assignment -name QIP_FILE inputProbe.qip
 set_global_assignment -name QIP_FILE demuxInputChecker.qip
+set_global_assignment -name QIP_FILE clkctrl_1.qip
+set_global_assignment -name QIP_FILE clkCtrlOut.qip
+set_location_assignment PIN_AA3 -to countersClockOut
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

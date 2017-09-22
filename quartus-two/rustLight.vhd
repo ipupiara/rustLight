@@ -9,13 +9,16 @@ ENTITY rustLight IS
 	PORT ( 	data : IN STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 				address : IN STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 				Clock, Reset, Strobe,ZeroPass, SwitchedOn : IN STD_LOGIC;
-				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) 
+				triacTriggerPulses : OUT STD_LOGIC_VECTOR(amtTriacs - 1 DOWNTO 0) ;
+				countersClockOut: OUT STD_LOGIC
 			 ) ;
 END rustLight ;
 ARCHITECTURE Behavior OF rustLight IS
 --	SIGNAL DataReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 --	SIGNAL SwitchedOnReg, countersClockSig: STD_LOGIC;
 	SIGNAL countersClockSig: STD_LOGIC;
+	SIGNAL countersClockGlobalSig : STD_LOGIC;
+-- SIGNAL countersClockOutSig : STD_LOGIC;
 	SIGNAL AddressReg : STD_LOGIC_VECTOR(integer(ceil(log2(real(amtTriacs)))) - 1 DOWNTO 0) ;
 	SIGNAL MuxOutputReg : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	SIGNAL zeroPassAsync1, zeroPassAsync2: STD_LOGIC; 
@@ -60,6 +63,22 @@ ARCHITECTURE Behavior OF rustLight IS
 		);
 	END COMPONENT;
 	
+	component clkctrl_1
+	PORT
+	(
+		inclk		: IN STD_LOGIC ;
+		outclk		: OUT STD_LOGIC 
+	);
+	end component;
+	
+--	component clkCtrlOut
+--	PORT
+--	(
+--		inclk		: IN STD_LOGIC ;
+--		outclk		: OUT STD_LOGIC 
+--	);
+--	end component;
+	
 	COMPONENT StrobeLatch 
 	  generic (
 		 BITS   : POSITIVE  := 8 );
@@ -98,6 +117,7 @@ ARCHITECTURE Behavior OF rustLight IS
 	
 	BEGIN
 --		XSig <= DataReg & SwitchedOnReg;
+		countersClockOut <= countersClockGlobalSig;
 		demuxer : DeMUX_1toX_N_bits
 			GENERIC MAP (PORTS => amtTriacs , BITS => 11)
 			PORT MAP (AddressReg,XSig, MuxOutputReg);
@@ -149,7 +169,7 @@ ARCHITECTURE Behavior OF rustLight IS
 					REGX1 : triacDriver port map
 						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
 						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
-						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
+						 Clock => Clock, Reset => Reset,countersClock => countersClockGlobalSig,
 						 triacTriggerPulse => triacTriggerPulses(i1)
 --						 ,testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) 
 						 );
@@ -160,6 +180,13 @@ ARCHITECTURE Behavior OF rustLight IS
 		
 		pll_1: rustLightPLL_1
 			PORT MAP (Clock, countersClockSig);
+			
+		clkctrl_1Impl: clkctrl_1
+			PORT Map (countersClockSig,countersClockGlobalSig);
+
+		
+--		clkctrlOutImpl: clkCtrlOut
+--			PORT MAP (countersClockSig, countersClockOut);
 			
 		PROCESS ( Reset, Clock )
 		BEGIN
