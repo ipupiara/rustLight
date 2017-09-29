@@ -44,7 +44,7 @@ ENTITY rustLightCompare_1 IS
 	(
 		dataa		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
 		datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
-		aleb		: OUT STD_LOGIC 
+		ageb		: OUT STD_LOGIC 
 	);
 END rustLightCompare_1;
 
@@ -62,14 +62,14 @@ ARCHITECTURE SYN OF rustlightcompare_1 IS
 		lpm_width		: NATURAL
 	);
 	PORT (
-			aleb	: OUT STD_LOGIC ;
+			ageb	: OUT STD_LOGIC ;
 			dataa	: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
 			datab	: IN STD_LOGIC_VECTOR (9 DOWNTO 0)
 	);
 	END COMPONENT;
 
 BEGIN
-	aleb    <= sub_wire0;
+	ageb    <= sub_wire0;
 
 	LPM_COMPARE_component : LPM_COMPARE
 	GENERIC MAP (
@@ -80,7 +80,7 @@ BEGIN
 	PORT MAP (
 		dataa => dataa,
 		datab => datab,
-		aleb => sub_wire0
+		ageb => sub_wire0
 	);
 
 
@@ -91,9 +91,9 @@ END SYN;
 -- CNX file retrieval info
 -- ============================================================
 -- Retrieval info: PRIVATE: AeqB NUMERIC "0"
--- Retrieval info: PRIVATE: AgeB NUMERIC "0"
+-- Retrieval info: PRIVATE: AgeB NUMERIC "1"
 -- Retrieval info: PRIVATE: AgtB NUMERIC "0"
--- Retrieval info: PRIVATE: AleB NUMERIC "1"
+-- Retrieval info: PRIVATE: AleB NUMERIC "0"
 -- Retrieval info: PRIVATE: AltB NUMERIC "0"
 -- Retrieval info: PRIVATE: AneB NUMERIC "0"
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
@@ -112,12 +112,12 @@ END SYN;
 -- Retrieval info: CONSTANT: LPM_REPRESENTATION STRING "UNSIGNED"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "LPM_COMPARE"
 -- Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "10"
--- Retrieval info: USED_PORT: aleb 0 0 0 0 OUTPUT NODEFVAL "aleb"
+-- Retrieval info: USED_PORT: ageb 0 0 0 0 OUTPUT NODEFVAL "ageb"
 -- Retrieval info: USED_PORT: dataa 0 0 10 0 INPUT NODEFVAL "dataa[9..0]"
 -- Retrieval info: USED_PORT: datab 0 0 10 0 INPUT NODEFVAL "datab[9..0]"
 -- Retrieval info: CONNECT: @dataa 0 0 10 0 dataa 0 0 10 0
 -- Retrieval info: CONNECT: @datab 0 0 10 0 datab 0 0 10 0
--- Retrieval info: CONNECT: aleb 0 0 0 0 @aleb 0 0 0 0
+-- Retrieval info: CONNECT: ageb 0 0 0 0 @ageb 0 0 0 0
 -- Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCompare_1.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCompare_1.inc FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCompare_1.cmp FALSE
