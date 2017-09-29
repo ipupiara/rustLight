@@ -26,14 +26,6 @@ ARCHITECTURE Behavior OF rustLight IS
 	SIGNAL XSig : STD_LOGIC_VECTOR(10 DOWNTO 0) ;
 	SIGNAL YSig : STD_LOGIC_VECTOR( (amtTriacs * 11) -1 DOWNTO 0) ;	
 	
---	type triacDriverIF is 
---	RECORD
---		Dta : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
---		SwitchedOn : STD_LOGIC;
---	END RECORD;	
---	
---	type triacDriverIFArray is  array(NATURAL range <>) of triacDriverIF;
---	SIGNAL  TriacDriverInput : triacDriverIFArray(amtTriacs -1 downto 0);	
 	COMPONENT DeMUX_1toX_N_bits
 		generic (
 			 PORTS  : POSITIVE  := 4;
@@ -150,22 +142,7 @@ ARCHITECTURE Behavior OF rustLight IS
 			
 		GEN_REG1: 
 		for i1 in 0 to amtTriacs-1 generate 
---			GEN_REG3:	
---			if (i1 = 0) generate
---					rustLightControllerInputChecker :  controllerInputChecker PORT MAP (
---						probe =>   YSig
-----						, source => source_sig
---						);
---						
---					REGX2 : triacDriver port map
---						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
---						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPassUp => zeroPassUpAsync2, 
---						 Clock => Clock, Reset => Reset,countersClock => countersClockSig,
---						 triacTriggerPulse => triacTriggerPulses(i1),
---						 testData => YSig);
---			end generate GEN_REG3;	
---			GEN_REG2: 
---				generate
+
 					REGX1 : triacDriver port map
 						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
 						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
@@ -173,9 +150,7 @@ ARCHITECTURE Behavior OF rustLight IS
 						 triacTriggerPulse => triacTriggerPulses(i1),
 						 testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) 
 						 );
-						 
---				end generate GEN_REG2; 
- 
+	
 		end generate GEN_REG1;	
 		
 		
@@ -185,26 +160,15 @@ ARCHITECTURE Behavior OF rustLight IS
 		clkctrl_1Impl: clkctrl_1
 			PORT Map (countersClockSig,countersClockGlobalSig);
 
-		
---		clkctrlOutImpl: clkCtrlOut
---			PORT MAP (countersClockSig, countersClockOut);
 			
 		PROCESS ( Reset, Clock )
 		BEGIN
 			IF Reset = '0' THEN
---				DataReg <= (OTHERS => '0'); 
---				addressReg  <= (OTHERS => '0'); 
---				SwitchedOnReg <= '0';
+
 			ELSIF  (Clock'EVENT AND Clock = '1' ) THEN
 				zeroPassAsync1 <= ZeroPass;
 				zeroPassAsync2 <= zeroPassAsync1;
---				strobeAsync1 <= Strobe;
---				strobeAsync2 <=  strobeAsync1;
---				IF (strobeAsync2 = '1')  THEN
-----					DataReg <= data; 
---					addressReg <= address;
---					SwitchedOnReg <= switchedOn;
---				END IF;	
+
 			END IF ;
 		END PROCESS ;
 

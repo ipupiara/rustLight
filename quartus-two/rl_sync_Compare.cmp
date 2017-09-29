@@ -13,12 +13,11 @@
 --applicable agreement for further details.
 
 
-component rustLightCounter
+component rl_sync_Compare
 	PORT
 	(
-		aclr		: IN STD_LOGIC ;
-		clock		: IN STD_LOGIC ;
-		cnt_en		: IN STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+		dataa		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		datab		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+		ageb		: OUT STD_LOGIC 
 	);
 end component;
