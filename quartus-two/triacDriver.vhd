@@ -21,7 +21,7 @@ architecture driverJob of triacDriver is
 	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL aclrIgnitionDelaySig, equalIgnitionDelaySig, equalIgnitionDelaySigA1, equalIgnitionDelaySigA2 : std_LOGIC;
-	SIGNAL cnt_En_triacDelay : std_Logic;
+	SIGNAL cnt_En_triacDelay, testSig : std_Logic;
 	SIGNAL cnt_En_fireCounter, sclr_fireCounter, ageb_fireCounter : std_LOGIC;
 	SIGNAL q_fireCounter, dataa_fireCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
 	SIGNAL cnt_En_fireDelayCounter, sclr_fireDelayCounter, ageb_fireDelayCounter : std_LOGIC;
@@ -102,7 +102,7 @@ architecture driverJob of triacDriver is
 			ageb => ageb_fireDelayCounter
 		);		
 		
-		PROCESS ( Clock )	
+		PROCESS ( Clock, Reset )	
 			procedure entryIdle is
 			begin
 				triacTriggerPulse <= '0';
@@ -115,7 +115,11 @@ architecture driverJob of triacDriver is
 				cnt_En_fireDelayCounter  <= '0';
 			end procedure entryIdle;
 		BEGIN
-			IF ( Clock'EVENT AND Clock = '1' ) THEN
+--			IF (Reset = '0') THEN
+--				entryIdle;
+--			ELSIF 
+				IF
+				    ( Clock'EVENT AND Clock = '1' ) THEN
 				equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
 				equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
 				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 

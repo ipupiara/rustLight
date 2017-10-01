@@ -106,8 +106,63 @@ ARCHITECTURE Behavior OF rustLight IS
 	);
 	end component;
 
-
-	
+--	component rustLightCounter
+--		PORT
+--		(
+--			aclr		: IN STD_LOGIC ;
+--			clock		: IN STD_LOGIC ;
+--			cnt_en		: IN STD_LOGIC ;
+--			q		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)	
+--		);
+--	end component;
+--	component rustLightCompare_1
+--		PORT
+--		(
+--			dataa		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
+--			datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
+--			ageb		: OUT STD_LOGIC 
+--		);
+--	end component;
+--
+--	component rl_sync_counter
+--		PORT
+--		(
+--			clock		: IN STD_LOGIC ;
+--			cnt_en		: IN STD_LOGIC ;
+--			sclr		: IN STD_LOGIC ;
+--			q		: OUT STD_LOGIC_VECTOR (13 DOWNTO 0)
+--		);
+--	end component;
+--	
+--	component rl_sync_Compare
+--	PORT
+--	(
+--		dataa		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+--		datab		: IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+--		ageb		: OUT STD_LOGIC 
+--	);
+--	end component;
+--	
+--	
+--
+--
+--component counterChecker
+--	PORT
+--	(
+--		probe		: IN STD_LOGIC_VECTOR (14 DOWNTO 0);
+--		source		: OUT STD_LOGIC_VECTOR (16 DOWNTO 0)
+--	);
+--end component;
+--
+--
+--	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(13 DOWNTO 0) ;
+--	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(13 DOWNTO 0) ;
+--	SIGNAL aclrIgnitionDelaySig, equalIgnitionDelaySig, equalIgnitionDelaySigA1, equalIgnitionDelaySigA2 : std_LOGIC;
+--	SIGNAL cnt_En_triacDelay, testSig, countersClock, clk : std_Logic;
+--	SIGNAL cnt_En_fireCounter, sclr_fireCounter, ageb_fireCounter : std_LOGIC;
+--	SIGNAL q_fireCounter, dataa_fireCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
+--	SIGNAL sourceSig : STD_LOGIC_VECTOR (16 downto 0);
+--	
 	BEGIN
 --		XSig <= DataReg & SwitchedOnReg;
 		countersClockOut <= countersClockGlobalSig;
@@ -171,6 +226,44 @@ ARCHITECTURE Behavior OF rustLight IS
 
 			END IF ;
 		END PROCESS ;
+		
+--		rustLightIgnitionDelayCounter : rl_sync_counter PORT MAP (
+--			clock	 => countersClock,
+--			sclr	 => aclrIgnitionDelaySig,
+--			cnt_en => cnt_En_triacDelay,
+--			q	 => IgnitionDelayCounterReg
+--		);
+--		rustLightIgnitionDelayCompare : rl_sync_Compare PORT MAP (
+--			dataa	 => IgnitionDelayCounterReg,
+--			datab  => IgnitionDelayReg,
+--			ageb   => equalIgnitionDelaySig
+--		);
+--		
+----		IgnitionDelayReg <= "1100000000";
+----		sourceSig <= countersClock & aclrIgnitionDelaySig & cnt_En_triacDelay & IgnitionDelayReg;
+--		
+--			IgnitionDelayReg <= sourceSig (13 downto 0);
+--			countersClock <= sourceSig(16);
+--			aclrIgnitionDelaySig <= sourceSig(15);
+--			cnt_En_triacDelay <= sourceSig(14);
+--		
+--		counterCheckerInst : counterChecker PORT MAP (
+--			probe =>  equalIgnitionDelaySig &  IgnitionDelayCounterReg ,
+--			source => sourceSig
+------			source => countersClock & aclrIgnitionDelaySig & cnt_En_triacDelay
+--		);
+--		
+--		rustLightFireCounter : rl_sync_counter PORT MAP (
+--			clock => clk,
+--			cnt_en => cnt_En_fireCounter,
+--			sclr =>  sclr_fireCounter ,
+--			q =>  q_fireCounter
+--		);
+--		rustLightFireCompare : rl_sync_Compare PORT MAP (
+--			dataa => q_fireCounter,
+--			datab => dataa_fireCounter,
+--			ageb => ageb_fireCounter
+--		);
 
 END Behavior ;
 
