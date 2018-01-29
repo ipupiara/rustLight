@@ -20,8 +20,8 @@ architecture driverJob of triacDriver is
 	SIGNAL triacState : triacStateType;
 	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL aclrIgnitionDelaySig, equalIgnitionDelaySig, equalIgnitionDelaySigA1, equalIgnitionDelaySigA2 : std_LOGIC;
-	SIGNAL cnt_En_triacDelay, testSig : std_Logic;
+	SIGNAL sClrIgnitionDelaySig, equalIgnitionDelaySig, equalIgnitionDelaySigA1, equalIgnitionDelaySigA2 : std_LOGIC;
+	SIGNAL cnt_En_IgnitionDelay, testSig : std_Logic;
 	SIGNAL cnt_En_fireCounter, sclr_fireCounter, ageb_fireCounter : std_LOGIC;
 	SIGNAL q_fireCounter, dataa_fireCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
 	SIGNAL cnt_En_fireDelayCounter, sclr_fireDelayCounter, ageb_fireDelayCounter : std_LOGIC;
@@ -30,7 +30,7 @@ architecture driverJob of triacDriver is
 	component rustLightCounter
 		PORT
 		(
-			aclr		: IN STD_LOGIC ;
+			sclr		: IN STD_LOGIC ;
 			clock		: IN STD_LOGIC ;
 			cnt_en		: IN STD_LOGIC ;
 			q		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)	
@@ -41,7 +41,7 @@ architecture driverJob of triacDriver is
 		(
 			dataa		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
 			datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
-			ageb		: OUT STD_LOGIC 
+			aeb		: OUT STD_LOGIC 
 		);
 	end component;
 
@@ -70,14 +70,14 @@ architecture driverJob of triacDriver is
 		
 	  rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
 			clock	 => countersClock,
-			aclr	 => aclrIgnitionDelaySig,
-			cnt_en => cnt_En_triacDelay,
+			sclr	 => sClrIgnitionDelaySig,
+			cnt_en => cnt_En_IgnitionDelay,
 			q	 => IgnitionDelayCounterReg
 		);
 		rustLightIgnitionDelayCompare : rustLightCompare_1 PORT MAP (
 			dataa	 => IgnitionDelayCounterReg,
 			datab  => IgnitionDelayReg,
-			ageb   => equalIgnitionDelaySig
+			aeb   => equalIgnitionDelaySig
 		);
 		rustLightFireCounter : rl_sync_counter PORT MAP (
 			clock => clock,
@@ -102,13 +102,14 @@ architecture driverJob of triacDriver is
 			ageb => ageb_fireDelayCounter
 		);		
 		
-		PROCESS ( Clock, Reset )	
+		PROCESS ( Clock )	
+--		PROCESS ( Clock, Reset )			
 			procedure entryIdle is
 			begin
 				triacTriggerPulse <= '0';
 				triacState <= idle;
-				aclrIgnitionDelaySig <= '1';
-				cnt_En_triacDelay  <= '0';
+				sClrIgnitionDelaySig <= '1';
+				cnt_En_IgnitionDelay  <= '0';
 				sclr_fireCounter <= '1';
 				cnt_En_fireCounter <= '0';
 				sclr_fireDelayCounter  <= '1';
@@ -118,24 +119,26 @@ architecture driverJob of triacDriver is
 --			IF (Reset = '0') THEN
 --				entryIdle;
 --			ELSIF 
-				IF
-				    ( Clock'EVENT AND Clock = '1' ) THEN
-				equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
-				equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
-				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 
+			IF
+				( Clock'EVENT AND Clock = '1' ) THEN
+					equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
+					equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
+--				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 
+				IF ( (zeroPass = '0')) THEN 
 					entryIdle; 
+					IgnitionDelayReg <= ignitionDelay; 
 				ELSE
 					IF ((triacState = idle) AND (zeroPass = '1')) THEN
 					--  set ignition delay to input in this transition
-						IgnitionDelayReg <= ignitionDelay; 
-						aclrIgnitionDelaySig <= '0';
-						cnt_En_triacDelay <= '1';
+--						IgnitionDelayReg <= ignitionDelay; 
+						sClrIgnitionDelaySig <= '0';
+						cnt_En_IgnitionDelay <= '1';
 						triacState <= triacTriggerDelay;
 					END IF;
 					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
 							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN
-						cnt_En_triacDelay <= '0';	
-						aclrIgnitionDelaySig <= '1';
+						cnt_En_IgnitionDelay <= '0';	
+						sClrIgnitionDelaySig <= '1';
 						
 						sclr_fireCounter <= '0';
 						cnt_En_fireCounter <= '1';

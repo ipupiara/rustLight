@@ -175,7 +175,7 @@ ARCHITECTURE Behavior OF rustLight IS
 			PORT MAP (data & SwitchedOn,XSig,Clock, Strobe, Reset );
 			
 		addressLatch : strobeLatch
-			GENERIC MAP ( BITS => 2)
+			GENERIC MAP ( BITS => integer(ceil(log2(real(amtTriacs)))))
 			PORT MAP (address,AddressReg,Clock, Strobe, Reset );
 
 
@@ -195,9 +195,8 @@ ARCHITECTURE Behavior OF rustLight IS
 		);
 
 			
-		GEN_REG1: 
-		for i1 in 0 to amtTriacs-1 generate 
-
+		GEN_REG0: 
+		for i1 in 0 to 0 generate 
 					REGX1 : triacDriver port map
 						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
 						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
@@ -205,7 +204,16 @@ ARCHITECTURE Behavior OF rustLight IS
 						 triacTriggerPulse => triacTriggerPulses(i1),
 						 testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) 
 						 );
-	
+		end generate GEN_REG0;	
+		GEN_REG1: 
+		for i1 in 1 to amtTriacs-1 generate 
+					REGX1 : triacDriver port map
+						 ( ignitionDelay => MuxOutputReg((((i1 + 1) * 11 ) - 2)  downto ((i1 * 11 )  )),
+						 switchedOn => MuxOutputReg((((i1 + 1) * 11 ) - 1)), zeroPass => zeroPassAsync2, 
+						 Clock => Clock, Reset => Reset,countersClock => countersClockGlobalSig,
+						 triacTriggerPulse => triacTriggerPulses(i1),
+						 testData => YSig((((i1 + 1) * 11 ) - 1)  downto ((i1 * 11 )  )) 
+						 );
 		end generate GEN_REG1;	
 		
 		

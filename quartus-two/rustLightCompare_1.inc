@@ -13,12 +13,12 @@
 --applicable agreement for further details.
 
 
-component rustLightCounter
-	PORT
-	(
-		clock		: IN STD_LOGIC ;
-		cnt_en		: IN STD_LOGIC ;
-		sclr		: IN STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
-	);
-end component;
+FUNCTION rustLightCompare_1 
+(
+	dataa[9..0],
+	datab[9..0]
+)
+
+RETURNS (
+	aeb
+);

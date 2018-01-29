@@ -33,7 +33,7 @@
 //applicable agreement for further details.
 
 
-//lpm_counter DEVICE_FAMILY="Cyclone III" lpm_direction="UP" lpm_port_updown="PORT_UNUSED" lpm_width=10 aclr clock cnt_en q
+//lpm_counter DEVICE_FAMILY="Cyclone III" lpm_direction="UP" lpm_port_updown="PORT_UNUSED" lpm_width=10 clock cnt_en q sclr
 //VERSION_BEGIN 13.1 cbx_cycloneii 2013:10:23:18:05:48:SJ cbx_lpm_add_sub 2013:10:23:18:05:48:SJ cbx_lpm_compare 2013:10:23:18:05:48:SJ cbx_lpm_counter 2013:10:23:18:05:48:SJ cbx_lpm_decode 2013:10:23:18:05:48:SJ cbx_mgl 2013:10:23:18:06:54:SJ cbx_stratix 2013:10:23:18:05:48:SJ cbx_stratixii 2013:10:23:18:05:48:SJ  VERSION_END
 // synthesis VERILOG_INPUT_VERSION VERILOG_2001
 // altera message_off 10463
@@ -45,19 +45,19 @@
 //synopsys translate_on
 module  rustLightCounter_cntr
 	( 
-	aclr,
 	clock,
 	cnt_en,
-	q) /* synthesis synthesis_clearbox=1 */;
-	input   aclr;
+	q,
+	sclr) /* synthesis synthesis_clearbox=1 */;
 	input   clock;
 	input   cnt_en;
 	output   [9:0]  q;
+	input   sclr;
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_off
 `endif
-	tri0   aclr;
 	tri1   cnt_en;
+	tri0   sclr;
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_on
 `endif
@@ -92,7 +92,6 @@ module  rustLightCounter_cntr
 	wire  external_cin;
 	wire  [9:0]  s_val;
 	wire  [9:0]  safe_q;
-	wire sclr;
 	wire sload;
 	wire sset;
 	wire  updown_dir;
@@ -334,14 +333,13 @@ module  rustLightCounter_cntr
 		wire_counter_reg_bit_ena = {10{(clk_en & (((sclr | sset) | sload) | cnt_en))}},
 		wire_counter_reg_bit_sload = {10{((sclr | sset) | sload)}};
 	assign
-		aclr_actual = aclr,
+		aclr_actual = 1'b0,
 		clk_en = 1'b1,
 		data = {10{1'b0}},
 		external_cin = 1'b1,
 		q = safe_q,
 		s_val = {10{1'b1}},
 		safe_q = counter_reg_bit,
-		sclr = 1'b0,
 		sload = 1'b0,
 		sset = 1'b0,
 		updown_dir = 1'b1;
@@ -353,23 +351,23 @@ endmodule //rustLightCounter_cntr
 `timescale 1 ps / 1 ps
 // synopsys translate_on
 module rustLightCounter (
-	aclr,
 	clock,
 	cnt_en,
+	sclr,
 	q)/* synthesis synthesis_clearbox = 1 */;
 
-	input	  aclr;
 	input	  clock;
 	input	  cnt_en;
+	input	  sclr;
 	output	[9:0]  q;
 
 	wire [9:0] sub_wire0;
 	wire [9:0] q = sub_wire0[9:0];
 
 	rustLightCounter_cntr	rustLightCounter_cntr_component (
-				.aclr (aclr),
 				.clock (clock),
 				.cnt_en (cnt_en),
+				.sclr (sclr),
 				.q (sub_wire0));
 
 endmodule
@@ -377,7 +375,7 @@ endmodule
 // ============================================================
 // CNX file retrieval info
 // ============================================================
-// Retrieval info: PRIVATE: ACLR NUMERIC "1"
+// Retrieval info: PRIVATE: ACLR NUMERIC "0"
 // Retrieval info: PRIVATE: ALOAD NUMERIC "0"
 // Retrieval info: PRIVATE: ASET NUMERIC "0"
 // Retrieval info: PRIVATE: ASET_ALL1 NUMERIC "1"
@@ -389,7 +387,7 @@ endmodule
 // Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 // Retrieval info: PRIVATE: ModulusCounter NUMERIC "0"
 // Retrieval info: PRIVATE: ModulusValue NUMERIC "0"
-// Retrieval info: PRIVATE: SCLR NUMERIC "0"
+// Retrieval info: PRIVATE: SCLR NUMERIC "1"
 // Retrieval info: PRIVATE: SLOAD NUMERIC "0"
 // Retrieval info: PRIVATE: SSET NUMERIC "0"
 // Retrieval info: PRIVATE: SSET_ALL1 NUMERIC "1"
@@ -401,18 +399,18 @@ endmodule
 // Retrieval info: CONSTANT: LPM_PORT_UPDOWN STRING "PORT_UNUSED"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "LPM_COUNTER"
 // Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "10"
-// Retrieval info: USED_PORT: aclr 0 0 0 0 INPUT NODEFVAL "aclr"
 // Retrieval info: USED_PORT: clock 0 0 0 0 INPUT NODEFVAL "clock"
 // Retrieval info: USED_PORT: cnt_en 0 0 0 0 INPUT NODEFVAL "cnt_en"
 // Retrieval info: USED_PORT: q 0 0 10 0 OUTPUT NODEFVAL "q[9..0]"
-// Retrieval info: CONNECT: @aclr 0 0 0 0 aclr 0 0 0 0
+// Retrieval info: USED_PORT: sclr 0 0 0 0 INPUT NODEFVAL "sclr"
 // Retrieval info: CONNECT: @clock 0 0 0 0 clock 0 0 0 0
 // Retrieval info: CONNECT: @cnt_en 0 0 0 0 cnt_en 0 0 0 0
+// Retrieval info: CONNECT: @sclr 0 0 0 0 sclr 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 10 0 @q 0 0 10 0
 // Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter.vhd TRUE
 // Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter.inc FALSE
 // Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter.cmp TRUE
 // Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter_inst.vhd FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter_inst.vhd TRUE
 // Retrieval info: GEN_FILE: TYPE_NORMAL rustLightCounter_syn.v TRUE
 // Retrieval info: LIB_FILE: lpm
