@@ -27,6 +27,9 @@ architecture driverJob of triacDriver is
 	SIGNAL cnt_En_fireDelayCounter, sclr_fireDelayCounter, ageb_fireDelayCounter : std_LOGIC;
 	SIGNAL q_fireDelayCounter, dataa_fireDelayCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
 
+SIGNAL  cClock, nClock: std_LOGIC;	
+SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
+	
 	component rustLightCounter
 		PORT
 		(
@@ -63,13 +66,26 @@ architecture driverJob of triacDriver is
 		ageb		: OUT STD_LOGIC 
 	);
 	end component;
+	
+	component rustlightProbe
+	PORT
+	(
+		probe		: IN STD_LOGIC_VECTOR (22 DOWNTO 0);
+		source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
+	);
+	end component;
+
 
   begin
 		dataa_fireCounter      <= "00000111111111" ;
 		dataa_fireDelayCounter <= "00111111111111" ;
+		nclock <= testclocks (0);
+		cclock <= testclocks (1);
+--		testclocks <= nclock, cclock;
 		
 	  rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
-			clock	 => countersClock,
+--			clock	 => countersClock,
+			clock  => cclock,
 			sclr	 => sClrIgnitionDelaySig,
 			cnt_en => cnt_En_IgnitionDelay,
 			q	 => IgnitionDelayCounterReg
@@ -80,7 +96,8 @@ architecture driverJob of triacDriver is
 			aeb   => equalIgnitionDelaySig
 		);
 		rustLightFireCounter : rl_sync_counter PORT MAP (
-			clock => clock,
+--			clock => clock,
+			clock => nclock,
 			cnt_en => cnt_En_fireCounter,
 			sclr =>  sclr_fireCounter ,
 			q =>  q_fireCounter
@@ -91,7 +108,8 @@ architecture driverJob of triacDriver is
 			ageb => ageb_fireCounter
 		);
 		rustLightFireDelayCounter : rl_sync_counter PORT MAP (
-			clock => clock,
+--			clock => clock,
+			clock => nclock,
 			cnt_en => cnt_En_fireDelayCounter,
 			sclr =>  sclr_fireDelayCounter,
 			q =>  q_fireDelayCounter
@@ -101,6 +119,12 @@ architecture driverJob of triacDriver is
 			datab => dataa_fireDelayCounter,
 			ageb => ageb_fireDelayCounter
 		);		
+		
+		rustlightProbe_inst : rustlightProbe PORT MAP (
+			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter , 
+			source	 => testclocks
+		);
+	
 		
 		PROCESS ( Clock )	
 --		PROCESS ( Clock, Reset )			
