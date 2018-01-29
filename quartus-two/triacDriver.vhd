@@ -44,7 +44,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		(
 			dataa		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
 			datab		: IN STD_LOGIC_VECTOR (9 DOWNTO 0);
-			aeb		: OUT STD_LOGIC 
+			ageb		: OUT STD_LOGIC 
 		);
 	end component;
 
@@ -93,7 +93,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		rustLightIgnitionDelayCompare : rustLightCompare_1 PORT MAP (
 			dataa	 => IgnitionDelayCounterReg,
 			datab  => IgnitionDelayReg,
-			aeb   => equalIgnitionDelaySig
+			ageb   => equalIgnitionDelaySig
 		);
 		rustLightFireCounter : rl_sync_counter PORT MAP (
 --			clock => clock,
