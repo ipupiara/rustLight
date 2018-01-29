@@ -30,13 +30,13 @@ typedef struct pinData
 	INT8S     bytePos;
 } pinPosData;
 
-#define pinPosArraySize  13
+#define pinPosArraySize  14
 
 pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1},{AVR32_PIN_PX02,2},
 								{AVR32_PIN_PX03,3},{AVR32_PIN_PX04,4},{AVR32_PIN_PX05,5},
 								{AVR32_PIN_PX06,6},{AVR32_PIN_PX07,7},{AVR32_PIN_PX08,8},
 								{AVR32_PIN_PX09,9},{AVR32_PIN_PX10,16},{AVR32_PIN_PX11,17},
-								{AVR32_PIN_PX12,24} };
+								{AVR32_PIN_PX12,24}, {AVR32_PIN_PX15,25} };
 										
 #define strobePin   AVR32_PIN_PX13
 #define resetPin	AVR32_PIN_PX14

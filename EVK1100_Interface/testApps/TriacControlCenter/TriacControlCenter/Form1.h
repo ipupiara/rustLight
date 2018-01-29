@@ -27,6 +27,8 @@ namespace TriacControlCenter {
 	{
 	protected:
 		static	Form1^  singleton ;
+	private: System::Windows::Forms::CheckBox^  zeroPassBox;
+	protected: 
 		String^ stri;
 //		RustlightUpdClient* pRustlightUpdClient;
 	public:
@@ -83,117 +85,129 @@ namespace TriacControlCenter {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->addressField = (gcnew System::Windows::Forms::NumericUpDown());
-			this->sendButton = (gcnew System::Windows::Forms::Button());
-			this->quitButton = (gcnew System::Windows::Forms::Button());
-			this->adradr = (gcnew System::Windows::Forms::Label());
-			this->ValueUpDown = (gcnew System::Windows::Forms::NumericUpDown());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->onCheckBox = (gcnew System::Windows::Forms::CheckBox());
-			this->logText = (gcnew System::Windows::Forms::TextBox());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->addressField))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->ValueUpDown))->BeginInit();
-			this->SuspendLayout();
-			// 
-			// addressField
-			// 
-			this->addressField->Location = System::Drawing::Point(106, 16);
-			this->addressField->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {3, 0, 0, 0});
-			this->addressField->Name = L"addressField";
-			this->addressField->Size = System::Drawing::Size(120, 20);
-			this->addressField->TabIndex = 0;
-			this->addressField->Tag = L"";
-			// 
-			// sendButton
-			// 
-			this->sendButton->Location = System::Drawing::Point(44, 138);
-			this->sendButton->Name = L"sendButton";
-			this->sendButton->Size = System::Drawing::Size(75, 23);
-			this->sendButton->TabIndex = 1;
-			this->sendButton->Text = L"send";
-			this->sendButton->UseVisualStyleBackColor = true;
-			this->sendButton->Click += gcnew System::EventHandler(this, &Form1::sendButton_Click);
-			// 
-			// quitButton
-			// 
-			this->quitButton->Location = System::Drawing::Point(348, 139);
-			this->quitButton->Name = L"quitButton";
-			this->quitButton->Size = System::Drawing::Size(75, 23);
-			this->quitButton->TabIndex = 2;
-			this->quitButton->Text = L"quit";
-			this->quitButton->UseVisualStyleBackColor = true;
-			this->quitButton->Click += gcnew System::EventHandler(this, &Form1::quitButton_Click);
-			// 
-			// adradr
-			// 
-			this->adradr->AutoSize = true;
-			this->adradr->Location = System::Drawing::Point(41, 16);
-			this->adradr->Name = L"adradr";
-			this->adradr->Size = System::Drawing::Size(44, 13);
-			this->adradr->TabIndex = 3;
-			this->adradr->Text = L"address";
-			this->adradr->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
-			// 
-			// ValueUpDown
-			// 
-			this->ValueUpDown->Location = System::Drawing::Point(106, 52);
-			this->ValueUpDown->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {1000, 0, 0, 0});
-			this->ValueUpDown->Name = L"ValueUpDown";
-			this->ValueUpDown->Size = System::Drawing::Size(120, 20);
-			this->ValueUpDown->TabIndex = 4;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(41, 59);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(33, 13);
-			this->label1->TabIndex = 5;
-			this->label1->Text = L"value";
-			this->label1->Click += gcnew System::EventHandler(this, &Form1::label1_Click_1);
-			// 
-			// onCheckBox
-			// 
-			this->onCheckBox->AutoSize = true;
-			this->onCheckBox->Location = System::Drawing::Point(44, 99);
-			this->onCheckBox->Name = L"onCheckBox";
-			this->onCheckBox->Size = System::Drawing::Size(38, 17);
-			this->onCheckBox->TabIndex = 6;
-			this->onCheckBox->Text = L"on";
-			this->onCheckBox->UseVisualStyleBackColor = true;
-			// 
-			// logText
-			// 
-			this->logText->Location = System::Drawing::Point(44, 168);
-			this->logText->Multiline = true;
-			this->logText->Name = L"logText";
-			this->logText->ReadOnly = true;
-			this->logText->ScrollBars = System::Windows::Forms::ScrollBars::Both;
-			this->logText->Size = System::Drawing::Size(379, 177);
-			this->logText->TabIndex = 7;
-			// 
-			// Form1
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(435, 357);
-			this->Controls->Add(this->logText);
-			this->Controls->Add(this->onCheckBox);
-			this->Controls->Add(this->label1);
-			this->Controls->Add(this->ValueUpDown);
-			this->Controls->Add(this->adradr);
-			this->Controls->Add(this->quitButton);
-			this->Controls->Add(this->sendButton);
-			this->Controls->Add(this->addressField);
-			this->Name = L"Form1";
-			this->Text = L"triacControlCenter";
-			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->addressField))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->ValueUpDown))->EndInit();
-			this->ResumeLayout(false);
-			this->PerformLayout();
+		this->addressField = (gcnew System::Windows::Forms::NumericUpDown());
+		this->sendButton = (gcnew System::Windows::Forms::Button());
+		this->quitButton = (gcnew System::Windows::Forms::Button());
+		this->adradr = (gcnew System::Windows::Forms::Label());
+		this->ValueUpDown = (gcnew System::Windows::Forms::NumericUpDown());
+		this->label1 = (gcnew System::Windows::Forms::Label());
+		this->onCheckBox = (gcnew System::Windows::Forms::CheckBox());
+		this->logText = (gcnew System::Windows::Forms::TextBox());
+		this->zeroPassBox = (gcnew System::Windows::Forms::CheckBox());
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->addressField))->BeginInit();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->ValueUpDown))->BeginInit();
+		this->SuspendLayout();
+		// 
+		// addressField
+		// 
+		this->addressField->Location = System::Drawing::Point(106, 16);
+		this->addressField->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {3, 0, 0, 0});
+		this->addressField->Name = L"addressField";
+		this->addressField->Size = System::Drawing::Size(120, 20);
+		this->addressField->TabIndex = 0;
+		this->addressField->Tag = L"";
+		// 
+		// sendButton
+		// 
+		this->sendButton->Location = System::Drawing::Point(44, 138);
+		this->sendButton->Name = L"sendButton";
+		this->sendButton->Size = System::Drawing::Size(75, 23);
+		this->sendButton->TabIndex = 1;
+		this->sendButton->Text = L"send";
+		this->sendButton->UseVisualStyleBackColor = true;
+		this->sendButton->Click += gcnew System::EventHandler(this, &Form1::sendButton_Click);
+		// 
+		// quitButton
+		// 
+		this->quitButton->Location = System::Drawing::Point(348, 139);
+		this->quitButton->Name = L"quitButton";
+		this->quitButton->Size = System::Drawing::Size(75, 23);
+		this->quitButton->TabIndex = 2;
+		this->quitButton->Text = L"quit";
+		this->quitButton->UseVisualStyleBackColor = true;
+		this->quitButton->Click += gcnew System::EventHandler(this, &Form1::quitButton_Click);
+		// 
+		// adradr
+		// 
+		this->adradr->AutoSize = true;
+		this->adradr->Location = System::Drawing::Point(41, 16);
+		this->adradr->Name = L"adradr";
+		this->adradr->Size = System::Drawing::Size(44, 13);
+		this->adradr->TabIndex = 3;
+		this->adradr->Text = L"address";
+		this->adradr->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
+		// 
+		// ValueUpDown
+		// 
+		this->ValueUpDown->Location = System::Drawing::Point(106, 52);
+		this->ValueUpDown->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {1000, 0, 0, 0});
+		this->ValueUpDown->Name = L"ValueUpDown";
+		this->ValueUpDown->Size = System::Drawing::Size(120, 20);
+		this->ValueUpDown->TabIndex = 4;
+		// 
+		// label1
+		// 
+		this->label1->AutoSize = true;
+		this->label1->Location = System::Drawing::Point(41, 59);
+		this->label1->Name = L"label1";
+		this->label1->Size = System::Drawing::Size(33, 13);
+		this->label1->TabIndex = 5;
+		this->label1->Text = L"value";
+		this->label1->Click += gcnew System::EventHandler(this, &Form1::label1_Click_1);
+		// 
+		// onCheckBox
+		// 
+		this->onCheckBox->AutoSize = true;
+		this->onCheckBox->Location = System::Drawing::Point(44, 99);
+		this->onCheckBox->Name = L"onCheckBox";
+		this->onCheckBox->Size = System::Drawing::Size(38, 17);
+		this->onCheckBox->TabIndex = 6;
+		this->onCheckBox->Text = L"on";
+		this->onCheckBox->UseVisualStyleBackColor = true;
+		// 
+		// logText
+		// 
+		this->logText->Location = System::Drawing::Point(44, 168);
+		this->logText->Multiline = true;
+		this->logText->Name = L"logText";
+		this->logText->ReadOnly = true;
+		this->logText->ScrollBars = System::Windows::Forms::ScrollBars::Both;
+		this->logText->Size = System::Drawing::Size(379, 177);
+		this->logText->TabIndex = 7;
+		// 
+		// zeroPassBox
+		// 
+		this->zeroPassBox->AutoSize = true;
+		this->zeroPassBox->Location = System::Drawing::Point(129, 98);
+		this->zeroPassBox->Name = L"zeroPassBox";
+		this->zeroPassBox->Size = System::Drawing::Size(69, 17);
+		this->zeroPassBox->TabIndex = 8;
+		this->zeroPassBox->Text = L"zeroPass";
+		this->zeroPassBox->UseVisualStyleBackColor = true;
+		// 
+		// Form1
+		// 
+		this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+		this->ClientSize = System::Drawing::Size(435, 357);
+		this->Controls->Add(this->zeroPassBox);
+		this->Controls->Add(this->logText);
+		this->Controls->Add(this->onCheckBox);
+		this->Controls->Add(this->label1);
+		this->Controls->Add(this->ValueUpDown);
+		this->Controls->Add(this->adradr);
+		this->Controls->Add(this->quitButton);
+		this->Controls->Add(this->sendButton);
+		this->Controls->Add(this->addressField);
+		this->Name = L"Form1";
+		this->Text = L"triacControlCenter";
+		this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->addressField))->EndInit();
+		(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->ValueUpDown))->EndInit();
+		this->ResumeLayout(false);
+		this->PerformLayout();
 
-		}
+			}
 #pragma endregion
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 				 singleton = this;
@@ -217,7 +231,14 @@ namespace TriacControlCenter {
 				 }  else {
 					 onInt = 0;
 				 } 
-				 System::UInt32 theMsg = val + (adr  << 16) + (onInt << 24);
+				 System::Boolean zeroPassState = this->zeroPassBox->Checked;
+				 System::UInt32 zeroPassInt = zeroPassState;
+				 if (zeroPassState)  {
+					 zeroPassInt = 1;
+				 }  else {
+					 zeroPassInt = 0;
+				 } 
+				 System::UInt32 theMsg = val + (adr  << 16) + (onInt << 24)+(zeroPassInt << 25);
 				 RustlightUpdClient::rustlightUpdClientSingleton->communicateMsg( theMsg);
 
 			
