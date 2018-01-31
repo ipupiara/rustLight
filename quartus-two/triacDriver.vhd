@@ -81,6 +81,8 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		dataa_fireCounter      <= "00000111111111" ;
 		dataa_fireDelayCounter <= "00111111111111" ;
 		
+		testData  <= ignitionDelay & switchedOn; 
+		
 --		nclock <= testclocks (0);
 --		cclock <= testclocks (1);
 
@@ -144,48 +146,47 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 				cnt_En_fireDelayCounter  <= '0';
 			end procedure entryIdle;
 		BEGIN
---			IF (Reset = '0') THEN
---				entryIdle;
---			ELSIF 
-			IF
-				( Clock'EVENT AND Clock = '1' ) THEN
-					equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
-					equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
---				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 
-				IF ( (zeroPass = '0')) THEN 
+		IF (Reset = '0') THEN
+				entryIdle;
+			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
+				equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
+				equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
+				
+				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 
 					entryIdle; 
 					IgnitionDelayReg <= ignitionDelay; 
 				ELSE
---					IF ((triacState = idle) AND (zeroPass = '1')) THEN
---					--  set ignition delay to input in this transition
-----						IgnitionDelayReg <= ignitionDelay; 
---						sClrIgnitionDelaySig <= '0';
---						cnt_En_IgnitionDelay <= '1';
---						triacState <= triacTriggerDelay;
---					END IF;
---					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
---							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN
---						cnt_En_IgnitionDelay <= '0';	
---						sClrIgnitionDelaySig <= '1';
---						
---						sclr_fireCounter <= '0';
---						cnt_En_fireCounter <= '1';
---						
---						triacTriggerPulse <= '1';
---						triacState <= fireIgnitionTrigger;
---					END IF;
---					IF ((triacState = fireIgnitionTrigger)  AND (ageb_fireCounter = '1' ))  THEN
---						triacTriggerPulse <= '0';
---						
---						cnt_En_fireCounter <= '0';
---						sclr_fireCounter <= '1';
---						
---						sclr_fireDelayCounter <= '0';
---						cnt_En_fireDelayCounter <='1';
---						triacState <= fireBreak;
---					END IF;
-				END IF;
-			END IF;   -- not idle	
+					IF ((triacState = idle) AND (zeroPass = '1')) THEN
+						sClrIgnitionDelaySig <= '0';
+						cnt_En_IgnitionDelay <= '1';
+						triacState <= triacTriggerDelay;
+					END IF;
+					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
+							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN	
+						sClrIgnitionDelaySig <= '1';
+						cnt_En_IgnitionDelay <= '0';
+						
+						sclr_fireDelayCounter <= '1';
+						cnt_En_fireDelayCounter <='0';
+						
+						sclr_fireCounter <= '0';
+						cnt_En_fireCounter <= '1';
+						
+						triacTriggerPulse <= '1';
+						triacState <= fireIgnitionTrigger;
+					END IF;
+					IF ((triacState = fireIgnitionTrigger)  AND (ageb_fireCounter = '1' ))  THEN
+						triacTriggerPulse <= '0';
+						
+						sclr_fireCounter <= '1';						
+						cnt_En_fireCounter <= '0';
+						
+						sclr_fireDelayCounter <= '0';
+						cnt_En_fireDelayCounter <='1';
+						triacState <= fireBreak;
+					END IF;
+				END IF;  -- not zero or not switchedOn
+			END IF;   -- not reset and clock 1
 		END PROCESS ;
 
 end;
