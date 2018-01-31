@@ -67,21 +67,25 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 	);
 	end component;
 	
-	component rustlightProbe
-	PORT
-	(
-		probe		: IN STD_LOGIC_VECTOR (22 DOWNTO 0);
-		source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
-	);
+	component triacDriverProbe
+		PORT
+		(
+			probe		: IN STD_LOGIC_VECTOR (23 DOWNTO 0);
+			source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
+		);
 	end component;
+
 
 
   begin
 		dataa_fireCounter      <= "00000111111111" ;
 		dataa_fireDelayCounter <= "00111111111111" ;
-		nclock <= testclocks (0);
-		cclock <= testclocks (1);
---		testclocks <= nclock, cclock;
+		
+--		nclock <= testclocks (0);
+--		cclock <= testclocks (1);
+
+		nclock <= Clock;
+		cclock <= countersClock ;
 		
 	  rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
 --			clock	 => countersClock,
@@ -120,8 +124,8 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 			ageb => ageb_fireDelayCounter
 		);		
 		
-		rustlightProbe_inst : rustlightProbe PORT MAP (
-			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter , 
+		triacDriverProbe_inst : triacDriverProbe PORT MAP (
+			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter & zeroPass , 
 			source	 => testclocks
 		);
 	
@@ -152,34 +156,34 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 					entryIdle; 
 					IgnitionDelayReg <= ignitionDelay; 
 				ELSE
-					IF ((triacState = idle) AND (zeroPass = '1')) THEN
-					--  set ignition delay to input in this transition
---						IgnitionDelayReg <= ignitionDelay; 
-						sClrIgnitionDelaySig <= '0';
-						cnt_En_IgnitionDelay <= '1';
-						triacState <= triacTriggerDelay;
-					END IF;
-					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
-							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN
-						cnt_En_IgnitionDelay <= '0';	
-						sClrIgnitionDelaySig <= '1';
-						
-						sclr_fireCounter <= '0';
-						cnt_En_fireCounter <= '1';
-						
-						triacTriggerPulse <= '1';
-						triacState <= fireIgnitionTrigger;
-					END IF;
-					IF ((triacState = fireIgnitionTrigger)  AND (ageb_fireCounter = '1' ))  THEN
-						triacTriggerPulse <= '0';
-						
-						cnt_En_fireCounter <= '0';
-						sclr_fireCounter <= '1';
-						
-						sclr_fireDelayCounter <= '0';
-						cnt_En_fireDelayCounter <='1';
-						triacState <= fireBreak;
-					END IF;
+--					IF ((triacState = idle) AND (zeroPass = '1')) THEN
+--					--  set ignition delay to input in this transition
+----						IgnitionDelayReg <= ignitionDelay; 
+--						sClrIgnitionDelaySig <= '0';
+--						cnt_En_IgnitionDelay <= '1';
+--						triacState <= triacTriggerDelay;
+--					END IF;
+--					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
+--							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN
+--						cnt_En_IgnitionDelay <= '0';	
+--						sClrIgnitionDelaySig <= '1';
+--						
+--						sclr_fireCounter <= '0';
+--						cnt_En_fireCounter <= '1';
+--						
+--						triacTriggerPulse <= '1';
+--						triacState <= fireIgnitionTrigger;
+--					END IF;
+--					IF ((triacState = fireIgnitionTrigger)  AND (ageb_fireCounter = '1' ))  THEN
+--						triacTriggerPulse <= '0';
+--						
+--						cnt_En_fireCounter <= '0';
+--						sclr_fireCounter <= '1';
+--						
+--						sclr_fireDelayCounter <= '0';
+--						cnt_En_fireDelayCounter <='1';
+--						triacState <= fireBreak;
+--					END IF;
 				END IF;
 			END IF;   -- not idle	
 		END PROCESS ;

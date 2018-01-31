@@ -227,7 +227,7 @@ using namespace System::Collections;
 		   info_printf( ex1->Message->ToString()+"\n");
 		}
 
-		info_printf("leaving RustlightUpdClient::communicateMsg\n");
+//		info_printf("leaving RustlightUpdClient::communicateMsg\n");
 
 
 /*		int cnt;

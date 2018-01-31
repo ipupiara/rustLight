@@ -1,4 +1,4 @@
-rustlightProbe_inst : rustlightProbe PORT MAP (
+triacDriverProbe_inst : triacDriverProbe PORT MAP (
 		probe	 => probe_sig,
 		source	 => source_sig
 	);

@@ -4,7 +4,7 @@
 -- MODULE: altsource_probe 
 
 -- ============================================================
--- File Name: rustlightProbe.vhd
+-- File Name: triacDriverProbe.vhd
 -- Megafunction Name(s):
 -- 			altsource_probe
 --
@@ -39,16 +39,16 @@ USE ieee.std_logic_1164.all;
 LIBRARY altera_mf;
 USE altera_mf.all;
 
-ENTITY rustlightProbe IS
+ENTITY triacDriverProbe IS
 	PORT
 	(
-		probe		: IN STD_LOGIC_VECTOR (22 DOWNTO 0);
+		probe		: IN STD_LOGIC_VECTOR (23 DOWNTO 0);
 		source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
 	);
-END rustlightProbe;
+END triacDriverProbe;
 
 
-ARCHITECTURE SYN OF rustlightprobe IS
+ARCHITECTURE SYN OF triacdriverprobe IS
 
 	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (1 DOWNTO 0);
 
@@ -66,7 +66,7 @@ ARCHITECTURE SYN OF rustlightprobe IS
 		lpm_type		: STRING
 	);
 	PORT (
-			probe	: IN STD_LOGIC_VECTOR (22 DOWNTO 0);
+			probe	: IN STD_LOGIC_VECTOR (23 DOWNTO 0);
 			source	: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
 	);
 	END COMPONENT;
@@ -78,7 +78,7 @@ BEGIN
 	GENERIC MAP (
 		enable_metastability => "NO",
 		instance_id => "tdrv",
-		probe_width => 23,
+		probe_width => 24,
 		sld_auto_instance_index => "YES",
 		sld_instance_index => 0,
 		source_initial_value => " 0",
@@ -101,18 +101,18 @@ END SYN;
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: ENABLE_METASTABILITY STRING "NO"
 -- Retrieval info: CONSTANT: INSTANCE_ID STRING "tdrv"
--- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "23"
+-- Retrieval info: CONSTANT: PROBE_WIDTH NUMERIC "24"
 -- Retrieval info: CONSTANT: SLD_AUTO_INSTANCE_INDEX STRING "YES"
 -- Retrieval info: CONSTANT: SLD_INSTANCE_INDEX NUMERIC "0"
 -- Retrieval info: CONSTANT: SOURCE_INITIAL_VALUE STRING " 0"
 -- Retrieval info: CONSTANT: SOURCE_WIDTH NUMERIC "2"
--- Retrieval info: USED_PORT: probe 0 0 23 0 INPUT NODEFVAL "probe[22..0]"
+-- Retrieval info: USED_PORT: probe 0 0 24 0 INPUT NODEFVAL "probe[23..0]"
 -- Retrieval info: USED_PORT: source 0 0 2 0 OUTPUT NODEFVAL "source[1..0]"
--- Retrieval info: CONNECT: @probe 0 0 23 0 probe 0 0 23 0
+-- Retrieval info: CONNECT: @probe 0 0 24 0 probe 0 0 24 0
 -- Retrieval info: CONNECT: source 0 0 2 0 @source 0 0 2 0
--- Retrieval info: GEN_FILE: TYPE_NORMAL rustlightProbe.vhd TRUE
--- Retrieval info: GEN_FILE: TYPE_NORMAL rustlightProbe.inc FALSE
--- Retrieval info: GEN_FILE: TYPE_NORMAL rustlightProbe.cmp TRUE
--- Retrieval info: GEN_FILE: TYPE_NORMAL rustlightProbe.bsf FALSE
--- Retrieval info: GEN_FILE: TYPE_NORMAL rustlightProbe_inst.vhd TRUE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL triacDriverProbe.vhd TRUE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL triacDriverProbe.inc FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL triacDriverProbe.cmp TRUE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL triacDriverProbe.bsf FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL triacDriverProbe_inst.vhd TRUE
 -- Retrieval info: LIB_FILE: altera_mf

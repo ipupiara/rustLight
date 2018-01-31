@@ -161,7 +161,8 @@ static  void  AppTaskStart (void *p_arg)
             LED_Off(9 - i);
 #endif			
         }
-		info_printf("AppTaskStart loopCnt: %u \r\n",loopCnt);
+//		info_printf("AppTaskStart loopCnt: %u \r\n",loopCnt);
+		info_printf(".");
     }
 }
 
