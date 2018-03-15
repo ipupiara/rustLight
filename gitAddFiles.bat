@@ -1,7 +1,7 @@
 git add docs/*
 git add gitAddFiles.bat
 git add quartus-two/*
-git add quartus-two/tickel/*
+git add quartus-two/tickelTockTock/*
 git add quartus-two/rustLightPLL_1.*
 git add quartus-two/rustLightCounter*.*
 git add quartus-two/testPluginTriacDriverDelay.*

@@ -27,7 +27,7 @@ architecture driverJob of triacDriver is
 	SIGNAL cnt_En_fireDelayCounter, sclr_fireDelayCounter, ageb_fireDelayCounter : std_LOGIC;
 	SIGNAL q_fireDelayCounter, dataa_fireDelayCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
 
-SIGNAL  cClock, nClock: std_LOGIC;	
+SIGNAL  triacDelayClock, sysClock: std_LOGIC;	
 SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 	
 	component rustLightCounter
@@ -70,7 +70,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 	component triacDriverProbe
 		PORT
 		(
-			probe		: IN STD_LOGIC_VECTOR (23 DOWNTO 0);
+			probe		: IN STD_LOGIC_VECTOR (24 DOWNTO 0);
 			source		: OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
 		);
 	end component;
@@ -78,20 +78,22 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 
 
   begin
-		dataa_fireCounter      <= "00000111111111" ;
-		dataa_fireDelayCounter <= "00111111111111" ;
-		
-		testData  <= ignitionDelay & switchedOn; 
-		
---		nclock <= testclocks (0);
---		cclock <= testclocks (1);
+--		dataa_fireCounter      <= "00000111111111" ;
+--		dataa_fireDelayCounter <= "00111111111111" ;
+--		sysClock <= Clock;
+--		triacDelayClock <= countersClock ;
 
-		nclock <= Clock;
-		cclock <= countersClock ;
-		
+--    some test values for jtag debugging 		
+		dataa_fireCounter      <= "00000000000111" ;
+		dataa_fireDelayCounter <= "00000000001111" ;
+		sysClock <= testclocks (0);
+		triacDelayClock <= testclocks (1);
+
+	  testData  <= ignitionDelay & switchedOn; 
+			
 	  rustLightIgnitionDelayCounter : rustLightCounter PORT MAP (
 --			clock	 => countersClock,
-			clock  => cclock,
+			clock  => triacDelayClock,
 			sclr	 => sClrIgnitionDelaySig,
 			cnt_en => cnt_En_IgnitionDelay,
 			q	 => IgnitionDelayCounterReg
@@ -103,7 +105,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		);
 		rustLightFireCounter : rl_sync_counter PORT MAP (
 --			clock => clock,
-			clock => nclock,
+			clock => sysClock,
 			cnt_en => cnt_En_fireCounter,
 			sclr =>  sclr_fireCounter ,
 			q =>  q_fireCounter
@@ -115,7 +117,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		);
 		rustLightFireDelayCounter : rl_sync_counter PORT MAP (
 --			clock => clock,
-			clock => nclock,
+			clock => sysClock,
 			cnt_en => cnt_En_fireDelayCounter,
 			sclr =>  sclr_fireDelayCounter,
 			q =>  q_fireDelayCounter
@@ -127,7 +129,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		);		
 		
 		triacDriverProbe_inst : triacDriverProbe PORT MAP (
-			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter & zeroPass , 
+			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter & zeroPass & switchedOn , 
 			source	 => testclocks
 		);
 	
