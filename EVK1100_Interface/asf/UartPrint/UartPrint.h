@@ -23,5 +23,7 @@ extern CPU_INT32U   amtUSBInterrupts;
 
 extern CPU_INT32U   amtUSBNonSofInterrupts;
 
+#define usartSpeed   57600
+
 
 #endif /* UARTPRINT_H_ */

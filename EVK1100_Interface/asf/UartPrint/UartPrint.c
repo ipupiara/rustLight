@@ -354,7 +354,7 @@ void init_err_printf()
 	err_init_print = OS_NO_ERR;
 
 	if (err_init_print == OS_NO_ERR) {
-		BSP_USART_Init (APP_USART_COM, 57600);  // start with something slow, later increase
+		BSP_USART_Init (APP_USART_COM, usartSpeed);  // start with something slow, later increase
 
 		if (!(SerialQSem = OSSemCreate(0)))
 		// after initialisation, probable a character can be sent

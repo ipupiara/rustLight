@@ -20,7 +20,7 @@ architecture driverJob of triacDriver is
 	SIGNAL triacState : triacStateType;
 	SIGNAL IgnitionDelayReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
 	SIGNAL IgnitionDelayCounterReg : STD_LOGIC_VECTOR(9 DOWNTO 0) ;
-	SIGNAL sClrIgnitionDelaySig, equalIgnitionDelaySig, equalIgnitionDelaySigA1, equalIgnitionDelaySigA2 : std_LOGIC;
+	SIGNAL sClrIgnitionDelaySig, agebIgnitionDelaySig, agebIgnitionDelaySigA1, agebIgnitionDelaySigA2 : std_LOGIC;
 	SIGNAL cnt_En_IgnitionDelay, testSig : std_Logic;
 	SIGNAL cnt_En_fireCounter, sclr_fireCounter, ageb_fireCounter : std_LOGIC;
 	SIGNAL q_fireCounter, dataa_fireCounter : STD_LOGIC_VECTOR (13 DOWNTO 0);
@@ -101,7 +101,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		rustLightIgnitionDelayCompare : rustLightCompare_1 PORT MAP (
 			dataa	 => IgnitionDelayCounterReg,
 			datab  => IgnitionDelayReg,
-			ageb   => equalIgnitionDelaySig
+			ageb   => agebIgnitionDelaySig
 		);
 		rustLightFireCounter : rl_sync_counter PORT MAP (
 --			clock => clock,
@@ -129,7 +129,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		);		
 		
 		triacDriverProbe_inst : triacDriverProbe PORT MAP (
-			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & equalIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter & zeroPass & switchedOn , 
+			probe	 => IgnitionDelayCounterReg & IgnitionDelayReg & agebIgnitionDelaySig & ageb_fireCounter & ageb_fireDelayCounter & zeroPass & switchedOn , 
 			source	 => testclocks
 		);
 	
@@ -151,8 +151,8 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 		IF (Reset = '0') THEN
 				entryIdle;
 			ELSIF ( Clock'EVENT AND Clock = '1' ) THEN
-				equalIgnitionDelaySigA2 <= equalIgnitionDelaySigA1;
-				equalIgnitionDelaySigA1 <= equalIgnitionDelaySig;
+				agebIgnitionDelaySigA2 <= agebIgnitionDelaySigA1;
+				agebIgnitionDelaySigA1 <= agebIgnitionDelaySig;
 				
 				IF ((switchedOn = '0') OR (zeroPass = '0')) THEN 
 					entryIdle; 
@@ -163,7 +163,7 @@ SIGNAL  testclocks : STD_LOGIC_VECTOR (1 downto 0);
 						cnt_En_IgnitionDelay <= '1';
 						triacState <= triacTriggerDelay;
 					END IF;
-					IF (((triacState = triacTriggerDelay) AND (equalIgnitionDelaySigA2 = '1'))  
+					IF (((triacState = triacTriggerDelay) AND (agebIgnitionDelaySigA2 = '1'))  
 							OR ((triacState = fireBreak ) AND (ageb_fireDelayCounter = '1')) )   THEN	
 						sClrIgnitionDelaySig <= '1';
 						cnt_En_IgnitionDelay <= '0';
