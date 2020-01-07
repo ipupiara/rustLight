@@ -1,5 +1,6 @@
 git add docs/*
 git add gitAddFiles.bat
+git add checkOriginMaster.bat
 git add quartus-two/*
 git add quartus-two/tickelTockTock/*
 git add quartus-two/rustLightPLL_1.*

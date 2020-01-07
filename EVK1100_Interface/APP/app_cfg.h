@@ -60,6 +60,7 @@
 #define  OS_TASK_TMR_PRIO                   5
 
 
+#define SERIAL_HYGROSENS_TASK_PRIO			12
 #define  SerialQ_TASK_PRIO                   13
 
 #define tcp_ip_Thread_TASK_PRIO              15

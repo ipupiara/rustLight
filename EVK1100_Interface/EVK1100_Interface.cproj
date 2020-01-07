@@ -318,6 +318,12 @@
     <Compile Include="asf\tpaste.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="asf\UartPrint\UartHygrosens.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="asf\UartPrint\UartHygrosens.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="asf\UartPrint\UartPrint.c">
       <SubType>compile</SubType>
     </Compile>
