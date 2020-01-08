@@ -35,44 +35,79 @@ OS_STK  SerialHygrosensMethodStk[SerialHygrosensMethod_STK_SIZE];
 #define startChar 0x40
 #define stopChar   0x24
 #define amtChars  66
-#define rxBufferSz  68
+
 enum rxStates {
 	rxIdle,
 	rxReceiving,
 	rxReceived,
 };
 
-INT8U rxBuffer [rxBufferSz];
 INT8U  rxState;
 INT8U amtCharRcvd;
 
-void envoyBuffer()
+#define hygrosensMemorySz    5
+#define hygrosensStrSz    68    // pn 9.June2012 attention: a value of e.g. 123 will give an unhandled exception.... ????
+#warning: "exception tobe tested ???"
+
+typedef CPU_INT08U hygrosensStringType [hygrosensStrSz];
+
+typedef struct hygrosensStringMemory {
+	hygrosensStringType serialStr;  // ATTENTION serialStr must be at first place, so that &(serialMem) == &(serialStr)
+} hygrosensStringMemory;
+
+hygrosensStringType* rxBuffer;
+
+OS_EVENT *hygrosensQSem;
+OS_MEM *hygrosensMsgMem;
+OS_EVENT*  hygrosensTaskMsgQ;
+hygrosensStringMemory hygrosensMem[hygrosensMemorySz];
+void* hygrosensTaskMsgs[hygrosensMemorySz];
+
+
+void OnHygrosensError()
 {
 	
 }
 
-
-void addCharToBuffer(INT8U rxCh)
+void envoyBuffer(hygrosensStringType* memo)
 {
+	CPU_INT08U	err;
+	err = OSQPost(hygrosensTaskMsgQ, (void *)memo);
+	if ( err != OS_NO_ERR) {
+		//	do something but dont loop--->> err_printf("Q post err tickHook\n");
+		OnHygrosensError();
+	}
+}
+
+hygrosensStringType* getBuffer(CPU_INT08U* err)
+{	
+	hygrosensStringType* res = NULL;
+
+	res = (hygrosensStringType *) OSMemGet(hygrosensMsgMem, err);
+	return res;
+}
+
+
+void addCharToBuffer(CPU_INT08U rxCh)
+{
+	CPU_INT08U err;
 	if (rxCh == startChar)  {
 		amtCharRcvd = 0;
-		rxBuffer [amtCharRcvd] = rxCh;
+		rxBuffer = getBuffer(&err);
+		*rxBuffer[amtCharRcvd] = rxCh;
 		rxState = rxReceiving;
 	} else
 	if (rxState == rxReceiving)  {
 		++ amtCharRcvd;
-		if (amtCharRcvd < rxBufferSz) {
-			rxBuffer [amtCharRcvd] = rxCh;
+		if (amtCharRcvd < hygrosensStrSz) {
+			*rxBuffer [amtCharRcvd] = rxCh;
 		}
 		if (rxCh == stopChar) {   // no  chars lost
 			rxState = rxReceived;
-			envoyBuffer();
+			envoyBuffer(rxBuffer);
 		}
 	}
 }
-
-
-
 
 
 static  void  SerialHygrosensThreadMethod (void *p_arg)
@@ -131,6 +166,16 @@ CPU_INT08U init_HygrosenseReceiver()
 		BSP_USART_IntEn (HYGROSENS_USART_COM, (1<< AVR32_USART_IER_RXRDY));
 	}
 	
+	if (err_init_hygrosens == OS_NO_ERR) {
+		hygrosensMsgMem = OSMemCreate(&hygrosensMem[0], hygrosensMemorySz, sizeof(hygrosensStringMemory), &err_init_hygrosens);
+	}
+	if (err_init_hygrosens == OS_NO_ERR) {
+		OSMemNameSet(hygrosensMsgMem, (INT8U*)"hygrosensMsgMem", &err_init_hygrosens);
+	}
+	if (err_init_hygrosens == OS_NO_ERR) {
+		hygrosensTaskMsgQ = OSQCreate(&hygrosensTaskMsgs[0], hygrosensMemorySz);
+		if (! hygrosensTaskMsgQ) err_init_hygrosens = 0xFF;
+	}
 	
 	
 	if (err_init_hygrosens == OS_NO_ERR )  {
