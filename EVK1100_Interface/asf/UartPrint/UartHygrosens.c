@@ -19,6 +19,26 @@
  *************   Hygrosense Receiver Stuff   ***********
  */
 
+void  setHygrosensPinAsOutputWithValue (CPU_INT16U pin, INT8U val)
+{
+	volatile  avr32_gpio_port_t  *gpio_port;
+
+	gpio_port        = &AVR32_GPIO.port[pin >> 5];
+	INT8U pinOfs     = pin & 0x1F;
+	INT32U mask     = (1<< pinOfs);
+	
+	gpio_port->oders = mask; // The GPIO output driver is enabled for that pin.
+	gpio_port->gpers = mask;
+	gpio_port->odmerc = mask;
+	
+	if (val == 0) {
+		gpio_port->ovrc  = mask;
+		} else {
+		gpio_port->ovrs  = mask;
+	}
+	
+}
+
 
 #define SerialHygrosensMethod_STK_SIZE   unique_STK_SIZE
 
@@ -141,22 +161,25 @@ void addCharToBuffer(CPU_INT08U rxCh)
 char * reallyWorkingStrstr(const char *inStr, const char *subStr)
 {
 	char firstSubChar;
-	size_t len;
+	size_t lenSubStr;
 	firstSubChar = *subStr++;
 	if (!firstSubChar)
 	return (char *) inStr;	// Trivial empty string case
 
-	len = strlen(subStr);
+	lenSubStr = strlen(subStr);
+	size_t lenInStr = strlen(inStr);
+	CPU_INT16U curPos = 0;
 	do {
 		char currentInChar;
 
 		do {
 			currentInChar = *inStr++;
-			if (!currentInChar)
+			++ curPos;
+			if ( ((curPos + lenSubStr) > lenInStr) ||  (!currentInChar))
 			return (char *) 0;
 		} while (currentInChar != firstSubChar);
-	} while (strncmp(inStr, subStr, len) != 0);
-	
+	} while (strncmp(inStr, subStr, lenSubStr) != 0);
+	#warning: accesses memory outside of string ( -> access violation) ->  above fix for this tobe tested (second condition is actually redundant)
 	return (char *) (inStr - 1);
 }
 
@@ -165,7 +188,8 @@ char * reallyWorkingStrstr(const char *inStr, const char *subStr)
 
 void setHeating(INT8U val)
 {
-	setPinAsOutputWithValue (AVR32_PIN_PX31,  val);	
+	setHygrosensPinAsOutputWithValue(AVR32_PIN_PX31,  val);
+//	setPinAsOutputWithValue (AVR32_PIN_PX31,  val);	
 }
 
 

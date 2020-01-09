@@ -22,6 +22,6 @@ void initIfDipatcher();
 
 void startIfDispatcher();
 
-void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val);  // made public for use in "friend" UartPrint.c
+//void  setPinAsOutputWithValue (CPU_INT16U pin, INT8U val);  // made public for use in "friend" UartPrint.c
 
 #endif /* IFDISPATCHER_H_ */

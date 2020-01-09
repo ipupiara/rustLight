@@ -135,10 +135,10 @@ static  void  AppTaskStart (void *p_arg)
 #endif
 
 #if uC_TCPIP_MODULE > 0
-//	AppInit_TCPIP();                                               
+//	AppInit_TCPIP();   
+//	initIfDipatcher();                                            
 #endif
 
-//	initIfDipatcher();
 	
     AppTaskCreate();                                                
 
@@ -207,8 +207,9 @@ static  void  AppTaskCreate (void)
 	
 #if uC_TCPIP_MODULE > 0
 //	startTcpipThread();
-#endif
 //	startIfDispatcher();
+#endif
+
 }
 
 
