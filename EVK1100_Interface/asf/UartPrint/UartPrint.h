@@ -20,7 +20,7 @@ void info_printf( char *emsg, ...);
 
 extern CPU_INT08U  serialPrintOn;
 
-
+#define heaterPin    AVR32_PIN_PX15
 #define printUsartSpeed   57600
 
 

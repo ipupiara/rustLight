@@ -27,11 +27,16 @@
 *********************************************************************************************************
 */
 
-#define  uC_TCPIP_MODULE                 DEF_ENABLED                    /* DEF_ENABLED = Present, DEF_DISABLED = Not Present        */
-//#define  uC_TCPIP_MODULE                 DEF_DISABLED                    /* DEF_ENABLED = Present, DEF_DISABLED = Not Present        */
+//#define  uC_TCPIP_MODULE                 DEF_ENABLED                    /* DEF_ENABLED = Present, DEF_DISABLED = Not Present        */
+#define  uC_TCPIP_MODULE                 DEF_DISABLED                    /* DEF_ENABLED = Present, DEF_DISABLED = Not Present        */
 
 #define  uC_TTCP_MODULE                  DEF_DISABLED                    /* DEF_ENABLED = Present, DEF_DISABLED = Not Present        */
 //#warning might be changed
+
+#define ASF_SDRAM_MODULE  DEF_DISABLED
+//#define ASF_SDRAM_MODULE  DEF_ENABLED
+
+
 /*
 **************************************************************************************************************
 *                                               STACK SIZES

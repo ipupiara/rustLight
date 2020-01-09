@@ -8,9 +8,11 @@
 //#include <malloc.h>
 #include <math.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "includes.h"
 #include "UartHygrosens.h"
+#include "UartPrint.h"
 
 /*
  *
@@ -45,7 +47,11 @@ enum rxStates {
 INT8U  rxState;
 INT8U amtCharRcvd;
 
+float latestTemperature;
+float latestHumidity;
+
 #define hygrosensMemorySz    5
+#define hygrosensExpectedStrlen 66
 #define hygrosensStrSz    68    // pn 9.June2012 attention: a value of e.g. 123 will give an unhandled exception.... ????
 #warning: "exception tobe tested ???"
 
@@ -57,16 +63,26 @@ typedef struct hygrosensStringMemory {
 
 hygrosensStringType* rxBuffer;
 
-OS_EVENT *hygrosensQSem;
-OS_MEM *hygrosensMsgMem;
+OS_MEM *hygrosensMsgsMem;
 OS_EVENT*  hygrosensTaskMsgQ;
 hygrosensStringMemory hygrosensMem[hygrosensMemorySz];
-void* hygrosensTaskMsgs[hygrosensMemorySz];
+void* hygrosensTaskMsgPtrs[hygrosensMemorySz];
 
 
-void OnHygrosensError()
+void OnHygrosensError(char * errSt,CPU_INT08U err)
 {
-	
+	err_printf(errSt);
+	err_printf("  ->error returned %i",err);
+}
+
+void releaseBuffer(hygrosensStringType* memo)
+{
+	CPU_INT08U	err;
+	err = OSMemPut( hygrosensMsgsMem,(void *) memo);
+	if ( err != OS_NO_ERR) {
+		//	do something but dont loop--->> err_printf("Q post err tickHook\n");
+		OnHygrosensError("releaseBuffer error",err);
+	}
 }
 
 void envoyBuffer(hygrosensStringType* memo)
@@ -75,15 +91,19 @@ void envoyBuffer(hygrosensStringType* memo)
 	err = OSQPost(hygrosensTaskMsgQ, (void *)memo);
 	if ( err != OS_NO_ERR) {
 		//	do something but dont loop--->> err_printf("Q post err tickHook\n");
-		OnHygrosensError();
+		OnHygrosensError("envoyBuffer error",err);
 	}
 }
 
 hygrosensStringType* getBuffer(CPU_INT08U* err)
 {	
 	hygrosensStringType* res = NULL;
-
-	res = (hygrosensStringType *) OSMemGet(hygrosensMsgMem, err);
+	res = (hygrosensStringType *) OSMemGet(hygrosensMsgsMem, err);
+	if ( err != OS_NO_ERR) {
+		//	do something but dont loop--->> err_printf("Q post err tickHook\n");
+		OnHygrosensError("getBuffer error",*err);
+		res = NULL;  // just tobe sure
+	}
 	return res;
 }
 
@@ -93,67 +113,165 @@ void addCharToBuffer(CPU_INT08U rxCh)
 	CPU_INT08U err;
 	if (rxCh == startChar)  {
 		amtCharRcvd = 0;
-		rxBuffer = getBuffer(&err);
-		*rxBuffer[amtCharRcvd] = rxCh;
-		rxState = rxReceiving;
+		if (rxBuffer == NULL) {
+			rxBuffer = getBuffer(&err); 
+		}  
+		if (rxBuffer != NULL) {
+			*rxBuffer[amtCharRcvd] = rxCh;
+			rxState = rxReceiving;
+		}
 	} else
 	if (rxState == rxReceiving)  {
 		++ amtCharRcvd;
-		if (amtCharRcvd < hygrosensStrSz) {
+		if (amtCharRcvd < hygrosensStrSz) {  //  prevent string overflow
 			*rxBuffer [amtCharRcvd] = rxCh;
 		}
-		if (rxCh == stopChar) {   // no  chars lost
+		if ((rxCh == stopChar) && (amtCharRcvd == hygrosensExpectedStrlen) ) {   // no  chars lost, valid message checked
 			rxState = rxReceived;
 			envoyBuffer(rxBuffer);
+			rxBuffer = NULL;
 		}
+	}
+}
+
+
+
+
+
+char * reallyWorkingStrstr(const char *inStr, const char *subStr)
+{
+	char firstSubChar;
+	size_t len;
+	firstSubChar = *subStr++;
+	if (!firstSubChar)
+	return (char *) inStr;	// Trivial empty string case
+
+	len = strlen(subStr);
+	do {
+		char currentInChar;
+
+		do {
+			currentInChar = *inStr++;
+			if (!currentInChar)
+			return (char *) 0;
+		} while (currentInChar != firstSubChar);
+	} while (strncmp(inStr, subStr, len) != 0);
+	
+	return (char *) (inStr - 1);
+}
+
+
+#define hygrosensPin   AVR32_PIN_PX31
+
+void setHeating(INT8U val)
+{
+	setPinAsOutputWithValue (AVR32_PIN_PX31,  val);	
+}
+
+
+
+void switchHeating(CPU_INT08U heatingNeedsOn)
+{
+	if (heatingNeedsOn > 0) {
+		
+		setHeating(1);
+//		heatingPort |=  0xff;  // (1 < heatingPin);
+//		heatingIsOn= 1;
+	}  else   {
+		setHeating(0);
+//		heatingPort &= 0x00;   //~(1 < heatingPin);
+//		heatingIsOn = 0;
+	}
+}
+
+void controlTemperature(float* temp)
+{
+	if (*temp < HeatingLowerLimit)  {
+		switchHeating(1);
+	}
+	if (*temp > HeatingUpperLimit)  {
+		switchHeating(0);
+	}
+}
+
+void onDataReceivedUart1(char * rcvMsg)        
+{
+	char tempS [5];
+	char hydS [5];
+	
+	char * v01Pos = (char *) 0;
+	char * v02Pos = (char *) 0;
+
+	memset (tempS,0,sizeof(tempS));
+	memset (hydS,0,sizeof(hydS));
+	     	
+	v01Pos = reallyWorkingStrstr((char* )&rxBuffer,"V01");
+	v02Pos = reallyWorkingStrstr((char*)&rxBuffer,"V02");
+				
+	strncpy(tempS,v01Pos+3,4);
+	strncpy(hydS,v02Pos+3,4);
+		
+	if ((v01Pos != NULL) && (v02Pos != NULL ))  {
+		char* endP = tempS+3;
+		float temp = strtoul(tempS ,&endP,0x10) ;
+		temp = temp / 100;
+		endP = hydS + 3;
+		float hyd = strtoul(hydS ,&endP,0x10) ;
+		hyd = hyd / 200;
+		
+		latestTemperature = temp;
+		latestHumidity = hyd;
+		
+		controlTemperature(&temp);
+	}
+}
+
+
+void  hygrosensRxISR (void)
+{
+	volatile  avr32_usart_t  *usart;
+	CPU_INT08U rxCh;
+
+	usart = &HYGROSENS_USART;
+	if (usart->CSR.rxrdy == 1) {
+	    rxCh =  (CPU_INT08U) usart->RHR.rxchr;
+		addCharToBuffer(rxCh);
 	}
 }
 
 
 static  void  SerialHygrosensThreadMethod (void *p_arg)
 {
-}
-
-
-void  hygrosensRxTxISR (void)
-{
-	volatile  avr32_usart_t  *usart;
 	INT8U err;
+	hygrosensStringType* msgStr;
 
-	usart = &HYGROSENS_USART;
-	//    if (usart->CSR.rxrdy == 1) {
-	//        APP_RxISRHandler();
-	//    }
-	//if (usart->CSR.txrdy == 1) {
-		//err = OSSemPost(SerialPrintQSem);
-		//if (err != OS_NO_ERR){
-			////    		err_printf("couldnt signal sema in USART ISR\n");
-		//}
-		//BSP_USART_IntDis (PRINT_USART_COM, (1<< AVR32_USART_IER_TXRDY));
-		//// PN 24. May 2012
-		//// contrary to other AVR processors, it seems necessary to disable TXRDY interrupts
-		//// manually, while other processors ATMega32/64 just trigger TXRDY interrupt once
-		//// further testing will take place.
-	//}
+	while (1) {
+		msgStr = (hygrosensStringType *)OSQPend(hygrosensTaskMsgQ, 3167, &err);
+		#warning: choose another prime number for above call
+		if (err == OS_NO_ERR) {
+			onDataReceivedUart1((char*) msgStr);
+		}
+		releaseBuffer(msgStr);
+	}
 }
-
-
-
 
 
 CPU_INT08U init_HygrosenseReceiver()
 {
 	serialHygrosensOn = 0;
+	rxBuffer = NULL;
+	latestHumidity = 0.0;
+	latestTemperature = 0.0;
 	CPU_INT08U  err_init_hygrosens = OS_NO_ERR;
 	
 	if (err_init_hygrosens == OS_NO_ERR) {
-		hygrosensMsgMem = OSMemCreate(&hygrosensMem[0], hygrosensMemorySz, sizeof(hygrosensStringMemory), &err_init_hygrosens);
+		hygrosensMsgsMem = OSMemCreate(&hygrosensMem[0], hygrosensMemorySz, sizeof(hygrosensStringMemory), &err_init_hygrosens);
 	}
 	if (err_init_hygrosens == OS_NO_ERR) {
-		OSMemNameSet(hygrosensMsgMem, (INT8U*)"hygrosensMsgMem", &err_init_hygrosens);
+		OSMemNameSet(hygrosensMsgsMem, (INT8U*)"hygrosensMsgMem", &err_init_hygrosens);
 	}
 	if (err_init_hygrosens == OS_NO_ERR) {
-		hygrosensTaskMsgQ = OSQCreate(&hygrosensTaskMsgs[0], hygrosensMemorySz);
+		hygrosensTaskMsgQ = OSQCreate(&hygrosensTaskMsgPtrs[0], hygrosensMemorySz);
 		if (! hygrosensTaskMsgQ) err_init_hygrosens = 0xFF;
 	}
 	
@@ -177,7 +295,7 @@ CPU_INT08U init_HygrosenseReceiver()
 		BSP_USART_Init (HYGROSENS_USART_COM, hygrosensUsartSpeed);  
 	}
 	if (err_init_hygrosens == OS_NO_ERR) {
-		if (BSP_INTC_IntReg(&hygrosensRxTxISR, HYGROSENS_USART_IRQ, 1) == BSP_INTC_ERR_NONE ) {
+		if (BSP_INTC_IntReg(&hygrosensRxISR, HYGROSENS_USART_IRQ, 1) == BSP_INTC_ERR_NONE ) {
 			err_init_hygrosens = OS_NO_ERR;
 			} else {
 			err_init_hygrosens = 0xFF;

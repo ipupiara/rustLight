@@ -79,8 +79,11 @@ int  main (void)
 
     CPU_IntDis();                                                       /* Disable all interrupts until we are ready to accept them */
     OSInit();  	
-	BSP_Init();          
-	
+	BSP_Init();    
+	    
+	#if (ASF_SDRAM_MODULE > 0)                                                                 /* #if (OS_VIEW_MODULE > 0) || (uC_PROBE_COM_MODULE > 0)    */
+		sdramc_init(4 * FOSC0);
+	#endif
 	init_err_printf();                                           
 
     OSTaskCreateExt(AppTaskStart,                                      
@@ -132,10 +135,10 @@ static  void  AppTaskStart (void *p_arg)
 #endif
 
 #if uC_TCPIP_MODULE > 0
-	AppInit_TCPIP();                                               
+//	AppInit_TCPIP();                                               
 #endif
 
-	initIfDipatcher();
+//	initIfDipatcher();
 	
     AppTaskCreate();                                                
 
@@ -203,9 +206,9 @@ static  void  AppTaskCreate (void)
 {  
 	
 #if uC_TCPIP_MODULE > 0
-	startTcpipThread();
+//	startTcpipThread();
 #endif
-	startIfDispatcher();
+//	startIfDispatcher();
 }
 
 

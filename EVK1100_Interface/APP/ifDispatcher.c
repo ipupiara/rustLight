@@ -41,9 +41,7 @@ pinPosData pinPosArray [pinPosArraySize] = {{AVR32_PIN_PX00,0},{AVR32_PIN_PX01,1
 #define strobePin   AVR32_PIN_PX13
 #define resetPin	AVR32_PIN_PX14
 #define zeroPassPin    AVR32_PIN_PX15
-//#define testPin    AVR32_PIN_PX15
-//#define testPin      AVR32_PIN_PB27    // =  gpio-led1
-		
+
 
 dispatchMsg dispatchMsgArray[dispatchQMemSz];
 void* dispatchQMsgPtrArray[dispatchQSz];
