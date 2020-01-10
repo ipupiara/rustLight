@@ -22,7 +22,8 @@
 #include "UartPrint.h"
 #if uC_TCPIP_MODULE > 0
 #include "tcpipApp.h"     
-#include "ifDispatcher.h"                                           
+#include "ifDispatcher.h"  
+#include "UartHygrosens.h"                                         
 #endif
 
 
@@ -138,7 +139,7 @@ static  void  AppTaskStart (void *p_arg)
 //	AppInit_TCPIP();   
 //	initIfDipatcher();                                            
 #endif
-
+	init_HygrosenseReceiver();
 	
     AppTaskCreate();                                                
 
@@ -209,6 +210,7 @@ static  void  AppTaskCreate (void)
 //	startTcpipThread();
 //	startIfDispatcher();
 #endif
+	 start_HygrosenseReceiver();
 
 }
 

@@ -16,6 +16,7 @@ CPU_INT08U  serialHygrosensOn;
 
 
 CPU_INT08U init_HygrosenseReceiver();
+CPU_INT08U start_HygrosenseReceiver();
 
 
 #endif /* UARTHYGROSENS_H_ */

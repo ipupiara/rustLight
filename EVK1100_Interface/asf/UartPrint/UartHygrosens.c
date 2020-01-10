@@ -46,11 +46,19 @@ OS_STK  SerialHygrosensMethodStk[SerialHygrosensMethod_STK_SIZE];
 
 
 
+
 #define   HYGROSENS_USART_COM               1
 #define   HYGROSENS_USART                   AVR32_USART1;
 
 #define   HYGROSENS_USART_IRQ               AVR32_USART1_IRQ
-#define	  hygrosensUsartSpeed   9600
+#define	  hygrosensUsartSpeed   4800
+
+
+//#define   HYGROSENS_USART_COM               0
+//#define   HYGROSENS_USART                   AVR32_USART0;
+//
+//#define   HYGROSENS_USART_IRQ               AVR32_USART0_IRQ
+//#define	  hygrosensUsartSpeed   4800
 
 
 
@@ -87,6 +95,8 @@ OS_MEM *hygrosensMsgsMem;
 OS_EVENT*  hygrosensTaskMsgQ;
 hygrosensStringMemory hygrosensMem[hygrosensMemorySz];
 void* hygrosensTaskMsgPtrs[hygrosensMemorySz];
+
+INT32U hygrosensThreadMethodLoops;
 
 
 void OnHygrosensError(char * errSt,CPU_INT08U err)
@@ -270,12 +280,13 @@ static  void  SerialHygrosensThreadMethod (void *p_arg)
 	hygrosensStringType* msgStr;
 
 	while (1) {
-		msgStr = (hygrosensStringType *)OSQPend(hygrosensTaskMsgQ, 3167, &err);
-		#warning: choose another prime number for above call
+		msgStr = (hygrosensStringType *)OSQPend(hygrosensTaskMsgQ, 6823, &err);
 		if (err == OS_NO_ERR) {
 			onDataReceivedUart1((char*) msgStr);
+			releaseBuffer(msgStr);
 		}
-		releaseBuffer(msgStr);
+		++hygrosensThreadMethodLoops;
+		info_printf("hygrosenseLoops %5i",hygrosensThreadMethodLoops);
 	}
 }
 
@@ -287,6 +298,7 @@ CPU_INT08U init_HygrosenseReceiver()
 	latestHumidity = 0.0;
 	latestTemperature = 0.0;
 	CPU_INT08U  err_init_hygrosens = OS_NO_ERR;
+	hygrosensThreadMethodLoops = 0;
 	
 	if (err_init_hygrosens == OS_NO_ERR) {
 		hygrosensMsgsMem = OSMemCreate(&hygrosensMem[0], hygrosensMemorySz, sizeof(hygrosensStringMemory), &err_init_hygrosens);
@@ -298,6 +310,28 @@ CPU_INT08U init_HygrosenseReceiver()
 		hygrosensTaskMsgQ = OSQCreate(&hygrosensTaskMsgPtrs[0], hygrosensMemorySz);
 		if (! hygrosensTaskMsgQ) err_init_hygrosens = 0xFF;
 	}
+	
+
+	
+	if (err_init_hygrosens == OS_NO_ERR) {
+		BSP_USART_Init (HYGROSENS_USART_COM, hygrosensUsartSpeed);  
+	}
+	if (err_init_hygrosens == OS_NO_ERR) {
+		if (BSP_INTC_IntReg(&hygrosensRxISR, HYGROSENS_USART_IRQ, 1) == BSP_INTC_ERR_NONE ) {
+			err_init_hygrosens = OS_NO_ERR;
+			} else {
+			err_init_hygrosens = 0xFF;
+		}
+	}
+	serialHygrosensOn = (err_init_hygrosens == OS_NO_ERR);
+	
+	return err_init_hygrosens;
+}
+
+
+CPU_INT08U start_HygrosenseReceiver()
+{
+	CPU_INT08U  err_init_hygrosens = OS_NO_ERR;
 	
 	if (err_init_hygrosens == OS_NO_ERR )  {
 		err_init_hygrosens = OSTaskCreateExt(SerialHygrosensThreadMethod,
@@ -315,18 +349,7 @@ CPU_INT08U init_HygrosenseReceiver()
 		OSTaskNameSet(SERIAL_HYGROSENS_TASK_PRIO, (INT8U *)"HygrosensTask", &err_init_hygrosens);
 	}
 	
-	if (err_init_hygrosens == OS_NO_ERR) {
-		BSP_USART_Init (HYGROSENS_USART_COM, hygrosensUsartSpeed);  
-	}
-	if (err_init_hygrosens == OS_NO_ERR) {
-		if (BSP_INTC_IntReg(&hygrosensRxISR, HYGROSENS_USART_IRQ, 1) == BSP_INTC_ERR_NONE ) {
-			err_init_hygrosens = OS_NO_ERR;
-			} else {
-			err_init_hygrosens = 0xFF;
-		}
+	if (err_init_hygrosens == OS_NO_ERR )  {
 		BSP_USART_IntEn (HYGROSENS_USART_COM, (1<< AVR32_USART_IER_RXRDY));
 	}
-	serialHygrosensOn = (err_init_hygrosens == OS_NO_ERR);
-	
-	return err_init_hygrosens;
 }
